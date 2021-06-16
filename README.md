@@ -1,16 +1,5 @@
-# photoschool
+# photoschool-app
 
-웅진씽크빅 인턴과제
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- 공공데이터의 생물도감 정보를 검색해서 상세 설명과 이미지를 제공한다. (공공 데이터 조회)
+- 생물도감의 사진을 실제로 학생들이 촬영하여 업로드한 사진을 열람 및 좋아요 표시 기능
+- 조회수와 좋아요를 많이 받은 학생 및 학교를 매달 선정하여 공유 게시판 메인 화면에 보이게 하는 기능 
