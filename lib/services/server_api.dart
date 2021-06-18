@@ -10,7 +10,13 @@ class CustomAPIService {
     return _getResult(result);
   }
 
-  // TODO: 추후에 반환형은 Post 객체가 되어야 함
+  static Future<String> searchSchool(String text) async {
+    final domain = dotenv.env["server_domain"]!;
+    final result = await Http.get("$domain/school/$text");
+    return _getResult(result);
+  }
+
+  // TODO: 반환형 Post
   static Future<String> getMyPosts(int index) async {
     final domain = dotenv.env["server_domain"]!;
     final idToken = await FirebaseAuth.instance.currentUser!.getIdToken();
@@ -22,6 +28,34 @@ class CustomAPIService {
   static Future<String> getOthersPostBy(int apiId, int index) async {
     final domain = dotenv.env["server_domain"]!;
     final result = await Http.get("$domain/others/$apiId/$index");
+    return _getResult(result);
+  }
+
+  // TODO: 반환형 Post
+  static Future<String> getAwardPosts(int index) async {
+    final domain = dotenv.env["server_domain"]!;
+    final result = await Http.get("$domain/awards/$index");
+    return _getResult(result);
+  }
+
+  // TODO: 반환형 School
+  static Future<String> getSchoolRank() async {
+    final domain = dotenv.env["server_domain"]!;
+    final result = await Http.get("$domain/rank");
+    return _getResult(result);
+  }
+
+  // TODO: 반환형 Post
+  static Future<String> getAllPosts(int index) async {
+    final domain = dotenv.env["server_domain"]!;
+    final result = await Http.get("$domain/post/all/$index");
+    return _getResult(result);
+  }
+
+  // TODO: 반환형 Post
+  static Future<String> searchPost(String searchType, String searchText, String sortType, int index) async {
+    final domain = dotenv.env["server_domain"]!;
+    final result = await Http.get("$domain/post/$searchType/$sortType/$searchText/$index");
     return _getResult(result);
   }
 

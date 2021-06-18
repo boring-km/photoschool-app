@@ -26,6 +26,17 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   String _userRegisterResult = "";
   String _myPostResult = "";
   String _otherPostsResult = "";
+  String _awardPostResult = "";
+  String _schoolRankResult = "";
+  String _allPostResult = "";
+
+  String _searchResult = "";
+
+  String _apiSearchResult = "";
+
+  String _schoolSearchResult = "";
+
+  var _schoolNameController = TextEditingController();
 
   Route _routeToSignInScreen() {
     return PageRouteBuilder(
@@ -133,10 +144,13 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
               ElevatedButton(
                   onPressed: () async {
                     String result = await PublicAPIService.getChildBookSearch("소나무", 10, 1);
-                    print("result: $result");
+                    setState(() {
+                      _apiSearchResult = result;
+                    });
                   },
-                  child: Text("검색 테스트")
+                  child: Text("소나무 검색 테스트")
               ),
+              Text(_apiSearchResult),
               ElevatedButton(
                   onPressed: () async {
                     final result = await CustomAPIService.checkUserRegistered();
@@ -147,6 +161,23 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                   child: Text("User 등록 테스트")
               ),
               Text(_userRegisterResult),
+              TextField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: '서울',
+                ),
+                controller: _schoolNameController,
+              ),
+              ElevatedButton(
+                  onPressed: () async {
+                    final result = await CustomAPIService.searchSchool(_schoolNameController.text);
+                    setState(() {
+                      _schoolSearchResult = result;
+                    });
+                  },
+                  child: Text("학교이름을 검색")
+              ),
+              Text(_schoolSearchResult),
               ElevatedButton(
                   onPressed: () async {
                     int index = 0;
@@ -169,13 +200,263 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                     });
                   },
                   child: Text("1234 도감번호와 관련된 게시물 불러오기")),
-              Text(_otherPostsResult)
+              Text(_otherPostsResult),
+              ElevatedButton(
+                  onPressed: () async {
+                    int index = 0;
+                    final result = await CustomAPIService.getAwardPosts(index);
+                    setState(() {
+                      print(result);
+                      _awardPostResult = result;
+                    });
+                  },
+                  child: Text("상을 받은 게시물 목록 가져오기")),
+              Text(_awardPostResult),
+              ElevatedButton(
+                  onPressed: () async {
+                    final result = await CustomAPIService.getSchoolRank();
+                    setState(() {
+                      print(result);
+                      _schoolRankResult = result;
+                    });
+                  },
+                  child: Text("학교 랭킹 구하기")),
+              Text(_schoolRankResult),
+              ElevatedButton(
+                  onPressed: () async {
+                    int index = 0;
+                    final result = await CustomAPIService.getAllPosts(index);
+                    setState(() {
+                      print(result);
+                      _allPostResult = result;
+                    });
+                  },
+                  child: Text("친구들 사진 기본 검색 결과 불러오기")),
+              Text(_allPostResult),
+              Padding(padding: EdgeInsets.all(5)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Column(
+                    children: [
+                      Text("최신순으로", style: TextStyle(fontSize: 20, color: Colors.red),),
+                      ElevatedButton(
+                          onPressed: () async {
+                            int index = 0;
+                            final result = await CustomAPIService.searchPost("title", "테스트", "new", index);
+                            setState(() {
+                              print(result);
+                              _searchResult = result;
+                            });
+                          },
+                          child: Text("제목을 테스트로 검색")),
+                      ElevatedButton(
+                          onPressed: () async {
+                            int index = 0;
+                            final result = await CustomAPIService.searchPost("nickname", "테스트", "new", index);
+                            setState(() {
+                              print(result);
+                              _searchResult = result;
+                            });
+                          },
+                          child: Text("닉네임을 테스트로 검색")),
+                      ElevatedButton(
+                          onPressed: () async {
+                            int index = 0;
+                            final result = await CustomAPIService.searchPost("school", "대구", "new", index);
+                            setState(() {
+                              print(result);
+                              _searchResult = result;
+                            });
+                          },
+                          child: Text("학교이름을 대구로 검색")),
+                    ],
+                  ),
+                  Padding(padding: EdgeInsets.all(5)),
+                  Column(
+                    children: [
+                      Text("오래된 순으로", style: TextStyle(fontSize: 20, color: Colors.red),),
+                      ElevatedButton(
+                          onPressed: () async {
+                            int index = 0;
+                            final result = await CustomAPIService.searchPost("title", "테스트", "old", index);
+                            setState(() {
+                              print(result);
+                              _searchResult = result;
+                            });
+                          },
+                          child: Text("제목을 테스트로 검색")),
+                      ElevatedButton(
+                          onPressed: () async {
+                            int index = 0;
+                            final result = await CustomAPIService.searchPost("nickname", "테스트", "old", index);
+                            setState(() {
+                              print(result);
+                              _searchResult = result;
+                            });
+                          },
+                          child: Text("닉네임을 테스트로 검색")),
+                      ElevatedButton(
+                          onPressed: () async {
+                            int index = 0;
+                            final result = await CustomAPIService.searchPost("school", "대구", "old", index);
+                            setState(() {
+                              print(result);
+                              _searchResult = result;
+                            });
+                          },
+                          child: Text("학교이름을 대구로 검색")),
+                    ],
+                  ),
+                  Padding(padding: EdgeInsets.all(5)),
+                  Column(
+                    children: [
+                      Text("조회수 높은 순", style: TextStyle(fontSize: 20, color: Colors.red),),
+                      ElevatedButton(
+                          onPressed: () async {
+                            int index = 0;
+                            final result = await CustomAPIService.searchPost("title", "테스트", "highviews", index);
+                            setState(() {
+                              print(result);
+                              _searchResult = result;
+                            });
+                          },
+                          child: Text("제목을 테스트로 검색")),
+                      ElevatedButton(
+                          onPressed: () async {
+                            int index = 0;
+                            final result = await CustomAPIService.searchPost("nickname", "테스트", "highviews", index);
+                            setState(() {
+                              print(result);
+                              _searchResult = result;
+                            });
+                          },
+                          child: Text("닉네임을 테스트로 검색")),
+                      ElevatedButton(
+                          onPressed: () async {
+                            int index = 0;
+                            final result = await CustomAPIService.searchPost("school", "대구", "highviews", index);
+                            setState(() {
+                              print(result);
+                              _searchResult = result;
+                            });
+                          },
+                          child: Text("학교이름을 대구로 검색")),
+                    ],
+                  ),
+                  Padding(padding: EdgeInsets.all(5)),
+                  Column(
+                    children: [
+                      Text("조회수 낮은 순", style: TextStyle(fontSize: 20, color: Colors.red),),
+                      ElevatedButton(
+                          onPressed: () async {
+                            int index = 0;
+                            final result = await CustomAPIService.searchPost("title", "테스트", "lowviews", index);
+                            setState(() {
+                              print(result);
+                              _searchResult = result;
+                            });
+                          },
+                          child: Text("제목을 테스트로 검색")),
+                      ElevatedButton(
+                          onPressed: () async {
+                            int index = 0;
+                            final result = await CustomAPIService.searchPost("nickname", "테스트", "lowviews", index);
+                            setState(() {
+                              print(result);
+                              _searchResult = result;
+                            });
+                          },
+                          child: Text("닉네임을 테스트로 검색")),
+                      ElevatedButton(
+                          onPressed: () async {
+                            int index = 0;
+                            final result = await CustomAPIService.searchPost("school", "대구", "lowviews", index);
+                            setState(() {
+                              print(result);
+                              _searchResult = result;
+                            });
+                          },
+                          child: Text("학교이름을 대구로 검색")),
+                    ],
+                  ),
+                  Padding(padding: EdgeInsets.all(5)),
+                  Column(
+                    children: [
+                      Text("좋아요 높은 순", style: TextStyle(fontSize: 20, color: Colors.red),),
+                      ElevatedButton(
+                          onPressed: () async {
+                            int index = 0;
+                            final result = await CustomAPIService.searchPost("title", "테스트", "highlikes", index);
+                            setState(() {
+                              print(result);
+                              _searchResult = result;
+                            });
+                          },
+                          child: Text("제목을 테스트로 검색")),
+                      ElevatedButton(
+                          onPressed: () async {
+                            int index = 0;
+                            final result = await CustomAPIService.searchPost("nickname", "테스트", "highlikes", index);
+                            setState(() {
+                              print(result);
+                              _searchResult = result;
+                            });
+                          },
+                          child: Text("닉네임을 테스트로 검색")),
+                      ElevatedButton(
+                          onPressed: () async {
+                            int index = 0;
+                            final result = await CustomAPIService.searchPost("school", "대구", "highlikes", index);
+                            setState(() {
+                              print(result);
+                              _searchResult = result;
+                            });
+                          },
+                          child: Text("학교이름을 대구로 검색")),
+                    ],
+                  ),
+                  Padding(padding: EdgeInsets.all(5)),
+                  Column(
+                    children: [
+                      Text("좋아요 낮은 순", style: TextStyle(fontSize: 20, color: Colors.red),),
+                      ElevatedButton(
+                          onPressed: () async {
+                            int index = 0;
+                            final result = await CustomAPIService.searchPost("title", "테스트", "lowlikes", index);
+                            setState(() {
+                              print(result);
+                              _searchResult = result;
+                            });
+                          },
+                          child: Text("제목을 테스트로 검색")),
+                      ElevatedButton(
+                          onPressed: () async {
+                            int index = 0;
+                            final result = await CustomAPIService.searchPost("nickname", "테스트", "lowlikes", index);
+                            setState(() {
+                              print(result);
+                              _searchResult = result;
+                            });
+                          },
+                          child: Text("닉네임을 테스트로 검색")),
+                      ElevatedButton(
+                          onPressed: () async {
+                            int index = 0;
+                            final result = await CustomAPIService.searchPost("school", "대구", "lowlikes", index);
+                            setState(() {
+                              print(result);
+                              _searchResult = result;
+                            });
+                          },
+                          child: Text("학교이름을 대구로 검색")),
+                    ],
+                  )
+                ],
+              ),
+              Text("검색결과: $_searchResult")
             ],
           )
-          // child: Column(
-          //   mainAxisAlignment: MainAxisAlignment.center,
-          //   children:
-          // ),
         ),
       ),
     );
