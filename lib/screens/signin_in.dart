@@ -112,15 +112,6 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
 
                 User? user =
                     await Authentication.signInWithGoogle(context: context);
-                String token =
-                    await FirebaseAuth.instance.currentUser!.getIdToken();
-
-                while (token.length > 0) {
-                  int initLength = (token.length >= 500 ? 500 : token.length);
-                  print(token.substring(0, initLength));
-                  int endLength = token.length;
-                  token = token.substring(initLength, endLength);
-                }
 
                 setState(() {
                   _isSigningIn = false;

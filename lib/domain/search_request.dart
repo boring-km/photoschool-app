@@ -1,5 +1,3 @@
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-
 class SearchRequest {
   late String baseUrl;
   late String serviceKey;

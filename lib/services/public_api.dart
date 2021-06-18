@@ -1,9 +1,7 @@
-import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:photoschool/domain/detail_request.dart';
 import 'package:photoschool/domain/search_request.dart';
 import 'package:photoschool/utils/http_custom.dart';
-import 'package:xml_parser/xml_parser.dart';
 
 class PublicAPIService {
 
@@ -13,7 +11,7 @@ class PublicAPIService {
     final target = SearchRequest(baseUrl, serviceKey, 1, keyword, numOfRows, page).toString();
 
     var result = await Http.get(target);
-    if (result['error']) {
+    if (result['error'] != null) {
       return result['errorCode'];
     } else {
       return result['data'];
@@ -31,4 +29,6 @@ class PublicAPIService {
       return result['data'];
     }
   }
+
+
 }
