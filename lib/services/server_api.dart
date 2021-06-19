@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:photoschool/utils/http_custom.dart';
@@ -13,8 +15,9 @@ class CustomAPIService {
   static Future<String> getNickName() async {
     final idToken = await FirebaseAuth.instance.currentUser!.getIdToken();
     final domain = dotenv.env["server_domain"]!;
-    var result = await Http.getWithJWT("$domain/nickname", idToken);
-    return _getResult(result);
+    final result = await Http.getWithJWT("$domain/nickname", idToken);
+    final json = jsonDecode(_getResult(result));
+    return json['nickname'];
   }
 
   static Future<String> searchSchool(String text) async {
@@ -66,7 +69,7 @@ class CustomAPIService {
     return _getResult(result);
   }
 
-  static _getResult(Map<String, dynamic> result) {
+  static String _getResult(Map<String, dynamic> result) {
     if (result['error'] == null) {
       return result['data'];
     } else {
