@@ -2,10 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:photoschool/res/colors.dart';
+import 'package:photoschool/screens/select_screen.dart';
 import 'package:photoschool/screens/signin_in.dart';
 import 'package:photoschool/services/public_api.dart';
 import 'package:photoschool/services/server_api.dart';
-import 'package:photoschool/widgets/app_bar_title.dart';
+import 'package:photoschool/widgets/app_bar_base.dart';
 
 import '../utils/auth.dart';
 
@@ -22,6 +23,7 @@ class UserInfoScreen extends StatefulWidget {
 
 class _UserInfoScreenState extends State<UserInfoScreen> {
   late User _user;
+  late String _nickname;
   bool _isSigningOut = false;
   String _userRegisterResult = "";
   String _myPostResult = "";
@@ -29,39 +31,21 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   String _awardPostResult = "";
   String _schoolRankResult = "";
   String _allPostResult = "";
-
   String _searchResult = "";
-
   String _apiSearchResult = "";
-
   String _schoolSearchResult = "";
 
   var _schoolNameController = TextEditingController();
 
-  Route _routeToSignInScreen() {
-    return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => SignInScreen(),
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        var begin = Offset(-1.0, 0.0);
-        var end = Offset.zero;
-        var curve = Curves.ease;
-
-        var tween =
-        Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-        return SlideTransition(
-          position: animation.drive(tween),
-          child: child,
-        );
-      },
-    );
-  }
-
   @override
   void initState() {
     _user = widget._user;
-
+    setNickName();
     super.initState();
+  }
+
+  void setNickName() async {
+    _nickname = await CustomAPIService.getNickName();
   }
 
   @override
@@ -71,7 +55,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: CustomColors.firebaseNavy,
-        title: AppBarTitle(),
+        title: AppBarTitle(_nickname),
       ),
       body: SafeArea(
         child: Padding(
@@ -454,11 +438,39 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                   )
                 ],
               ),
-              Text("검색결과: $_searchResult")
+              Text("검색결과: $_searchResult"),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => SelectScreen()
+                      )
+                    );
+                  },
+                  child: Text("로그인 후 선택 화면"))
             ],
           )
         ),
       ),
+    );
+  }
+
+  Route _routeToSignInScreen() {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => SignInScreen(),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        var begin = Offset(-1.0, 0.0);
+        var end = Offset.zero;
+        var curve = Curves.ease;
+
+        var tween =
+        Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
     );
   }
 }
