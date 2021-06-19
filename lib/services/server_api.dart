@@ -13,7 +13,7 @@ class CustomAPIService {
   static Future<String> getNickName() async {
     final idToken = await FirebaseAuth.instance.currentUser!.getIdToken();
     final domain = dotenv.env["server_domain"]!;
-    final result = await Http.getWithJWT("$domain/nickname", idToken);
+    var result = await Http.getWithJWT("$domain/nickname", idToken);
     return _getResult(result);
   }
 

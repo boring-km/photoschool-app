@@ -23,7 +23,6 @@ class UserInfoScreen extends StatefulWidget {
 
 class _UserInfoScreenState extends State<UserInfoScreen> {
   late User _user;
-  late String _nickname;
   bool _isSigningOut = false;
   String _userRegisterResult = "";
   String _myPostResult = "";
@@ -40,12 +39,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   @override
   void initState() {
     _user = widget._user;
-    setNickName();
     super.initState();
-  }
-
-  void setNickName() async {
-    _nickname = await CustomAPIService.getNickName();
   }
 
   @override
@@ -55,7 +49,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: CustomColors.firebaseNavy,
-        title: AppBarTitle(_nickname),
+        title: AppBarTitle(),
       ),
       body: SafeArea(
         child: Padding(

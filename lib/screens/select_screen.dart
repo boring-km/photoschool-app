@@ -4,11 +4,13 @@ import 'package:photoschool/res/colors.dart';
 import 'package:photoschool/widgets/app_bar_base.dart';
 
 class SelectScreen extends StatefulWidget {
+
   @override
   _SelectScreenState createState() => _SelectScreenState();
 }
 
 class _SelectScreenState extends State<SelectScreen> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
