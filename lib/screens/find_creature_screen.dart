@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:photoschool/domain/searched_detail_item.dart';
 import 'package:photoschool/domain/searched_item.dart';
 import 'package:photoschool/res/colors.dart';
@@ -13,12 +14,17 @@ class FindCreatureScreen extends StatefulWidget {
 
 class _FindCreatureState extends State<FindCreatureScreen> {
   var _creatureSearchController = TextEditingController();
-  List<Widget> _creatureSearchedList = [];
+  int _currentPage = 1;
+  int received = -1;
+  List<SearchedDetailItem> dataList = [];
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-
-    getCreatureSearchedListView("");
 
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
@@ -84,8 +90,9 @@ class _FindCreatureState extends State<FindCreatureScreen> {
                         width: buttonWidth, height: buttonHeight),
                     child: ElevatedButton(
                         onPressed: () async {
-                          print(_creatureSearchController.text);
-                          await getCreatureSearchedListView(_creatureSearchController.text);
+                          _currentPage = 1;
+                          dataList.clear();
+                          await getCreatureSearchedListView(_creatureSearchController.text, _currentPage);
                         },
                         style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
@@ -107,13 +114,14 @@ class _FindCreatureState extends State<FindCreatureScreen> {
 
   buildListView(double base) {
     return FutureBuilder(
-      future: getCreatureSearchedListView(_creatureSearchController.text),
+      future: getCreatureSearchedListView(_creatureSearchController.text, _currentPage),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Text("Error");
         } else if (snapshot.connectionState == ConnectionState.done) {
           final items = snapshot.data as List<SearchedDetailItem>;
           List<Widget> resultList = [];
+          received = items.length;
           for (var item in items) {
             final name = item.name;
             final type = item.type;
@@ -142,9 +150,25 @@ class _FindCreatureState extends State<FindCreatureScreen> {
             resultList.add(widget);
           }
           print(snapshot.data.toString());
-          return Expanded(child: ListView(
-            shrinkWrap: true,
-            children: resultList,));
+          return Expanded(
+              child: NotificationListener<ScrollEndNotification>(
+                onNotification: (scrollEnd) {
+                  var metrics = scrollEnd.metrics;
+                  if (metrics.atEdge) {
+                    if (metrics.pixels != 0) {
+                      if (received == -1 || received == 10) {
+                        _currentPage++;
+                        getCreatureSearchedListView(_creatureSearchController.text, _currentPage);
+                      }
+                    }
+                  }
+                  return true;
+                },
+                child: ListView(
+                  shrinkWrap: true,
+                  children: resultList,),
+              )
+          );
         }
         return Padding(
           padding: EdgeInsets.all(base),
@@ -158,17 +182,15 @@ class _FindCreatureState extends State<FindCreatureScreen> {
     );
   }
 
-  Future<List<SearchedDetailItem>> getCreatureSearchedListView(String text) async {
-    List<SearchedCreature> list = await PublicAPIService.getChildBookSearch(text, 1);
-    _creatureSearchedList.clear();
-    List<SearchedDetailItem> resultList = [];
+  Future<List<SearchedDetailItem>> getCreatureSearchedListView(String text, int page) async {
+    List<SearchedCreature> list = await PublicAPIService.getChildBookSearch(text, page);
     for (var item in list) {
       final result = await PublicAPIService.getChildBookDetail(item.apiId);
       if (result != false) {
         var item = (result as SearchedDetailItem);
-        resultList.add(item);
+        dataList.add(item);
       }
     }
-    return resultList;
+    return dataList;
   }
 }
