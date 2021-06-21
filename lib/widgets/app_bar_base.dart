@@ -25,20 +25,26 @@ class _AppBarTitleState extends State<AppBarTitle> {
 
   @override
   Widget build(BuildContext context) {
+    double w = MediaQuery.of(context).size.width;
+    double h = MediaQuery.of(context).size.height;
+
+    double nicknameSize = w > h ? h / 30 : w / 30;
+
     return Padding(
-      padding: const EdgeInsets.only(top: 10.0),
+      padding: EdgeInsets.only(top: h/50),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             '포토스쿨',
             style: TextStyle(
-              color: CustomColors.firebaseYellow,
-              fontSize: 18,
+              color: Colors.white,
+              fontFamily: 'SDSamlip',
+              fontSize: 28,
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(h/50),
             child: ElevatedButton(
               onPressed: () {
                 // TODO 유저기능 추가
@@ -48,7 +54,8 @@ class _AppBarTitleState extends State<AppBarTitle> {
                 _nickname,
                 style: TextStyle(
                     color: Colors.black,
-                    fontSize: 18),
+                    fontFamily: 'KCCDodam',
+                    fontSize: nicknameSize),
               ),
               style: ElevatedButton.styleFrom(
                 primary: Colors.amber,

@@ -44,6 +44,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double w = MediaQuery.of(context).size.width;
+    double h = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: CustomColors.firebaseNavy,
       appBar: AppBar(
@@ -53,16 +55,16 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.only(
-            left: 16.0,
-            right: 16.0,
-            bottom: 20.0,
+          padding: EdgeInsets.only(
+            left: w / 20,
+            right: w / 20,
+            bottom: w / 20,
           ),
           child: ListView(
             shrinkWrap: true,
-            padding: EdgeInsets.all(100.0),
+            padding: EdgeInsets.all(h / 20),
             children: [
-              SizedBox(height: 8.0),
+              SizedBox(height: h / 50),
               Text(
                 _user.displayName!,
                 style: TextStyle(
@@ -70,7 +72,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                   fontSize: 26,
                 ),
               ),
-              SizedBox(height: 8.0),
+              SizedBox(height: h / 50),
               Text(
                 '( ${_user.email!} )',
                 style: TextStyle(
@@ -79,7 +81,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                   letterSpacing: 0.5,
                 ),
               ),
-              SizedBox(height: 24.0),
+              SizedBox(height: h / 20),
               _isSigningOut
                   ? CircularProgressIndicator(
                 valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
@@ -107,7 +109,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                       .pushReplacement(_routeToSignInScreen());
                 },
                 child: Padding(
-                  padding: EdgeInsets.only(top: 8.0, bottom: 8.0),
+                  padding: EdgeInsets.only(top: h / 50, bottom: h / 50),
                   child: Text(
                     'Sign Out',
                     style: TextStyle(
@@ -211,10 +213,11 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                   },
                   child: Text("친구들 사진 기본 검색 결과 불러오기")),
               Text(_allPostResult),
-              Padding(padding: EdgeInsets.all(5)),
+              Padding(padding: EdgeInsets.all(h/50)),
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  Padding(padding: EdgeInsets.all(h/50)),
                   Column(
                     children: [
                       Text("최신순으로", style: TextStyle(fontSize: 20, color: Colors.red),),
@@ -227,7 +230,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                               _searchResult = result;
                             });
                           },
-                          child: Text("제목을 테스트로 검색")),
+                          child: Text("제목을 테스트로 검색", style: TextStyle(fontSize: 10.0),)),
                       ElevatedButton(
                           onPressed: () async {
                             int index = 0;
@@ -237,7 +240,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                               _searchResult = result;
                             });
                           },
-                          child: Text("닉네임을 테스트로 검색")),
+                          child: Text("닉네임을 테스트로 검색", style: TextStyle(fontSize: 10.0),)),
                       ElevatedButton(
                           onPressed: () async {
                             int index = 0;
@@ -247,12 +250,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                               _searchResult = result;
                             });
                           },
-                          child: Text("학교이름을 대구로 검색")),
-                    ],
-                  ),
-                  Padding(padding: EdgeInsets.all(5)),
-                  Column(
-                    children: [
+                          child: Text("학교이름을 대구로 검색", style: TextStyle(fontSize: 10.0),)),
                       Text("오래된 순으로", style: TextStyle(fontSize: 20, color: Colors.red),),
                       ElevatedButton(
                           onPressed: () async {
@@ -263,7 +261,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                               _searchResult = result;
                             });
                           },
-                          child: Text("제목을 테스트로 검색")),
+                          child: Text("제목을 테스트로 검색", style: TextStyle(fontSize: 10.0),)),
                       ElevatedButton(
                           onPressed: () async {
                             int index = 0;
@@ -273,7 +271,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                               _searchResult = result;
                             });
                           },
-                          child: Text("닉네임을 테스트로 검색")),
+                          child: Text("닉네임을 테스트로 검색", style: TextStyle(fontSize: 10.0),)),
                       ElevatedButton(
                           onPressed: () async {
                             int index = 0;
@@ -283,10 +281,10 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                               _searchResult = result;
                             });
                           },
-                          child: Text("학교이름을 대구로 검색")),
+                          child: Text("학교이름을 대구로 검색", style: TextStyle(fontSize: 10.0),)),
                     ],
                   ),
-                  Padding(padding: EdgeInsets.all(5)),
+                  Padding(padding: EdgeInsets.all(h/50)),
                   Column(
                     children: [
                       Text("조회수 높은 순", style: TextStyle(fontSize: 20, color: Colors.red),),
@@ -299,7 +297,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                               _searchResult = result;
                             });
                           },
-                          child: Text("제목을 테스트로 검색")),
+                          child: Text("제목을 테스트로 검색", style: TextStyle(fontSize: 10.0),)),
                       ElevatedButton(
                           onPressed: () async {
                             int index = 0;
@@ -309,7 +307,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                               _searchResult = result;
                             });
                           },
-                          child: Text("닉네임을 테스트로 검색")),
+                          child: Text("닉네임을 테스트로 검색", style: TextStyle(fontSize: 10.0),)),
                       ElevatedButton(
                           onPressed: () async {
                             int index = 0;
@@ -319,12 +317,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                               _searchResult = result;
                             });
                           },
-                          child: Text("학교이름을 대구로 검색")),
-                    ],
-                  ),
-                  Padding(padding: EdgeInsets.all(5)),
-                  Column(
-                    children: [
+                          child: Text("학교이름을 대구로 검색", style: TextStyle(fontSize: 10.0),)),
                       Text("조회수 낮은 순", style: TextStyle(fontSize: 20, color: Colors.red),),
                       ElevatedButton(
                           onPressed: () async {
@@ -335,7 +328,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                               _searchResult = result;
                             });
                           },
-                          child: Text("제목을 테스트로 검색")),
+                          child: Text("제목을 테스트로 검색", style: TextStyle(fontSize: 10.0),)),
                       ElevatedButton(
                           onPressed: () async {
                             int index = 0;
@@ -345,7 +338,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                               _searchResult = result;
                             });
                           },
-                          child: Text("닉네임을 테스트로 검색")),
+                          child: Text("닉네임을 테스트로 검색", style: TextStyle(fontSize: 10.0),)),
                       ElevatedButton(
                           onPressed: () async {
                             int index = 0;
@@ -355,10 +348,10 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                               _searchResult = result;
                             });
                           },
-                          child: Text("학교이름을 대구로 검색")),
+                          child: Text("학교이름을 대구로 검색", style: TextStyle(fontSize: 10.0),)),
                     ],
                   ),
-                  Padding(padding: EdgeInsets.all(5)),
+                  Padding(padding: EdgeInsets.all(h/50)),
                   Column(
                     children: [
                       Text("좋아요 높은 순", style: TextStyle(fontSize: 20, color: Colors.red),),
@@ -371,7 +364,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                               _searchResult = result;
                             });
                           },
-                          child: Text("제목을 테스트로 검색")),
+                          child: Text("제목을 테스트로 검색", style: TextStyle(fontSize: 10.0),)),
                       ElevatedButton(
                           onPressed: () async {
                             int index = 0;
@@ -381,7 +374,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                               _searchResult = result;
                             });
                           },
-                          child: Text("닉네임을 테스트로 검색")),
+                          child: Text("닉네임을 테스트로 검색", style: TextStyle(fontSize: 10.0),)),
                       ElevatedButton(
                           onPressed: () async {
                             int index = 0;
@@ -391,12 +384,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                               _searchResult = result;
                             });
                           },
-                          child: Text("학교이름을 대구로 검색")),
-                    ],
-                  ),
-                  Padding(padding: EdgeInsets.all(5)),
-                  Column(
-                    children: [
+                          child: Text("학교이름을 대구로 검색", style: TextStyle(fontSize: 10.0),)),
                       Text("좋아요 낮은 순", style: TextStyle(fontSize: 20, color: Colors.red),),
                       ElevatedButton(
                           onPressed: () async {
@@ -407,7 +395,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                               _searchResult = result;
                             });
                           },
-                          child: Text("제목을 테스트로 검색")),
+                          child: Text("제목을 테스트로 검색", style: TextStyle(fontSize: 10.0),)),
                       ElevatedButton(
                           onPressed: () async {
                             int index = 0;
@@ -417,7 +405,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                               _searchResult = result;
                             });
                           },
-                          child: Text("닉네임을 테스트로 검색")),
+                          child: Text("닉네임을 테스트로 검색", style: TextStyle(fontSize: 10.0),)),
                       ElevatedButton(
                           onPressed: () async {
                             int index = 0;
@@ -427,9 +415,9 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                               _searchResult = result;
                             });
                           },
-                          child: Text("학교이름을 대구로 검색")),
+                          child: Text("학교이름을 대구로 검색", style: TextStyle(fontSize: 10.0),)),
                     ],
-                  )
+                  ),
                 ],
               ),
               Text("검색결과: $_searchResult"),

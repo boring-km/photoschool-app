@@ -4,15 +4,22 @@ import 'package:photoschool/res/colors.dart';
 import 'package:photoschool/widgets/app_bar_base.dart';
 
 class SelectScreen extends StatefulWidget {
-
   @override
   _SelectScreenState createState() => _SelectScreenState();
 }
 
 class _SelectScreenState extends State<SelectScreen> {
-
   @override
   Widget build(BuildContext context) {
+    double w = MediaQuery.of(context).size.width;
+    double h = MediaQuery.of(context).size.height;
+
+    double boxFontSize = w > h ? h / 15 : w / 15;
+    double boxHeight = w > h ? h * (3/5) : h * (4/5);
+    double boxWidth = w > h ? w * (2/5) : h / 4;
+
+    double boxRounded = w > h ? h / 30 : w / 30;
+
     return Scaffold(
       backgroundColor: CustomColors.firebaseNavy,
       appBar: AppBar(
@@ -22,26 +29,68 @@ class _SelectScreenState extends State<SelectScreen> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(36.0),
+          padding: EdgeInsets.all(w / 20),
           child: Center(
             child: Container(
+              width: w * (9 / 10),
+              height: h * (9 / 10),
               decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(
-                  width: 1,
-                  color: Colors.white30
-                ),
-                borderRadius: BorderRadius.all(
-                  Radius.circular(10)
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.white10,
-                    offset: Offset(4.0, 4.0),
-                    blurRadius: 15.0,
-                    spreadRadius: 1.0,
-                  )
-                ]
+                  color: Colors.white,
+                  border: Border.all(width: 1, color: Colors.white30),
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.white10,
+                      offset: Offset(4.0, 4.0),
+                      blurRadius: 15.0,
+                      spreadRadius: 1.0,
+                    )
+                  ]),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ConstrainedBox(
+                    constraints: BoxConstraints.tightFor(
+                        width: boxWidth, height: boxHeight),
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      child: Text(
+                        "생물도감 보기",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: boxFontSize,
+                            fontFamily: 'SDChild'),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(boxRounded)),
+                          primary: CustomColors.friendsGreen,
+                          onSurface: CustomColors.friendsGreenAccent),
+                    ),
+                  ),
+                  Padding(padding: EdgeInsets.all(boxRounded)),
+                  ConstrainedBox(
+                    constraints: BoxConstraints.tightFor(
+                        width: boxWidth, height: boxHeight),
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      child: Text(
+                        "친구들\n사진 보기",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: boxFontSize,
+                            fontFamily: 'SDChild'),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(boxRounded)),
+                          primary: CustomColors.friendsYellow,
+                          onSurface: CustomColors.friendsYellowAccent),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -49,5 +98,4 @@ class _SelectScreenState extends State<SelectScreen> {
       ),
     );
   }
-
 }

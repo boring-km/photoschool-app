@@ -29,6 +29,16 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  fonts:
+    - family: SDChild
+      fonts:
+        - asset: fonts/SDChildfundkoreaTTF.ttf
+    - family: SDSamlip
+      fonts:
+        - asset: fonts/SDSamliphopangcheTTFOutline.ttf
+    - family: KCCDodam
+      fonts:
+        - asset: fonts/KCCDodamdodam.ttf
   assets:
     - assets/
     - .env
