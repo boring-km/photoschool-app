@@ -123,7 +123,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
               ),
               ElevatedButton(
                   onPressed: () async {
-                    String result = await PublicAPIService.getChildBookSearch("소나무", 10, 1);
+                    String result = await PublicAPIService.getChildBookSearch("소나무", 1);
                     setState(() {
                       _apiSearchResult = result;
                     });

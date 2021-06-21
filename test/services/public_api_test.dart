@@ -3,7 +3,6 @@ import 'package:photoschool/domain/search_request.dart';
 import 'package:photoschool/utils/http_custom.dart';
 import 'package:photoschool/utils/xml_custom.dart';
 import 'package:test/test.dart';
-import 'package:xml_parser/xml_parser.dart';
 
 void main() async {
 
@@ -51,7 +50,7 @@ void main() async {
 
     // when
     String data = (await Http.get(target))["data"];
-    String name = XMLParser.parseXMLList(data)[0].getChild("lvbngKrlngNm")!.text!;
+    String name = XMLParser.parseXMLItems(data)[0].getChild("lvbngKrlngNm")!.text!;
 
     // then
     expect(name, "가는잎조팝나무");
