@@ -8,5 +8,5 @@ class SearchedDetailItem {
   final String imgUrl2;
   final String imgUrl3;
 
-  SearchedDetailItem(this.name, this.type, this.familyType, this.habitat, this.detail, this.imgUrl1, this.imgUrl2, this.imgUrl3);
+  SearchedDetailItem(this.name, this.type, this.familyType, this.habitat, this.detail, this.imgUrl1, this.imgUrl2, this.imgUrl3,);
 }

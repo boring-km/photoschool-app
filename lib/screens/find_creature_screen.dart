@@ -20,6 +20,7 @@ class _FindCreatureState extends State<FindCreatureScreen> {
 
   @override
   void initState() {
+    getCreatureSearchedListView(_creatureSearchController.text, _currentPage);
     super.initState();
   }
 
@@ -113,84 +114,82 @@ class _FindCreatureState extends State<FindCreatureScreen> {
   }
 
   buildListView(double base) {
-    return FutureBuilder(
-      future: getCreatureSearchedListView(_creatureSearchController.text, _currentPage),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Text("Error");
-        } else if (snapshot.connectionState == ConnectionState.done) {
-          final items = snapshot.data as List<SearchedDetailItem>;
-          List<Widget> resultList = [];
-          received = items.length;
-          for (var item in items) {
-            final name = item.name;
-            final type = item.type;
-            final imageURL = item.imgUrl1;
+    List<Widget> resultList = [];
+    for (var item in dataList) {
+      final name = item.name;
+      final type = item.type;
+      final imageURL = item.imgUrl1;
 
-            final widget = Container(
-              height: 200,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.all(Radius.circular(base/10)),
-                border: Border.all(width: 2, color: Colors.black),
-              ),
-              child: Padding(
-                padding: EdgeInsets.all(base/5),
-                child: Row(
-                  children: [
-                    Image.network(imageURL, height: 150,),
-                    Padding(padding: EdgeInsets.symmetric(horizontal: base/5)),
-                    Text("이름: $name", style: TextStyle(fontSize: base/5, color: Colors.black),),
-                    Padding(padding: EdgeInsets.symmetric(horizontal: base/2)),
-                    Text("타입: $type", style: TextStyle(fontSize: base/8, color: Colors.black),)
-                  ],
-                ),
-              ),
-            );
-            resultList.add(widget);
-          }
-          print(snapshot.data.toString());
-          return Expanded(
-              child: NotificationListener<ScrollEndNotification>(
-                onNotification: (scrollEnd) {
-                  var metrics = scrollEnd.metrics;
-                  if (metrics.atEdge) {
-                    if (metrics.pixels != 0) {
-                      if (received == -1 || received == 10) {
-                        _currentPage++;
-                        getCreatureSearchedListView(_creatureSearchController.text, _currentPage);
-                      }
-                    }
-                  }
-                  return true;
-                },
-                child: ListView(
-                  shrinkWrap: true,
-                  children: resultList,),
-              )
-          );
-        }
-        return Padding(
-          padding: EdgeInsets.all(base),
-          child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(
-              CustomColors.firebaseOrange,
-            ),
+      final widget = Container(
+        height: 200,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(base/10)),
+          border: Border.all(width: 2, color: Colors.black),
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(base/5),
+          child: Row(
+            children: [
+              Image.network(imageURL, height: 150, loadingBuilder: (context, child, progress) {
+                if (progress != null) {
+                  return CircularProgressIndicator(
+                    backgroundColor: Colors.black12,
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+                    value: progress.cumulativeBytesLoaded / progress.expectedTotalBytes!,
+                  );
+                } else {
+                  return child;
+                }
+              }),
+              Padding(padding: EdgeInsets.symmetric(horizontal: base/5)),
+              Text("이름: $name", style: TextStyle(fontSize: base/5, color: Colors.black),),
+              Padding(padding: EdgeInsets.symmetric(horizontal: base/2)),
+              Text("타입: $type", style: TextStyle(fontSize: base/8, color: Colors.black),)
+            ],
           ),
-        );
-      },
+        ),
+      );
+      resultList.add(widget);
+    }
+
+    return Expanded(
+        child: NotificationListener<ScrollEndNotification>(
+          onNotification: (scrollEnd) {
+            var metrics = scrollEnd.metrics;
+            if (metrics.atEdge) {
+              if (metrics.pixels != 0) {
+                print('page: $_currentPage, received: $received');
+                if (received == -1 || received == 8) {
+                  _currentPage++;
+                  getCreatureSearchedListView(_creatureSearchController.text, _currentPage);
+                }
+              }
+            }
+            return true;
+          },
+          child: ListView.builder(
+            itemCount: resultList.length,
+            itemBuilder: (context, index) {
+              return resultList[index];
+            },
+          ),
+        )
     );
   }
 
-  Future<List<SearchedDetailItem>> getCreatureSearchedListView(String text, int page) async {
+  getCreatureSearchedListView(String text, int page) async {
     List<SearchedCreature> list = await PublicAPIService.getChildBookSearch(text, page);
+    received = list.length;
+    print(received);
     for (var item in list) {
       final result = await PublicAPIService.getChildBookDetail(item.apiId);
       if (result != false) {
-        var item = (result as SearchedDetailItem);
-        dataList.add(item);
+        setState(() {
+          var item = (result as SearchedDetailItem);
+          dataList.add(item);
+        });
       }
     }
-    return dataList;
   }
 }

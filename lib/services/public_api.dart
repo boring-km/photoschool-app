@@ -11,7 +11,7 @@ class PublicAPIService {
   static Future<List<SearchedCreature>> getChildBookSearch(String keyword, int page) async {
     final baseUrl = dotenv.env["public_api_list_url"]!;
     final serviceKey = dotenv.env["public_api_key"]!;
-    final numOfRows = 10;
+    final numOfRows = 8;
     final target = SearchRequest(baseUrl, serviceKey, 1, keyword, numOfRows, page).toString();
     List<SearchedCreature> creatureList = [];
     var result = await Http.get(target);
@@ -49,7 +49,7 @@ class PublicAPIService {
           item.getChild('lvbngDscrt')!.text != null ? item.getChild('lvbngDscrt')!.text! : "",
           item.getChild('imgUrl1')!.text!,
           item.getChild('imgUrl2')!.text!,
-          item.getChild('imgUrl3')!.text!);
+          item.getChild('imgUrl3')!.text!,);
     }
   }
 
