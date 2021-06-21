@@ -8,7 +8,7 @@ import 'package:photoschool/utils/xml_custom.dart';
 
 class PublicAPIService {
 
-  static getChildBookSearch(String keyword, int page) async {
+  static Future<List<SearchedCreature>> getChildBookSearch(String keyword, int page) async {
     final baseUrl = dotenv.env["public_api_list_url"]!;
     final serviceKey = dotenv.env["public_api_key"]!;
     final numOfRows = 10;
@@ -20,7 +20,6 @@ class PublicAPIService {
     } else {
       final searched = result['data'];
       final list = XMLParser.parseXMLItems(searched);
-      List<SearchedCreature> creatureList = [];
       for (var item in list) {
         final apiId = int.parse(item.getChild('childLvbngPilbkNo')!.text!);
         final name = item.getChild('lvbngKrlngNm')!.text!;
@@ -36,18 +35,18 @@ class PublicAPIService {
     final serviceKey = dotenv.env["public_api_key"]!;
     final target = DetailRequest(baseUrl, serviceKey, apiId).toString();
     var result = await Http.get(target);
-    if (result['error']) {
-      return result['errorCode'];
+    if (result['error'] != null) {
+      print(result['errorCode']);
+      return false;
     } else {
       final searched = result['data'];
       final item = XMLParser.parseXMLItem(searched);
       return SearchedDetailItem(
-          item.getChild('lvbngKrlngNm')!.text!,
+          item.getChild('lvbngKrlngNm')!.text != null ? item.getChild('lvbngKrlngNm')!.text! : "",
           item.getChild('lvbngTpcdNm')!.text!,
           item.getChild('famlKrlngNm')!.text!,
-          item.getChild('prtctSpecsTpcdNm')!.text!,
-          item.getChild('hbttNm')!.text!,
-          item.getChild('lvbngDscrt')!.text!,
+          item.getChild('hbttNm')!.text != null ? item.getChild('hbttNm')!.text! : "",
+          item.getChild('lvbngDscrt')!.text != null ? item.getChild('lvbngDscrt')!.text! : "",
           item.getChild('imgUrl1')!.text!,
           item.getChild('imgUrl2')!.text!,
           item.getChild('imgUrl3')!.text!);

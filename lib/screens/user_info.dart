@@ -6,6 +6,7 @@ import 'package:photoschool/screens/select_screen.dart';
 import 'package:photoschool/screens/signin_in.dart';
 import 'package:photoschool/services/public_api.dart';
 import 'package:photoschool/services/server_api.dart';
+import 'package:photoschool/utils/screen_animation.dart';
 import 'package:photoschool/widgets/app_bar_base.dart';
 
 import '../utils/auth.dart';
@@ -106,7 +107,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                     _isSigningOut = false;
                   });
                   Navigator.of(context)
-                      .pushReplacement(_routeToSignInScreen());
+                      .pushReplacement(ScreenAnimation.routeTo(SignInScreen()));
                 },
                 child: Padding(
                   padding: EdgeInsets.only(top: h / 50, bottom: h / 50),
@@ -123,7 +124,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
               ),
               ElevatedButton(
                   onPressed: () async {
-                    String result = await PublicAPIService.getChildBookSearch("소나무", 1);
+                    String result = (await PublicAPIService.getChildBookSearch("소나무", 1)).toString();
                     setState(() {
                       _apiSearchResult = result;
                     });
@@ -434,25 +435,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
           )
         ),
       ),
-    );
-  }
-
-  Route _routeToSignInScreen() {
-    return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => SignInScreen(),
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        var begin = Offset(-1.0, 0.0);
-        var end = Offset.zero;
-        var curve = Curves.ease;
-
-        var tween =
-        Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-        return SlideTransition(
-          position: animation.drive(tween),
-          child: child,
-        );
-      },
     );
   }
 }

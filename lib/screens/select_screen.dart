@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:photoschool/res/colors.dart';
 import 'package:photoschool/widgets/app_bar_base.dart';
 
+import 'find_creature_screen.dart';
+
 class SelectScreen extends StatefulWidget {
   @override
   _SelectScreenState createState() => _SelectScreenState();
@@ -53,7 +55,13 @@ class _SelectScreenState extends State<SelectScreen> {
                     constraints: BoxConstraints.tightFor(
                         width: boxWidth, height: boxHeight),
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => FindCreatureScreen()
+                          )
+                        );
+                      },
                       child: Text(
                         "생물도감 보기",
                         textAlign: TextAlign.center,
