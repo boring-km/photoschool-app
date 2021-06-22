@@ -370,7 +370,12 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            content: Image.network(imageURL),
+            content: InteractiveViewer(
+              panEnabled: false,
+              minScale: 0.5,
+              maxScale: 4,
+              child: Image.network(imageURL),
+            ),
             actions: [
               TextButton(
                 style: ButtonStyle(
