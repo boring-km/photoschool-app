@@ -151,7 +151,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                       _apiSearchResult = result;
                     });
                   },
-                  child: Text("소나무 검색 테스트")
+                  child: Text("어린이 생물 도감에서 '소나무'를 검색")
               ),
               Text(_apiSearchResult),
               ElevatedButton(
@@ -161,7 +161,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                       _userRegisterResult = result.toString();
                     });
                   },
-                  child: Text("User 등록 테스트")
+                  child: Text("현재 사용자가 등록된 사용자인지 API 서버에서 체크")
               ),
               Text(_userRegisterResult),
               TextField(
@@ -182,7 +182,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                       _schoolSearchResult = result;
                     });
                   },
-                  child: Text("학교이름을 검색")
+                  child: Text("학교이름을 API 서버에서 검색")
               ),
               Text(_schoolSearchResult),
               ElevatedButton(
@@ -202,7 +202,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                       _myPostImageList = imageList;
                     });
                   },
-                  child: Text("나의 게시물 조회")),
+                  child: Text("내가 작성한 게시물을 API 서버에서 조회")),
               Text(_myPostResult),
               Row(
                 children: _myPostImageList,
@@ -225,7 +225,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                       _othersPostWithApiList = imageList;
                     });
                   },
-                  child: Text("1234 도감번호와 관련된 게시물 불러오기")),
+                  child: Text("생물도감 번호 (1234)를 보고 촬영한 게시물을 API 서버에서 불러오기 (사진은 Firebase Storage)")),
               Text(_otherPostsResult),
               Row(
                 children: _othersPostWithApiList,
@@ -246,7 +246,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                       _awardImageList = imageList;
                     });
                   },
-                  child: Text("상을 받은 게시물 목록 가져오기")),
+                  child: Text("상을 받은 게시물을 API서버에서 조회하기 (사진은 Firebase Storage)")),
               Text(_awardPostResult),
               Row(
                 children: _awardImageList,
@@ -262,7 +262,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                       _schoolRankResult = text;
                     });
                   },
-                  child: Text("학교 랭킹 구하기")),
+                  child: Text("API 서버에서 학교 랭킹 구하기")),
               Text(_schoolRankResult),
               ElevatedButton(
                   onPressed: () async {
@@ -281,14 +281,14 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                       _allPostsImageList = imageList;
                     });
                   },
-                  child: Text("친구들 사진 기본 검색 결과 불러오기")),
+                  child: Text("API 서버에서 모든 학생들의 기본 게시물 결과 불러오기")),
               Text(_allPostResult),
               Column(
                 children: _allPostsImageList,
               ),
               Padding(padding: EdgeInsets.all(h/50)),
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Padding(padding: EdgeInsets.all(h/50)),
                   Column(
@@ -300,21 +300,21 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             final result = await CustomAPIService.searchPost("title", "테스트", "new", index);
                             setSearchResult(result);
                           },
-                          child: Text("제목을 테스트로 검색", style: TextStyle(fontSize: 10.0),)),
+                          child: Text("제목을 '테스트'로 검색", style: TextStyle(fontSize: 10.0),)),
                       ElevatedButton(
                           onPressed: () async {
                             int index = 0;
                             final result = await CustomAPIService.searchPost("nickname", "테스트", "new", index);
                             setSearchResult(result);
                           },
-                          child: Text("닉네임을 테스트로 검색", style: TextStyle(fontSize: 10.0),)),
+                          child: Text("닉네임을 '테스트'로 검색", style: TextStyle(fontSize: 10.0),)),
                       ElevatedButton(
                           onPressed: () async {
                             int index = 0;
                             final result = await CustomAPIService.searchPost("school", "대구", "new", index);
                             setSearchResult(result);
                           },
-                          child: Text("학교이름을 대구로 검색", style: TextStyle(fontSize: 10.0),)),
+                          child: Text("학교이름을 '대구'로 검색", style: TextStyle(fontSize: 10.0),)),
                       Text("오래된 순으로", style: TextStyle(fontSize: 20, color: Colors.red),),
                       ElevatedButton(
                           onPressed: () async {
@@ -322,21 +322,21 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             final result = await CustomAPIService.searchPost("title", "테스트", "old", index);
                             setSearchResult(result);
                           },
-                          child: Text("제목을 테스트로 검색", style: TextStyle(fontSize: 10.0),)),
+                          child: Text("제목을 '테스트'로 검색", style: TextStyle(fontSize: 10.0),)),
                       ElevatedButton(
                           onPressed: () async {
                             int index = 0;
                             final result = await CustomAPIService.searchPost("nickname", "테스트", "old", index);
                             setSearchResult(result);
                           },
-                          child: Text("닉네임을 테스트로 검색", style: TextStyle(fontSize: 10.0),)),
+                          child: Text("닉네임을 '테스트'로 검색", style: TextStyle(fontSize: 10.0),)),
                       ElevatedButton(
                           onPressed: () async {
                             int index = 0;
                             final result = await CustomAPIService.searchPost("school", "대구", "old", index);
                             setSearchResult(result);
                           },
-                          child: Text("학교이름을 대구로 검색", style: TextStyle(fontSize: 10.0),)),
+                          child: Text("학교이름을 '대구'로 검색", style: TextStyle(fontSize: 10.0),)),
                     ],
                   ),
                   Padding(padding: EdgeInsets.all(h/50)),
@@ -349,21 +349,21 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             final result = await CustomAPIService.searchPost("title", "테스트", "highviews", index);
                             setSearchResult(result);
                           },
-                          child: Text("제목을 테스트로 검색", style: TextStyle(fontSize: 10.0),)),
+                          child: Text("제목을 '테스트'로 검색", style: TextStyle(fontSize: 10.0),)),
                       ElevatedButton(
                           onPressed: () async {
                             int index = 0;
                             final result = await CustomAPIService.searchPost("nickname", "테스트", "highviews", index);
                             setSearchResult(result);
                           },
-                          child: Text("닉네임을 테스트로 검색", style: TextStyle(fontSize: 10.0),)),
+                          child: Text("닉네임을 '테스트'로 검색", style: TextStyle(fontSize: 10.0),)),
                       ElevatedButton(
                           onPressed: () async {
                             int index = 0;
                             final result = await CustomAPIService.searchPost("school", "대구", "highviews", index);
                             setSearchResult(result);
                           },
-                          child: Text("학교이름을 대구로 검색", style: TextStyle(fontSize: 10.0),)),
+                          child: Text("학교이름을 '대구'로 검색", style: TextStyle(fontSize: 10.0),)),
                       Text("조회수 낮은 순", style: TextStyle(fontSize: 20, color: Colors.red),),
                       ElevatedButton(
                           onPressed: () async {
@@ -371,21 +371,21 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             final result = await CustomAPIService.searchPost("title", "테스트", "lowviews", index);
                             setSearchResult(result);
                           },
-                          child: Text("제목을 테스트로 검색", style: TextStyle(fontSize: 10.0),)),
+                          child: Text("제목을 '테스트'로 검색", style: TextStyle(fontSize: 10.0),)),
                       ElevatedButton(
                           onPressed: () async {
                             int index = 0;
                             final result = await CustomAPIService.searchPost("nickname", "테스트", "lowviews", index);
                             setSearchResult(result);
                           },
-                          child: Text("닉네임을 테스트로 검색", style: TextStyle(fontSize: 10.0),)),
+                          child: Text("닉네임을 '테스트'로 검색", style: TextStyle(fontSize: 10.0),)),
                       ElevatedButton(
                           onPressed: () async {
                             int index = 0;
                             final result = await CustomAPIService.searchPost("school", "대구", "lowviews", index);
                             setSearchResult(result);
                           },
-                          child: Text("학교이름을 대구로 검색", style: TextStyle(fontSize: 10.0),)),
+                          child: Text("학교이름을 '대구'로 검색", style: TextStyle(fontSize: 10.0),)),
                     ],
                   ),
                   Padding(padding: EdgeInsets.all(h/50)),
@@ -398,21 +398,21 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             final result = await CustomAPIService.searchPost("title", "테스트", "highlikes", index);
                             setSearchResult(result);
                           },
-                          child: Text("제목을 테스트로 검색", style: TextStyle(fontSize: 10.0),)),
+                          child: Text("제목을 '테스트'로 검색", style: TextStyle(fontSize: 10.0),)),
                       ElevatedButton(
                           onPressed: () async {
                             int index = 0;
                             final result = await CustomAPIService.searchPost("nickname", "테스트", "highlikes", index);
                             setSearchResult(result);
                           },
-                          child: Text("닉네임을 테스트로 검색", style: TextStyle(fontSize: 10.0),)),
+                          child: Text("닉네임을 '테스트'로 검색", style: TextStyle(fontSize: 10.0),)),
                       ElevatedButton(
                           onPressed: () async {
                             int index = 0;
                             final result = await CustomAPIService.searchPost("school", "대구", "highlikes", index);
                             setSearchResult(result);
                           },
-                          child: Text("학교이름을 대구로 검색", style: TextStyle(fontSize: 10.0),)),
+                          child: Text("학교이름을 '대구'로 검색", style: TextStyle(fontSize: 10.0),)),
                       Text("좋아요 낮은 순", style: TextStyle(fontSize: 20, color: Colors.red),),
                       ElevatedButton(
                           onPressed: () async {
@@ -420,21 +420,21 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             final result = await CustomAPIService.searchPost("title", "테스트", "lowlikes", index);
                             setSearchResult(result);
                           },
-                          child: Text("제목을 테스트로 검색", style: TextStyle(fontSize: 10.0),)),
+                          child: Text("제목을 '테스트'로 검색", style: TextStyle(fontSize: 10.0),)),
                       ElevatedButton(
                           onPressed: () async {
                             int index = 0;
                             final result = await CustomAPIService.searchPost("nickname", "테스트", "lowlikes", index);
                             setSearchResult(result);
                           },
-                          child: Text("닉네임을 테스트로 검색", style: TextStyle(fontSize: 10.0),)),
+                          child: Text("닉네임을 '테스트'로 검색", style: TextStyle(fontSize: 10.0),)),
                       ElevatedButton(
                           onPressed: () async {
                             int index = 0;
                             final result = await CustomAPIService.searchPost("school", "대구", "lowlikes", index);
                             setSearchResult(result);
                           },
-                          child: Text("학교이름을 대구로 검색", style: TextStyle(fontSize: 10.0),)),
+                          child: Text("학교이름을 '대구'로 검색", style: TextStyle(fontSize: 10.0),)),
                     ],
                   ),
                 ],
@@ -447,13 +447,13 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                   onPressed: () async {
                     final result = await CustomAPIService.searchDetailPost(1000000001);
                     setState(() {
-                      _searchedDetailPostResult = "게시물 제목: ${result.title}, 작성자 닉네임: ${result.nickname}, "
-                          "도감번호: ${result.apiId}, 좋아요 수: ${result.likes}, "
-                          "조회수: ${result.views}, 작성일자/수정일자: ${result.regTime}";
+                      _searchedDetailPostResult = "게시물 제목: ${result.title}\n 작성자 닉네임: ${result.nickname}\n "
+                          "도감번호: ${result.apiId}\n 좋아요 수: ${result.likes}\n "
+                          "조회수: ${result.views}\n 작성일자/수정일자: ${result.regTime}\n";
                       _searchedDetailPostImage = result.imgURL;
                     });
                   },
-                  child: Text("게시물id가 1000000001인 게시물 상세보기 조회")),
+                  child: Text("API 서버에서 게시물id가 1000000001인 게시물을 상세보기 조회")),
               Text(_searchedDetailPostResult),
               _searchedDetailPostImage == "" ? Text("로딩 전") : Image.network(_searchedDetailPostImage, height: 200,),
               ElevatedButton(
@@ -464,11 +464,11 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                       else _likeButtonResult = "좋아요 클릭 해제됨";
                     });
                   },
-                  child: Text("게시물id 1000000001인 게시물 좋아요 클릭")),
+                  child: Text("API 서버에서 게시물id 1000000001인 게시물을 좋아요 요청")),
               Text(_likeButtonResult),
               ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).pushReplacement(
+                    Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => SelectScreen()
                       )
