@@ -21,6 +21,7 @@ dependencies:
   http: 0.13.3
   flutter_dotenv: ^5.0.0
   xml_parser: 1.0.0
+  flutter_html: ^2.1.0
 
 dev_dependencies:
   flutter_test:

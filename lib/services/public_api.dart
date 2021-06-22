@@ -42,14 +42,15 @@ class PublicAPIService {
       final searched = result['data'];
       final item = XMLParser.parseXMLItem(searched);
       return SearchedDetailItem(
-          item.getChild('lvbngKrlngNm')!.text != null ? item.getChild('lvbngKrlngNm')!.text! : "",
-          item.getChild('lvbngTpcdNm')!.text!,
-          item.getChild('famlKrlngNm')!.text!,
-          item.getChild('hbttNm')!.text != null ? item.getChild('hbttNm')!.text! : "",
-          item.getChild('lvbngDscrt')!.text != null ? item.getChild('lvbngDscrt')!.text! : "",
-          item.getChild('imgUrl1')!.text!,
-          item.getChild('imgUrl2')!.text!,
-          item.getChild('imgUrl3')!.text!,);
+        apiId,
+        item.getChild('lvbngKrlngNm')!.text != null ? item.getChild('lvbngKrlngNm')!.text! : "",
+        item.getChild('lvbngTpcdNm')!.text!,
+        item.getChild('famlKrlngNm')!.text!,
+        item.getChild('hbttNm')!.text != null ? item.getChild('hbttNm')!.text! : "",
+        item.getChild('lvbngDscrt')!.text != null ? item.getChild('lvbngDscrt')!.text! : "",
+        item.getChild('imgUrl1')!.text!,
+        item.getChild('imgUrl2')!.text!,
+        item.getChild('imgUrl3')!.text!,);
     }
   }
 

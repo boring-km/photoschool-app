@@ -4,6 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:photoschool/domain/searched_detail_item.dart';
 import 'package:photoschool/domain/searched_item.dart';
 import 'package:photoschool/res/colors.dart';
+import 'package:photoschool/screens/creature_detail_screen.dart';
 import 'package:photoschool/services/public_api.dart';
 import 'package:photoschool/widgets/app_bar_base.dart';
 
@@ -77,7 +78,7 @@ class _FindCreatureState extends State<FindCreatureScreen> {
                           decoration: InputDecoration(
                               border: InputBorder.none,
                               labelText:
-                              '동물, 식물, 곤충의 이름을 입력해주세요 ex) 사자, 소나무, 나방',
+                              '동물, 식물, 곤충의 이름을 입력해주세요 ex) 호랑이, 소나무, 나방',
                               labelStyle: TextStyle(color: Colors.black45),
                               fillColor: Colors.black),
                           style: TextStyle(color: Colors.black),
@@ -120,33 +121,42 @@ class _FindCreatureState extends State<FindCreatureScreen> {
       final type = item.type;
       final imageURL = item.imgUrl1;
 
-      final widget = Container(
-        height: 200,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(base/10)),
-          border: Border.all(width: 2, color: Colors.black),
-        ),
-        child: Padding(
-          padding: EdgeInsets.all(base/5),
-          child: Row(
-            children: [
-              Image.network(imageURL, height: 150, loadingBuilder: (context, child, progress) {
-                if (progress != null) {
-                  return CircularProgressIndicator(
-                    backgroundColor: Colors.black12,
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
-                    value: progress.cumulativeBytesLoaded / progress.expectedTotalBytes!,
-                  );
-                } else {
-                  return child;
-                }
-              }),
-              Padding(padding: EdgeInsets.symmetric(horizontal: base/5)),
-              Text("이름: $name", style: TextStyle(fontSize: base/5, color: Colors.black),),
-              Padding(padding: EdgeInsets.symmetric(horizontal: base/2)),
-              Text("타입: $type", style: TextStyle(fontSize: base/8, color: Colors.black),)
-            ],
+      final widget = GestureDetector(
+        onTap: () {
+          Navigator.of(context).push(
+              MaterialPageRoute(
+                  builder: (context) => CreatureDetailScreen(item)
+              )
+          );
+        },
+        child: Container(
+          height: 200,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.all(Radius.circular(base/10)),
+            border: Border.all(width: 2, color: Colors.black),
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(base/5),
+            child: Row(
+              children: [
+                Image.network(imageURL, height: 150, loadingBuilder: (context, child, progress) {
+                  if (progress != null) {
+                    return CircularProgressIndicator(
+                      backgroundColor: Colors.black12,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+                      value: progress.cumulativeBytesLoaded / progress.expectedTotalBytes!,
+                    );
+                  } else {
+                    return child;
+                  }
+                }),
+                Padding(padding: EdgeInsets.symmetric(horizontal: base/5)),
+                Text("이름: $name", style: TextStyle(fontSize: base/5, color: Colors.black),),
+                Padding(padding: EdgeInsets.symmetric(horizontal: base/2)),
+                Text("타입: $type", style: TextStyle(fontSize: base/8, color: Colors.black),)
+              ],
+            ),
           ),
         ),
       );
@@ -173,7 +183,7 @@ class _FindCreatureState extends State<FindCreatureScreen> {
             itemBuilder: (context, index) {
               return resultList[index];
             },
-          ),
+          )
         )
     );
   }
@@ -181,7 +191,6 @@ class _FindCreatureState extends State<FindCreatureScreen> {
   getCreatureSearchedListView(String text, int page) async {
     List<SearchedCreature> list = await PublicAPIService.getChildBookSearch(text, page);
     received = list.length;
-    print(received);
     for (var item in list) {
       final result = await PublicAPIService.getChildBookDetail(item.apiId);
       if (result != false) {
