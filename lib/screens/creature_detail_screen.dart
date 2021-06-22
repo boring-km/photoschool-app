@@ -171,24 +171,32 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
               child: null
             ),
           )
-        : Padding(
-            padding: EdgeInsets.symmetric(horizontal: baseSize / 3),
-            child: Container(
-              width: baseSize * 4,
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(boxRounded)),
-                  border: Border.all(color: Colors.black, width: 2.0)),
-              child: Padding(
-                padding: EdgeInsets.all(4.0),
-                child: Center(
-                    child: Image.network(
-                  imageUrl,
-                  height: baseSize * 3,
-                )),
+        : Material(
+          color: Colors.white,
+          child: InkWell(
+            onTap: () {
+              _showFullImageDialog(context, imageUrl);
+            },
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: baseSize / 3),
+              child: Container(
+                width: baseSize * 4,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(boxRounded)),
+                    border: Border.all(color: Colors.black, width: 2.0)),
+                child: Padding(
+                  padding: EdgeInsets.all(4.0),
+                  child: Center(
+                      child: Image.network(
+                        imageUrl,
+                        height: baseSize * 3,
+                      )),
+                ),
               ),
             ),
-          );
+          ),
+    );
   }
 
   _showSelectSource(BuildContext context) {
@@ -352,6 +360,27 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                 },
                 child: Text('업로드'),
               )
+            ],
+          );
+        });
+  }
+
+  _showFullImageDialog(BuildContext parentContext, String imageURL) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: Image.network(imageURL),
+            actions: [
+              TextButton(
+                style: ButtonStyle(
+                  foregroundColor: MaterialStateProperty.all<Color>(Colors.grey),
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('닫기'),
+              ),
             ],
           );
         });
