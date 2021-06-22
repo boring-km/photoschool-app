@@ -2,76 +2,148 @@ import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:photoschool/domain/post_response.dart';
+import 'package:photoschool/domain/school_rank.dart';
+import 'package:photoschool/domain/school_search_response.dart';
+import 'package:photoschool/domain/searched_post_detail.dart';
 import 'package:photoschool/utils/http_custom.dart';
 
 class CustomAPIService {
-  static Future<String> checkUserRegistered() async {
+  static Future checkUserRegistered() async {
     final idToken = await FirebaseAuth.instance.currentUser!.getIdToken();
     final domain = dotenv.env["server_domain"]!;
     final result = await Http.getWithJWT("$domain/check", idToken);
-    return _getResult(result);
+    return _getResult(result)['isRegistered'];
   }
 
   static Future<String> getNickName() async {
     final idToken = await FirebaseAuth.instance.currentUser!.getIdToken();
     final domain = dotenv.env["server_domain"]!;
     final result = await Http.getWithJWT("$domain/nickname", idToken);
-    final json = jsonDecode(_getResult(result));
+    final json = _getResult(result);
     return json['nickname'];
   }
 
-  static Future<String> searchSchool(String text) async {
+  static Future<List<SchoolSearchResponse>> searchSchool(String text) async {
     final domain = dotenv.env["server_domain"]!;
-    final result = await Http.get("$domain/school/$text");
-    return _getResult(result);
+    final httpResult = await Http.get("$domain/school/$text");
+    final json = _getResult(httpResult);
+    final schools = json['schools'];
+    List<SchoolSearchResponse> resultList = [];
+    for (var school in schools) {
+      resultList.add(SchoolSearchResponse(school['schoolId'], school['region'], school['schoolName']));
+    }
+    return resultList;
   }
 
-  // TODO: 반환형 Post
-  static Future<String> getMyPosts(int index) async {
+  static Future<Map<String, dynamic>> getMyPosts(int index) async {
     final domain = dotenv.env["server_domain"]!;
     final idToken = await FirebaseAuth.instance.currentUser!.getIdToken();
     final result = await Http.getWithJWT("$domain/mypost/$index", idToken);
-    return _getResult(result);
+    final json =  _getResult(result);
+
+    final numOfPosts = json['numOfMyPosts'];
+    final schoolName = json['schoolName'];
+    final posts = json['posts'];
+    List<PostResponse> postList = [];
+    for (var item in posts) {
+      postList.add(PostResponse(item['postId'], item['title'], item['likes'], item['views'], item['tbImgURL'], item['regTime']));
+    }
+    return { "numOfPosts": numOfPosts, "schoolName": schoolName, "posts": postList };
   }
 
-  // TODO: 반환형 Post
-  static Future<String> getOthersPostBy(int apiId, int index) async {
+  static Future<Map<String, dynamic>> getOthersPostBy(int apiId, int index) async {
     final domain = dotenv.env["server_domain"]!;
     final result = await Http.get("$domain/others/$apiId/$index");
-    return _getResult(result);
+    final json = _getResult(result);
+
+    final numOfPosts = json['numOfPosts'];
+    final posts = json['posts'];
+    List<PostResponse> postList = [];
+    for (var item in posts) {
+      postList.add(PostResponse(item['postId'], item['title'], item['likes'], item['views'], item['tbImgURL'], item['regTime']));
+    }
+    return { "numOfPosts": numOfPosts, "posts": postList };
   }
 
-  // TODO: 반환형 Post
-  static Future<String> getAwardPosts(int index) async {
+  static Future<Map<String, dynamic>> getAwardPosts(int index) async {
     final domain = dotenv.env["server_domain"]!;
     final result = await Http.get("$domain/awards/$index");
-    return _getResult(result);
+    final json = _getResult(result);
+    final numOfPosts = json['numOfPosts'];
+    final posts = json['posts'];
+    List<PostResponse> postList = [];
+    for (var item in posts) {
+      var postResponse = PostResponse(item['postId'], item['title'], item['likes'], item['views'], item['tbImgURL'], item['regTime']);
+      postResponse.nickname = item['nickname'];
+      postResponse.awardName = item['awardName'];
+      postList.add(postResponse);
+    }
+    return { "numOfPosts": numOfPosts, "posts": postList };
   }
 
-  // TODO: 반환형 School
-  static Future<String> getSchoolRank() async {
+  static Future<List<SchoolRank>> getSchoolRank() async {
     final domain = dotenv.env["server_domain"]!;
     final result = await Http.get("$domain/rank");
-    return _getResult(result);
+    final json = _getResult(result);
+    final schools = json['topSchools'];
+    List<SchoolRank> schoolList = [];
+    for (var item in schools) {
+      schoolList.add(SchoolRank(item['region'], item['schoolName'], item['sumOfViews'], item['sumOfStudents']));
+    }
+    return schoolList;
   }
 
-  // TODO: 반환형 Post
-  static Future<String> getAllPosts(int index) async {
+  static Future<Map<String, dynamic>> getAllPosts(int index) async {
     final domain = dotenv.env["server_domain"]!;
     final result = await Http.get("$domain/post/all/$index");
-    return _getResult(result);
+    final json = _getResult(result);
+
+    final numOfPosts = json['numOfPosts'];
+    final posts = json['posts'];
+    List<PostResponse> postList = [];
+    for (var item in posts) {
+      var postResponse = PostResponse(item['postId'], item['title'], item['likes'], item['views'], item['tbImgURL'], item['regTime']);
+      postResponse.nickname = item['nickname'];
+      postList.add(postResponse);
+    }
+    return { "numOfPosts": numOfPosts, "posts": postList };
   }
 
-  // TODO: 반환형 Post
-  static Future<String> searchPost(String searchType, String searchText, String sortType, int index) async {
+  static searchPost(String searchType, String searchText, String sortType, int index) async {
     final domain = dotenv.env["server_domain"]!;
     final result = await Http.get("$domain/post/$searchType/$sortType/$searchText/$index");
-    return _getResult(result);
+    final json = _getResult(result);
+
+    final posts = json['posts'];
+    List<PostResponse> postList = [];
+    for (var item in posts) {
+      var postResponse = PostResponse(item['postId'], item['title'], item['likes'], item['views'], item['tbImgURL'], item['regTime']);
+      postResponse.nickname = item['nickname'];
+      postList.add(postResponse);
+    }
+    return postList;
   }
 
-  static String _getResult(Map<String, dynamic> result) {
+  static Future<SearchedPostDetail> searchDetailPost(int postId) async {
+    final domain = dotenv.env["server_domain"]!;
+    final result = await Http.get("$domain/post/detail/$postId");
+    final json = _getResult(result);
+    final post = json['post'];
+    final detailResult = SearchedPostDetail(post['title'], post['nickname'], post['apiId'], post['likes'], post['views'], post['imgURL'], post['regTime']);
+    return detailResult;
+  }
+
+  static Future likeOrNotLike(int postId) async {
+    final domain = dotenv.env["server_domain"]!;
+    final idToken = await FirebaseAuth.instance.currentUser!.getIdToken();
+    final result = await Http.postWithJWT("$domain/post/like", idToken, { "postId": "$postId" });
+    return _getResult(result)['result'];
+  }
+
+  static dynamic _getResult(Map<String, dynamic> result) {
     if (result['error'] == null) {
-      return result['data'];
+      return jsonDecode(result['data']);
     } else {
       return '${result['errorCode']}';
     }
