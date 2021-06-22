@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:photoschool/res/colors.dart';
 import 'package:photoschool/widgets/app_bar_base.dart';
 
-import 'find_creature_screen.dart';
+import 'creature_find_screen.dart';
 
 class SelectScreen extends StatefulWidget {
   @override
