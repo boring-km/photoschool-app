@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:photoschool/res/colors.dart';
 import 'package:photoschool/widgets/app_bar_base.dart';
 
-import 'creature_find_screen.dart';
+import 'search_creature_screen.dart';
 
 class SelectScreen extends StatefulWidget {
   @override
@@ -18,7 +18,7 @@ class _SelectScreenState extends State<SelectScreen> {
 
     double boxFontSize = w > h ? h / 15 : w / 15;
     double boxHeight = w > h ? h * (3/5) : h * (4/5);
-    double boxWidth = w > h ? w * (2/5) : h / 4;
+    double boxWidth = w * (2/5);
 
     double boxRounded = w > h ? h / 30 : w / 30;
 
@@ -58,12 +58,12 @@ class _SelectScreenState extends State<SelectScreen> {
                       onPressed: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => FindCreatureScreen()
+                            builder: (context) => SearchCreatureScreen()
                           )
                         );
                       },
                       child: Text(
-                        "생물도감 보기",
+                        "생물도감\n보기",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             color: Colors.black,

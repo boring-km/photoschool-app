@@ -8,12 +8,12 @@ import 'package:photoschool/screens/creature_detail_screen.dart';
 import 'package:photoschool/services/public_api.dart';
 import 'package:photoschool/widgets/app_bar_base.dart';
 
-class FindCreatureScreen extends StatefulWidget {
+class SearchCreatureScreen extends StatefulWidget {
   @override
   _FindCreatureState createState() => _FindCreatureState();
 }
 
-class _FindCreatureState extends State<FindCreatureScreen> {
+class _FindCreatureState extends State<SearchCreatureScreen> {
   var _creatureSearchController = TextEditingController();
   int _currentPage = 1;
   int received = -1;
@@ -138,9 +138,12 @@ class _FindCreatureState extends State<FindCreatureScreen> {
           ),
           child: Padding(
             padding: EdgeInsets.all(base/5),
-            child: Row(
+            child: ListView(
+              shrinkWrap: true,
+              physics: ClampingScrollPhysics(),
+              scrollDirection: Axis.horizontal,
               children: [
-                Image.network(imageURL, height: 150, loadingBuilder: (context, child, progress) {
+                Image.network(imageURL, width: 150, loadingBuilder: (context, child, progress) {
                   if (progress != null) {
                     return CircularProgressIndicator(
                       backgroundColor: Colors.black12,
@@ -152,9 +155,9 @@ class _FindCreatureState extends State<FindCreatureScreen> {
                   }
                 }),
                 Padding(padding: EdgeInsets.symmetric(horizontal: base/5)),
-                Text("이름: $name", style: TextStyle(fontSize: base/5, color: Colors.black),),
+                Center(child: Text("이름: $name", style: TextStyle(fontSize: base/5, color: Colors.black),)),
                 Padding(padding: EdgeInsets.symmetric(horizontal: base/2)),
-                Text("타입: $type", style: TextStyle(fontSize: base/8, color: Colors.black),)
+                Center(child: Text("타입: $type", style: TextStyle(fontSize: base/8, color: Colors.black),))
               ],
             ),
           ),

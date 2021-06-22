@@ -288,7 +288,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
               ),
               Padding(padding: EdgeInsets.all(h/50)),
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Padding(padding: EdgeInsets.all(h/50)),
                   Column(
