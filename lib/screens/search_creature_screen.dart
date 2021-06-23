@@ -83,6 +83,11 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
                               fillColor: Colors.black),
                           style: TextStyle(color: Colors.black),
                           controller: _creatureSearchController,
+                          onSubmitted: (String str) async {
+                            _currentPage = 1;
+                            dataList.clear();
+                            await getCreatureSearchedListView(str, _currentPage);
+                          },
                         ),
                       ),
                     ),
