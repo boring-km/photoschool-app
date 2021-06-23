@@ -61,7 +61,9 @@ class CustomAPIService {
     final posts = json['posts'];
     List<PostResponse> postList = [];
     for (var item in posts) {
-      postList.add(PostResponse(item['postId'], item['title'], item['likes'], item['views'], item['tbImgURL'], item['regTime']));
+      var postResponse = PostResponse(item['postId'], item['title'], item['likes'], item['views'], item['tbImgURL'], item['regTime']);
+      postResponse.nickname = item['nickname'];
+      postList.add(postResponse);
     }
     return { "numOfPosts": numOfPosts, "posts": postList };
   }
