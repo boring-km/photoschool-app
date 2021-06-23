@@ -28,10 +28,10 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
 
   File? _imageFileToUpload;
   int _othersIndex = 0;
-  int numOfPosts = 0;
-  List<Widget> _othersImageCardList = [];
+  List<Widget> _othersImageCardList = [Container()];
   double baseSize = 100;
   File? _thumbnailFileToUpload;
+  int received = -1;
 
   _CreatureDetailScreenState(this._creature);
 
@@ -182,11 +182,29 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                               Expanded(
                                 child: Container(
                                   height: 350,
-                                  child: ListView(
-                                    shrinkWrap: true,
-                                    scrollDirection: Axis.horizontal,
-                                    children: _othersImageCardList,
-                                  ),
+                                  child: NotificationListener<ScrollEndNotification> (
+                                    onNotification: (scrollEnd) {
+                                      var metrics = scrollEnd.metrics;
+                                      if (metrics.atEdge) {
+                                        if (metrics.pixels != 0) {
+                                          print('page: $_othersIndex, received: $received');
+                                          if (received == -1 || received == 5) {
+                                            _othersIndex++;
+                                            _buildOthersCardList(_creature.apiId);
+                                          }
+                                        }
+                                      }
+                                      return true;
+                                    },
+                                    child: ListView.builder(
+                                      shrinkWrap: true,
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: _othersImageCardList.length,
+                                      itemBuilder: (context, index) {
+                                        return _othersImageCardList[index];
+                                      },
+                                    ),
+                                  )
                               ))
                             ],
                           ),
@@ -514,9 +532,8 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
 
   _buildOthersCardList(int apiId) async {
     final result = await CustomAPIService.getOthersPostBy(apiId, _othersIndex);
-    numOfPosts = result['numOfPosts'] as int;
     final List<PostResponse> posts = result['posts'] as List<PostResponse>;
-
+    received = posts.length;
     List<Widget> resultList = [];
     for (var item in posts) {
       final widget = Padding(
@@ -588,7 +605,7 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
       resultList.add(widget);
     }
     setState(() {
-      _othersImageCardList = resultList;
+      _othersImageCardList.addAll(resultList);
     });
   }
 
