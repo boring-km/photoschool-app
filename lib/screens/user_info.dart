@@ -189,7 +189,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                   onPressed: () async {
                     int index = 0;
                     final result = await CustomAPIService.getMyPosts(index);
-                    String text = "조회된 게시물 길이: ${result['numOfPosts']}, 학교 이름: ${result['schoolName']}\n";
+                    String text = "학교 이름: ${result['schoolName']}\n";
                     List<Widget> imageList = [];
                     for (var item in result['posts']) {
                       text += "게시물 번호: ${item.postId}, 게시물 제목: ${item.title}, 좋아요: ${item.likes}, 조회수: ${item.views}, 작성일자/수정일자: ${item.regTime}\n";
@@ -212,7 +212,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                     int index = 0;
                     int apiId = 1234;
                     final result = await CustomAPIService.getOthersPostBy(apiId, index);
-                    String text = "조회된 게시물 길이: ${result['numOfPosts']}\n";
+                    String text = "";
                     List<Widget> imageList = [];
                     for (var item in result['posts']) {
                       text += "게시물 번호: ${item.postId}, 게시물 제목: ${item.title}, 좋아요: ${item.likes}, 조회수: ${item.views}, 작성일자/수정일자: ${item.regTime}\n";
@@ -234,7 +234,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                   onPressed: () async {
                     int index = 0;
                     final result = await CustomAPIService.getAwardPosts(index);
-                    String text = "조회된 게시물 길이: ${result['numOfPosts']}\n";
+                    String text = "";
                     List<Widget> imageList = [];
                     for (var item in result['posts']) {
                       text += "게시물 번호: ${item.postId}, 게시물 제목: ${item.title}, 좋아요: ${item.likes}, 조회수: ${item.views}, 작성일자/수정일자: ${item.regTime}\n";
@@ -268,7 +268,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                   onPressed: () async {
                     int index = 0;
                     final result = await CustomAPIService.getAllPosts(index);
-                    String text = "게시물 전체 길이: ${result['numOfPosts']}\n";
+                    String text = "";
                     final posts = result['posts'];
                     List<Widget> imageList = [];
                     for (var item in posts) {
