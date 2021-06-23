@@ -22,6 +22,7 @@ dependencies:
   flutter_dotenv: ^5.0.0
   xml_parser: 1.0.0
   flutter_html: ^2.1.0
+  flutter_native_image: ^0.0.6
 
 dev_dependencies:
   flutter_test:
@@ -40,6 +41,11 @@ flutter:
     - family: KCCDodam
       fonts:
         - asset: fonts/KCCDodamdodam.ttf
+    - family: DdoDdo
+      fonts:
+        - asset: fonts/또또사랑 OTF Medium.otf
+        - asset: fonts/또또사랑 OTF Bold.otf
+          weight: 700
   assets:
     - assets/
     - .env
