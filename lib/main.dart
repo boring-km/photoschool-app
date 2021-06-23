@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.indigo,
         brightness: Brightness.dark,
+        fontFamily: 'DdoDdo'
       ),
       home: SignInScreen(),
     );
