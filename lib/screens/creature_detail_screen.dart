@@ -369,24 +369,41 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
     return showDialog(
         context: context,
         builder: (context) {
+          var baseWidth = MediaQuery.of(parentContext).size.width / 10;
+          var baseHeight = MediaQuery.of(parentContext).size.height / 10;
           return AlertDialog(
-            content: InteractiveViewer(
-              panEnabled: false,
-              minScale: 0.5,
-              maxScale: 4,
-              child: Image.network(imageURL),
-            ),
-            actions: [
-              TextButton(
-                style: ButtonStyle(
-                  foregroundColor: MaterialStateProperty.all<Color>(Colors.grey),
+            content: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                InteractiveViewer(
+                  panEnabled: false,
+                  minScale: 0.5,
+                  maxScale: 4,
+                  child: Image.network(imageURL, height: baseHeight*5,),
                 ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text('닫기'),
-              ),
-            ],
+                Padding(
+                  padding: EdgeInsets.only(top: baseWidth/4),
+                  child: Container(
+                    width: baseWidth * 3,
+                    height: baseHeight,
+                    child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                            primary: Colors.white,
+                            onSurface: Colors.white70,
+                            side: BorderSide(
+                                style: BorderStyle.none,
+                                width: 2.0,
+                                color: Colors.black
+                            )
+                        ),
+                        child: Text("닫기", style: TextStyle(fontSize: baseWidth/4, color: Colors.black),)),
+                  ),
+                )
+              ],
+            ),
           );
         });
   }
