@@ -88,7 +88,7 @@ class CustomAPIService {
     final schools = json['topSchools'];
     List<SchoolRank> schoolList = [];
     for (var item in schools) {
-      schoolList.add(SchoolRank(item['region'], item['schoolName'], item['sumOfViews'], item['sumOfStudents']));
+      schoolList.add(SchoolRank(item['region'], item['schoolName'], item['sumOfViews'], item['sumOfPosts']));
     }
     return schoolList;
   }

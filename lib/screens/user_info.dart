@@ -256,13 +256,13 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                     final result = await CustomAPIService.getSchoolRank();
                     String text = "";
                     for (var i = 0; i < result.length; i++) {
-                      text += "학교순위: ${i+1}, 학교지역: ${result[i].region}, 학교이름: ${result[i].schoolName}, 조회수 총합: ${result[i].sumOfViews}, 학생수 합: ${result[i].sumOfStudents}\n";
+                      text += "학교순위: ${i+1}, 학교지역: ${result[i].region}, 학교이름: ${result[i].schoolName}, 조회수 총합: ${result[i].sumOfViews}, 게시물 수의 합: ${result[i].sumOfPosts}\n";
                     }
                     setState(() {
                       _schoolRankResult = text;
                     });
                   },
-                  child: Text("API 서버에서 학교 랭킹 구하기")),
+                  child: Text("API 서버에서 학교 랭킹 구하기 (조회수가 높고, 게시물 수가 많을수록)")),
               Text(_schoolRankResult),
               ElevatedButton(
                   onPressed: () async {
