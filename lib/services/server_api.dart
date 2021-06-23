@@ -42,14 +42,13 @@ class CustomAPIService {
     final result = await Http.getWithJWT("$domain/mypost/$index", idToken);
     final json =  _getResult(result);
 
-    final numOfPosts = json['numOfMyPosts'];
     final schoolName = json['schoolName'];
     final posts = json['posts'];
     List<PostResponse> postList = [];
     for (var item in posts) {
       postList.add(PostResponse(item['postId'], item['title'], item['likes'], item['views'], item['tbImgURL'], item['regTime']));
     }
-    return { "numOfPosts": numOfPosts, "schoolName": schoolName, "posts": postList };
+    return { "schoolName": schoolName, "posts": postList };
   }
 
   static Future<Map<String, dynamic>> getOthersPostBy(int apiId, int index) async {
@@ -57,7 +56,6 @@ class CustomAPIService {
     final result = await Http.get("$domain/others/$apiId/$index");
     final json = _getResult(result);
 
-    final numOfPosts = json['numOfPosts'];
     final posts = json['posts'];
     List<PostResponse> postList = [];
     for (var item in posts) {
@@ -65,14 +63,13 @@ class CustomAPIService {
       postResponse.nickname = item['nickname'];
       postList.add(postResponse);
     }
-    return { "numOfPosts": numOfPosts, "posts": postList };
+    return { "posts": postList };
   }
 
   static Future<Map<String, dynamic>> getAwardPosts(int index) async {
     final domain = dotenv.env["server_domain"]!;
     final result = await Http.get("$domain/awards/$index");
     final json = _getResult(result);
-    final numOfPosts = json['numOfPosts'];
     final posts = json['posts'];
     List<PostResponse> postList = [];
     for (var item in posts) {
@@ -81,7 +78,7 @@ class CustomAPIService {
       postResponse.awardName = item['awardName'];
       postList.add(postResponse);
     }
-    return { "numOfPosts": numOfPosts, "posts": postList };
+    return { "posts": postList };
   }
 
   static Future<List<SchoolRank>> getSchoolRank() async {
@@ -101,7 +98,6 @@ class CustomAPIService {
     final result = await Http.get("$domain/post/all/$index");
     final json = _getResult(result);
 
-    final numOfPosts = json['numOfPosts'];
     final posts = json['posts'];
     List<PostResponse> postList = [];
     for (var item in posts) {
@@ -109,7 +105,7 @@ class CustomAPIService {
       postResponse.nickname = item['nickname'];
       postList.add(postResponse);
     }
-    return { "numOfPosts": numOfPosts, "posts": postList };
+    return { "posts": postList };
   }
 
   static searchPost(String searchType, String searchText, String sortType, int index) async {
@@ -140,6 +136,21 @@ class CustomAPIService {
     final domain = dotenv.env["server_domain"]!;
     final idToken = await FirebaseAuth.instance.currentUser!.getIdToken();
     final result = await Http.postWithJWT("$domain/post/like", idToken, { "postId": "$postId" });
+    return _getResult(result)['result'];
+  }
+
+  static Future<int> registerPost(int apiId, String title) async {
+    final domain = dotenv.env["server_domain"]!;
+    final idToken = await FirebaseAuth.instance.currentUser!.getIdToken();
+    final result = await Http.postWithJWT("$domain/register/post", idToken, { "apiId": "$apiId", "title": title });
+    return _getResult(result)['result'];
+  }
+
+  static Future<bool> updateImage(int postId, String tbImgURL, String imgURL) async {
+    final domain = dotenv.env["server_domain"]!;
+    final idToken = await FirebaseAuth.instance.currentUser!.getIdToken();
+    final result = await Http.patchWithJWT("$domain/update/image",
+        idToken, { "postId": "$postId", "tbImgURL": tbImgURL, "imgURL": imgURL });
     return _getResult(result)['result'];
   }
 

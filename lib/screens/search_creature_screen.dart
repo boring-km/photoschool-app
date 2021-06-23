@@ -160,7 +160,7 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
                   }
                 }),
                 Padding(padding: EdgeInsets.symmetric(horizontal: base/5)),
-                Center(child: Text("이름: $name", style: TextStyle(fontSize: base/5, color: Colors.black),)),
+                Center(child: Text("이름: $name", style: TextStyle(fontSize: base/5, fontWeight: FontWeight.w700, color: Colors.black),)),
                 Padding(padding: EdgeInsets.symmetric(horizontal: base/2)),
                 Center(child: Text("타입: $type", style: TextStyle(fontSize: base/8, color: Colors.black),))
               ],
