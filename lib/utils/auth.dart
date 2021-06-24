@@ -2,15 +2,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:photoschool/screens/user_info.dart';
+import '../screens/user_info.dart';
 
 class Authentication {
   static Future<FirebaseApp> initializeFirebase({
     required BuildContext context,
   }) async {
-    FirebaseApp firebaseApp = await Firebase.initializeApp();
+    var firebaseApp = await Firebase.initializeApp();
 
-    User? user = FirebaseAuth.instance.currentUser;
+    var user = FirebaseAuth.instance.currentUser;
 
     if (user != null) {
       Navigator.of(context).pushReplacement(
@@ -26,16 +26,16 @@ class Authentication {
   }
 
   static Future<User?> signInWithGoogle({required BuildContext context}) async {
-    FirebaseAuth auth = FirebaseAuth.instance;
+    var auth = FirebaseAuth.instance;
     User? user;
 
-    final GoogleSignIn googleSignIn = GoogleSignIn();
+    final googleSignIn = GoogleSignIn();
 
-    final GoogleSignInAccount? googleSignInAccount =
+    final googleSignInAccount =
     await googleSignIn.signIn();
 
     if (googleSignInAccount != null) {
-      final GoogleSignInAuthentication googleSignInAuthentication =
+      final googleSignInAuthentication =
       await googleSignInAccount.authentication;
       final AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleSignInAuthentication.accessToken,
@@ -43,7 +43,7 @@ class Authentication {
       );
 
       try {
-        final UserCredential userCredential =
+        final userCredential =
         await auth.signInWithCredential(credential);
 
         user = userCredential.user;
@@ -63,7 +63,7 @@ class Authentication {
             ),
           );
         }
-      } catch (e) {
+      } on Exception {
         ScaffoldMessenger.of(context).showSnackBar(
           customSnackBar(
             content: 'Error occurred using Google Sign-In. Try again.',
@@ -78,7 +78,7 @@ class Authentication {
   static Future<void> signOut({required BuildContext context}) async {
     try {
       await FirebaseAuth.instance.signOut();
-    } catch (e) {
+    } on Exception {
       ScaffoldMessenger.of(context).showSnackBar(
         customSnackBar(
           content: 'Error signing out. Try again.',

@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:photoschool/domain/searched_detail_item.dart';
-import 'package:photoschool/domain/searched_item.dart';
-import 'package:photoschool/res/colors.dart';
-import 'package:photoschool/screens/creature_detail_screen.dart';
-import 'package:photoschool/services/public_api.dart';
-import 'package:photoschool/widgets/app_bar_base.dart';
+
+import '../domain/searched_detail_item.dart';
+import '../res/colors.dart';
+import '../services/public_api.dart';
+import '../widgets/app_bar_base.dart';
+import 'creature_detail_screen.dart';
 
 class SearchCreatureScreen extends StatefulWidget {
   @override
@@ -14,27 +14,27 @@ class SearchCreatureScreen extends StatefulWidget {
 }
 
 class _FindCreatureState extends State<SearchCreatureScreen> {
-  var _creatureSearchController = TextEditingController();
+  final _creatureSearchController = TextEditingController();
   int _currentPage = 1;
   int received = -1;
   List<SearchedDetailItem> dataList = [];
 
   @override
   void initState() {
-    getCreatureSearchedListView(_creatureSearchController.text, _currentPage);
+    _getCreatureSearchedListView(_creatureSearchController.text, _currentPage);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
 
-    double w = MediaQuery.of(context).size.width;
-    double h = MediaQuery.of(context).size.height;
+    var w = MediaQuery.of(context).size.width;
+    var h = MediaQuery.of(context).size.height;
 
-    double base = w > h ? w / 10 : h / 10;
-    double buttonWidth = w > h ? w / 15 : h / 15;
-    double buttonHeight = w > h ? h / 15 : w / 15;
-    double buttonFontSize = w > h ? h / 40 : w / 40;
+    var base = w > h ? w / 10 : h / 10;
+    var buttonWidth = w > h ? w / 15 : h / 15;
+    var buttonHeight = w > h ? h / 15 : w / 15;
+    var buttonFontSize = w > h ? h / 40 : w / 40;
 
     return Scaffold(
       backgroundColor: CustomColors.firebaseNavy,
@@ -83,10 +83,10 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
                               fillColor: Colors.black),
                           style: TextStyle(color: Colors.black),
                           controller: _creatureSearchController,
-                          onSubmitted: (String str) async {
+                          onSubmitted: (str) async {
                             _currentPage = 1;
                             dataList.clear();
-                            await getCreatureSearchedListView(str, _currentPage);
+                            await _getCreatureSearchedListView(str, _currentPage);
                           },
                         ),
                       ),
@@ -99,7 +99,7 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
                         onPressed: () async {
                           _currentPage = 1;
                           dataList.clear();
-                          await getCreatureSearchedListView(_creatureSearchController.text, _currentPage);
+                          await _getCreatureSearchedListView(_creatureSearchController.text, _currentPage);
                         },
                         style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
@@ -112,15 +112,15 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
                 ],
               ),
             ),
-            buildListView(base)
+            _buildListView(base)
           ],
         ),
       ),
     );
   }
 
-  buildListView(double base) {
-    List<Widget> resultList = [];
+  _buildListView(double base) {
+    var resultList = <Widget>[];
     for (var item in dataList) {
       final name = item.name;
       final type = item.type;
@@ -180,7 +180,7 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
                 print('page: $_currentPage, received: $received');
                 if (received == -1 || received == 8) {
                   _currentPage++;
-                  getCreatureSearchedListView(_creatureSearchController.text, _currentPage);
+                  _getCreatureSearchedListView(_creatureSearchController.text, _currentPage);
                 }
               }
             }
@@ -196,8 +196,8 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
     );
   }
 
-  getCreatureSearchedListView(String text, int page) async {
-    List<SearchedCreature> list = await PublicAPIService.getChildBookSearch(text, page);
+  _getCreatureSearchedListView(String text, int page) async {
+    var list = await PublicAPIService.getChildBookSearch(text, page);
     received = list.length;
     for (var item in list) {
       final result = await PublicAPIService.getChildBookDetail(item.apiId);

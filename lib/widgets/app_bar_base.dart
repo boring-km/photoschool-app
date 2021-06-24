@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:photoschool/res/colors.dart';
-import 'package:photoschool/services/server_api.dart';
+import '../res/colors.dart';
+import '../services/server_api.dart';
 
 class AppBarTitle extends StatefulWidget {
   @override
@@ -17,7 +17,7 @@ class _AppBarTitleState extends State<AppBarTitle> {
   }
 
   void setNickName() async {
-    String temp = await CustomAPIService.getNickName();
+    var temp = await CustomAPIService.getNickName();
     setState(() {
       _nickname = temp;
     });
@@ -25,10 +25,10 @@ class _AppBarTitleState extends State<AppBarTitle> {
 
   @override
   Widget build(BuildContext context) {
-    double w = MediaQuery.of(context).size.width;
-    double h = MediaQuery.of(context).size.height;
+    var w = MediaQuery.of(context).size.width;
+    var h = MediaQuery.of(context).size.height;
 
-    double nicknameSize = w > h ? h / 30 : w / 30;
+    var nicknameSize = w > h ? h / 30 : w / 30;
 
     return Padding(
       padding: EdgeInsets.only(top: h/50),

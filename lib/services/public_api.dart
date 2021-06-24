@@ -1,10 +1,10 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:photoschool/domain/detail_request.dart';
-import 'package:photoschool/domain/search_request.dart';
-import 'package:photoschool/domain/searched_detail_item.dart';
-import 'package:photoschool/domain/searched_item.dart';
-import 'package:photoschool/utils/http_custom.dart';
-import 'package:photoschool/utils/xml_custom.dart';
+import '../domain/detail_request.dart';
+import '../domain/search_request.dart';
+import '../domain/searched_detail_item.dart';
+import '../domain/searched_item.dart';
+import '../utils/http_custom.dart';
+import '../utils/xml_custom.dart';
 
 class PublicAPIService {
 
@@ -13,7 +13,7 @@ class PublicAPIService {
     final serviceKey = dotenv.env["public_api_key"]!;
     final numOfRows = 8;
     final target = SearchRequest(baseUrl, serviceKey, 1, keyword, numOfRows, page).toString();
-    List<SearchedCreature> creatureList = [];
+    var creatureList = <SearchedCreature>[];
     var result = await Http.get(target);
     if (result['error'] != null) {
       print(result['errorCode']);

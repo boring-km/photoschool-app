@@ -6,11 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:photoschool/domain/post_response.dart';
-import 'package:photoschool/domain/searched_detail_item.dart';
-import 'package:photoschool/res/colors.dart';
-import 'package:photoschool/services/server_api.dart';
-import 'package:photoschool/widgets/app_bar_base.dart';
+import '../domain/post_response.dart';
+import '../domain/searched_detail_item.dart';
+import '../res/colors.dart';
+import '../services/server_api.dart';
+import '../widgets/app_bar_base.dart';
 
 class CreatureDetailScreen extends StatefulWidget {
   final SearchedDetailItem _creature;
@@ -23,12 +23,12 @@ class CreatureDetailScreen extends StatefulWidget {
 
 class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
   final SearchedDetailItem _creature;
-  var _dialogTextController = TextEditingController();
+  final _dialogTextController = TextEditingController();
   final picker = ImagePicker();
 
   File? _imageFileToUpload;
   int _othersIndex = 0;
-  List<Widget> _othersImageCardList = [Container()];
+  final List<Widget> _othersImageCardList = [Container()];
   double baseSize = 100;
   File? _thumbnailFileToUpload;
   int received = -1;
@@ -43,11 +43,11 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double w = MediaQuery.of(context).size.width;
-    double h = MediaQuery.of(context).size.height;
+    var w = MediaQuery.of(context).size.width;
+    var h = MediaQuery.of(context).size.height;
 
     baseSize = w > h ? h / 10 : w / 10;
-    double boxRounded = w > h ? h / 30 : w / 30;
+    var boxRounded = w > h ? h / 30 : w / 30;
 
     return Scaffold(
       backgroundColor: CustomColors.firebaseNavy,
@@ -253,13 +253,13 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
   }
 
   _showSelectSource(BuildContext rootContext) {
-    double w = MediaQuery.of(rootContext).size.width;
-    double h = MediaQuery.of(rootContext).size.height;
+    var w = MediaQuery.of(rootContext).size.width;
+    var h = MediaQuery.of(rootContext).size.height;
 
-    double baseSize = w > h ? h / 10 : w / 10;
-    double baseWidth = w / 10;
-    double baseHeight = h / 10;
-    double boxRounded = w > h ? h / 30 : w / 30;
+    var baseSize = w > h ? h / 10 : w / 10;
+    var baseWidth = w / 10;
+    var baseHeight = h / 10;
+    var boxRounded = w > h ? h / 30 : w / 30;
     return showDialog(
         context: rootContext,
         builder: (context) {
@@ -284,10 +284,11 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                             style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(boxRounded)), primary: Colors.white, onSurface: Colors.white30),
                             onPressed: () async {
                               final result = await pickImage(ImageSource.camera);
-                              if (result)
+                              if (result) {
                                 _showTitleDialog(context, rootContext);
-                              else
+                              } else {
                                 print("실패");
+                              }
                               // TODO 실패 시 알려주기
                             },
                             child: Padding(
@@ -320,10 +321,11 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                             style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(boxRounded)), primary: Colors.white, onSurface: Colors.white30),
                             onPressed: () async {
                               final result = await pickImage(ImageSource.gallery);
-                              if (result)
+                              if (result) {
                                 _showTitleDialog(context, rootContext);
-                              else
+                              } else {
                                 print("실패");
+                              }
                               // TODO 실패 시 알려주기
                             },
                             child: Padding(
@@ -385,16 +387,17 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
         quality: 5,
       );
       return true;
-    } else
+    } else {
       return false;
+    }
   }
 
   _showTitleDialog(BuildContext parentContext, BuildContext rootContext) {
     return showDialog(
         context: parentContext,
         builder: (context) {
-          double w = MediaQuery.of(context).size.width / 10;
-          double h = MediaQuery.of(context).size.height / 10;
+          var w = MediaQuery.of(context).size.width / 10;
+          var h = MediaQuery.of(context).size.height / 10;
 
           return AlertDialog(
             title: Text('촬영한 사진의 제목을 입력해 주세요!'),
@@ -457,7 +460,7 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
   Future<void> _uploadImage(BuildContext rootContext, BuildContext context, BuildContext parentContext, String title) async {
     if (_imageFileToUpload != null && _thumbnailFileToUpload != null) {
       // 1. 이미지 없이 등록 후 postId 받아서
-      int postId = await CustomAPIService.registerPost(_creature.apiId, title);
+      var postId = await CustomAPIService.registerPost(_creature.apiId, title);
 
       // 2. storage에 썸네일 및 원본 이미지 저장 후 url 추출
       var realImageRef = FirebaseStorage.instance.ref().child('real/$postId.png');
@@ -532,9 +535,9 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
 
   _buildOthersCardList(int apiId) async {
     final result = await CustomAPIService.getOthersPostBy(apiId, _othersIndex);
-    final List<PostResponse> posts = result['posts'] as List<PostResponse>;
+    final posts = result['posts'] as List<PostResponse>;
     received = posts.length;
-    List<Widget> resultList = [];
+    var resultList = <Widget>[];
     for (var item in posts) {
       final widget = Padding(
         padding: EdgeInsets.all(baseSize / 4),

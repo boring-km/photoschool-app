@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:photoschool/res/colors.dart';
-import 'package:photoschool/widgets/app_bar_base.dart';
+import '../res/colors.dart';
+import '../widgets/app_bar_base.dart';
 
 import 'search_creature_screen.dart';
 
@@ -13,14 +13,14 @@ class SelectScreen extends StatefulWidget {
 class _SelectScreenState extends State<SelectScreen> {
   @override
   Widget build(BuildContext context) {
-    double w = MediaQuery.of(context).size.width;
-    double h = MediaQuery.of(context).size.height;
+    var w = MediaQuery.of(context).size.width;
+    var h = MediaQuery.of(context).size.height;
 
-    double boxFontSize = w > h ? h / 15 : w / 15;
-    double boxHeight = w > h ? h * (3/5) : h * (4/5);
-    double boxWidth = w * (2/5);
+    var boxFontSize = w > h ? h / 15 : w / 15;
+    var boxHeight = w > h ? h * (3/5) : h * (4/5);
+    var boxWidth = w * (2/5);
 
-    double boxRounded = w > h ? h / 30 : w / 30;
+    var boxRounded = w > h ? h / 30 : w / 30;
 
     return Scaffold(
       backgroundColor: CustomColors.firebaseNavy,
