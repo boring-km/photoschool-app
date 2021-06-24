@@ -2,7 +2,7 @@ import 'package:xml_parser/xml_parser.dart';
 
 class XMLParser {
   static List<XmlElement> parseXMLItems(String searched) {
-    List<XmlElement> itemList = XmlDocument.from(searched)!
+    var itemList = XmlDocument.from(searched)!
         .getChild("response")!
         .getChild("body")!
         .getChild("items")!
@@ -11,7 +11,7 @@ class XMLParser {
   }
   
   static XmlElement parseXMLItem(String searched) {
-    XmlElement item = XmlDocument.from(searched)!
+    var item = XmlDocument.from(searched)!
         .getChild("response")!
         .getChild("body")!
         .getChild("item")!;

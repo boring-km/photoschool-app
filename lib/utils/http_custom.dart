@@ -40,7 +40,7 @@ class Http {
   }
 
   static Map<String, dynamic> getHttpResult(http.Response response) {
-    Map<String, dynamic> result = {};
+    var result = <String, dynamic>{};
     if (response.statusCode == 200) {
       result["data"] = utf8.decode(response.bodyBytes);
     } else {

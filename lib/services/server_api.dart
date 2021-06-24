@@ -2,11 +2,12 @@ import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:photoschool/domain/post_response.dart';
-import 'package:photoschool/domain/school_rank.dart';
-import 'package:photoschool/domain/school_search_response.dart';
-import 'package:photoschool/domain/searched_post_detail.dart';
-import 'package:photoschool/utils/http_custom.dart';
+
+import '../domain/post_response.dart';
+import '../domain/school_rank.dart';
+import '../domain/school_search_response.dart';
+import '../domain/searched_post_detail.dart';
+import '../utils/http_custom.dart';
 
 class CustomAPIService {
   static Future checkUserRegistered() async {
@@ -29,8 +30,9 @@ class CustomAPIService {
     final httpResult = await Http.get("$domain/school/$text");
     final json = _getResult(httpResult);
     final schools = json['schools'];
-    List<SchoolSearchResponse> resultList = [];
+    var resultList = <SchoolSearchResponse>[];
     for (var school in schools) {
+      // ignore: lines_longer_than_80_chars
       resultList.add(SchoolSearchResponse(school['schoolId'], school['region'], school['schoolName']));
     }
     return resultList;
@@ -44,7 +46,7 @@ class CustomAPIService {
 
     final schoolName = json['schoolName'];
     final posts = json['posts'];
-    List<PostResponse> postList = [];
+    var postList = <PostResponse>[];
     for (var item in posts) {
       postList.add(PostResponse(item['postId'], item['title'], item['likes'], item['views'], item['tbImgURL'], item['regTime']));
     }
@@ -57,7 +59,7 @@ class CustomAPIService {
     final json = _getResult(result);
 
     final posts = json['posts'];
-    List<PostResponse> postList = [];
+    var postList = <PostResponse>[];
     for (var item in posts) {
       var postResponse = PostResponse(item['postId'], item['title'], item['likes'], item['views'], item['tbImgURL'], item['regTime']);
       postResponse.nickname = item['nickname'];
@@ -71,7 +73,7 @@ class CustomAPIService {
     final result = await Http.get("$domain/awards/$index");
     final json = _getResult(result);
     final posts = json['posts'];
-    List<PostResponse> postList = [];
+    var postList = <PostResponse>[];
     for (var item in posts) {
       var postResponse = PostResponse(item['postId'], item['title'], item['likes'], item['views'], item['tbImgURL'], item['regTime']);
       postResponse.nickname = item['nickname'];
@@ -86,7 +88,7 @@ class CustomAPIService {
     final result = await Http.get("$domain/rank");
     final json = _getResult(result);
     final schools = json['topSchools'];
-    List<SchoolRank> schoolList = [];
+    var schoolList = <SchoolRank>[];
     for (var item in schools) {
       schoolList.add(SchoolRank(item['region'], item['schoolName'], item['sumOfViews'], item['sumOfPosts']));
     }
@@ -99,7 +101,7 @@ class CustomAPIService {
     final json = _getResult(result);
 
     final posts = json['posts'];
-    List<PostResponse> postList = [];
+    var postList = <PostResponse>[];
     for (var item in posts) {
       var postResponse = PostResponse(item['postId'], item['title'], item['likes'], item['views'], item['tbImgURL'], item['regTime']);
       postResponse.nickname = item['nickname'];
@@ -108,13 +110,13 @@ class CustomAPIService {
     return { "posts": postList };
   }
 
-  static searchPost(String searchType, String searchText, String sortType, int index) async {
+  static Future<List<PostResponse>> searchPost(String searchType, String searchText, String sortType, int index) async {
     final domain = dotenv.env["server_domain"]!;
     final result = await Http.get("$domain/post/$searchType/$sortType/$searchText/$index");
     final json = _getResult(result);
 
     final posts = json['posts'];
-    List<PostResponse> postList = [];
+    var postList = <PostResponse>[];
     for (var item in posts) {
       var postResponse = PostResponse(item['postId'], item['title'], item['likes'], item['views'], item['tbImgURL'], item['regTime']);
       postResponse.nickname = item['nickname'];

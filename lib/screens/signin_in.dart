@@ -1,10 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:photoschool/res/colors.dart';
-import 'package:photoschool/screens/user_info.dart';
 
+import '../res/colors.dart';
 import '../utils/auth.dart';
+import 'user_info.dart';
 
 class SignInScreen extends StatefulWidget {
   @override
@@ -107,7 +106,7 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
                       _isSigningIn = true;
                     });
 
-                    User? user =
+                    var user =
                         await Authentication.signInWithGoogle(context: context);
 
                     setState(() {

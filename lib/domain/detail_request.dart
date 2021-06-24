@@ -1,5 +1,3 @@
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-
 class DetailRequest {
   late String baseUrl;
   final int q1;

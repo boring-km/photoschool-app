@@ -25,6 +25,9 @@ dependencies:
   flutter_native_image: ^0.0.6
   flutter_launcher_icons: ^0.9.0
 
+  # dart linter
+  effective_dart: ^1.3.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
