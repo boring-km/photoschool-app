@@ -30,7 +30,7 @@ class PublicAPIService {
     return creatureList;
   }
 
-  static getChildBookDetail(int apiId) async {
+  static Future<Object> getChildBookDetail(int apiId) async {
     final baseUrl = dotenv.env["public_api_detail_url"]!;
     final serviceKey = dotenv.env["public_api_key"]!;
     final target = DetailRequest(baseUrl, serviceKey, apiId).toString();

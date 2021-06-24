@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:photoschool/domain/school_search_response.dart';
+import 'package:photoschool/domain/searched_detail_item.dart';
 import 'package:photoschool/domain/searched_item.dart';
 import 'package:photoschool/res/colors.dart';
 import 'package:photoschool/screens/select_screen.dart';
@@ -54,6 +55,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   List<Widget> _searchImageResult = [];
 
   String _searchedDetailPostImage = "";
+
+  String _apiResultURL = "";
 
   @override
   void initState() {
@@ -143,17 +146,21 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
               ElevatedButton(
                   onPressed: () async {
                     List<SearchedCreature> results = await PublicAPIService.getChildBookSearch("소나무", 1);
+                    String result = "";
+                    for (var item in results) {
+                      result += "이름: ${item.name}, 종류: ${item.type}, 도감번호: ${item.apiId}\n";
+                    }
+                    final item = await PublicAPIService.getChildBookDetail(results[2].apiId) as SearchedDetailItem;
+                    result += "선택한 생물 이름: ${item.name}, 상세설명: ${item.detail}\n";
+                    _apiResultURL = item.imgUrl1;
                     setState(() {
-                      String result = "";
-                      for (var item in results) {
-                        result += "이름: ${item.name}, 종류: ${item.type}, 도감번호: ${item.apiId}\n";
-                      }
                       _apiSearchResult = result;
                     });
                   },
-                  child: Text("어린이 생물 도감에서 '소나무'를 검색")
+                  child: Text("어린이 생물 도감에서 '소나무'를 검색하여 그중 3번째로 나온 금강소나무")
               ),
               Text(_apiSearchResult),
+              Image.network(_apiResultURL, height: 150,),
               ElevatedButton(
                   onPressed: () async {
                     final result = await CustomAPIService.checkUserRegistered();
