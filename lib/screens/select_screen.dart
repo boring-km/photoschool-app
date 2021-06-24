@@ -1,9 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import '../res/colors.dart';
 import '../widgets/app_bar_base.dart';
-
+import 'friends_main_screen.dart';
 import 'search_creature_screen.dart';
 
 class SelectScreen extends StatefulWidget {
@@ -97,7 +98,13 @@ class _SelectScreenState extends State<SelectScreen> {
                     constraints: BoxConstraints.tightFor(
                         width: boxWidth, height: boxHeight),
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                                builder: (context) => FriendsMainScreen(user: _user)
+                            )
+                        );
+                      },
                       child: Text(
                         "친구들\n사진 보기",
                         textAlign: TextAlign.center,
