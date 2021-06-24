@@ -7,11 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:image_picker/image_picker.dart';
+
 import '../dto/post_response.dart';
 import '../dto/searched_detail_item.dart';
 import '../res/colors.dart';
 import '../services/server_api.dart';
+import '../utils/screen_animation.dart';
 import '../widgets/app_bar_base.dart';
+import 'search_creature_screen.dart';
 
 class CreatureDetailScreen extends StatefulWidget {
   final SearchedDetailItem _creature;
@@ -85,8 +88,13 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                       padding: EdgeInsets.all(baseSize / 10),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
+                          IconButton(
+                              onPressed: () {
+                                Navigator.of(context).pushReplacement(ScreenAnimation.routeTo(SearchCreatureScreen(user: _user)));
+                              },
+                              icon: Icon(CupertinoIcons.back, color: Colors.black, size: baseSize/2,)),
                           ElevatedButton(
                               style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(boxRounded)), primary: Colors.blue, onSurface: Colors.blueAccent),
                               onPressed: () {
@@ -164,7 +172,7 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                             },
                           ),
                         ),
-                        _othersImageCardList.isEmpty ? Padding(
+                        _othersImageCardList.length == 1 ? Padding(
                           padding: EdgeInsets.symmetric(vertical: baseSize / 4),
                           child: Text(
                             "아직 관련 생물을 찍은 친구가 없어요!",
@@ -179,7 +187,7 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                             style: TextStyle(color: Colors.black, fontSize: baseSize * (2 / 3)),
                           ),
                         ),
-                        _othersImageCardList.isEmpty ? Container() : Padding(
+                        _othersImageCardList.length == 1 ? Container() : Padding(
                           padding: EdgeInsets.symmetric(horizontal: baseSize / 4),
                           child: Flex(
                             direction: Axis.horizontal,
@@ -572,37 +580,59 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                       style: TextStyle(color: Colors.black, fontSize: baseSize / 4),
                     ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Icon(
-                          Icons.thumb_up,
-                          color: Colors.red,
+                        Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Icon(
+                                  Icons.thumb_up,
+                                  color: Colors.red,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(left: baseSize / 8),
+                                  child: Text(
+                                    item.likes.toString(),
+                                    style: TextStyle(color: Colors.red, fontSize: baseSize / 4),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Icon(
+                                    CupertinoIcons.eye,
+                                    color: Colors.black
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(left: baseSize / 8),
+                                  child: Text(
+                                    item.views.toString(),
+                                    style: TextStyle(color: Colors.black, fontSize: baseSize / 4),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                         Padding(
-                          padding: EdgeInsets.only(left: baseSize / 8),
-                          child: Text(
-                            item.likes.toString(),
-                            style: TextStyle(color: Colors.red, fontSize: baseSize / 4),
+                          padding: EdgeInsets.only(right: baseSize/10),
+                          child: ElevatedButton(
+                              onPressed: () {},
+                              style: ElevatedButton.styleFrom(
+                                  primary: Colors.white,
+                                  onSurface: Colors.white70,
+                                  side: BorderSide(color: Colors.black, width: 2.0),
+                                  shadowColor: Colors.white10
+                              ),
+                              child: Text("상세보기", style: TextStyle(color: Colors.black, fontSize: baseSize/5),)
                           ),
                         ),
                       ],
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Icon(
-                            CupertinoIcons.eye,
-                            color: Colors.black
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: baseSize / 8),
-                          child: Text(
-                            item.views.toString(),
-                            style: TextStyle(color: Colors.black, fontSize: baseSize / 4),
-                          ),
-                        ),
-                      ],
-                    )
                   ],
                 ),
               ),

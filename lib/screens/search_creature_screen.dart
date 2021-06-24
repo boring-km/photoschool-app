@@ -88,7 +88,7 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
                           decoration: InputDecoration(
                               border: InputBorder.none,
                               labelText:
-                              '동물, 식물, 곤충의 이름을 입력해주세요 ex) 호랑이, 소나무, 나방',
+                              '백과사전 검색',
                               labelStyle: TextStyle(color: Colors.black45),
                               fillColor: Colors.black),
                           style: TextStyle(color: Colors.black),
@@ -138,7 +138,7 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
 
       final widget = GestureDetector(
         onTap: () {
-          Navigator.of(context).push(
+          Navigator.of(context).pushReplacement(
               MaterialPageRoute(
                   builder: (context) => CreatureDetailScreen(item, user: _user,)
               )
@@ -172,7 +172,7 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
                 Padding(padding: EdgeInsets.symmetric(horizontal: base/5)),
                 Center(child: Text("이름: $name", style: TextStyle(fontSize: base/5, fontWeight: FontWeight.w700, color: Colors.black),)),
                 Padding(padding: EdgeInsets.symmetric(horizontal: base/2)),
-                Center(child: Text("타입: $type", style: TextStyle(fontSize: base/8, color: Colors.black),))
+                Center(child: Text("추가 정보: $type", style: TextStyle(fontSize: base/8, color: Colors.black),))
               ],
             ),
           ),
@@ -209,14 +209,16 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
   _getCreatureSearchedListView(String text, int page) async {
     var list = await PublicAPIService.getChildBookSearch(text, page);
     received = list.length;
+    var resultList = <SearchedDetailItem>[];
     for (var item in list) {
       final result = await PublicAPIService.getChildBookDetail(item.apiId);
       if (result != false) {
-        setState(() {
-          var item = (result as SearchedDetailItem);
-          dataList.add(item);
-        });
+        var item = (result as SearchedDetailItem);
+        resultList.add(item);
       }
     }
+    setState(() {
+      dataList.addAll(resultList);
+    });
   }
 }
