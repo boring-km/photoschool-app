@@ -1,9 +1,11 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../res/colors.dart';
 import '../screens/signin_screen.dart';
-import '../services/server_api.dart';
 import '../utils/auth.dart';
 import '../utils/screen_animation.dart';
 
@@ -24,6 +26,8 @@ class _AppBarTitleState extends State<AppBarTitle> {
   bool _isSigningOut = false;
   late User _user;
 
+  Timer? timer;
+
   @override
   void initState() {
     _user = widget._user;
@@ -31,10 +35,11 @@ class _AppBarTitleState extends State<AppBarTitle> {
     super.initState();
   }
 
-  void setNickName() async {
-    var temp = await CustomAPIService.getNickName(_user);
-    setState(() {
-      _nickname = temp;
+  void setNickName() {
+    SharedPreferences.getInstance().then((prefs) {
+      setState(() {
+        _nickname = prefs.getString('nickname') ?? _user.displayName!;
+      });
     });
   }
 

@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../res/colors.dart';
+import '../services/server_api.dart';
 import '../utils/auth.dart';
 import 'select_screen.dart';
 
@@ -114,6 +116,12 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
                     });
 
                     if (user != null) {
+
+                      // TODO: 닉네임과 학교 설정 AlertDialog 호출
+                      final prefs = await SharedPreferences.getInstance();
+                      final nickname = await CustomAPIService.getNickName(user);
+                      prefs.setString('nickname', nickname);
+
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
                           builder: (context) => SelectScreen(

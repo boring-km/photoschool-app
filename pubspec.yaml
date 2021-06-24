@@ -24,6 +24,7 @@ dependencies:
   flutter_html: ^2.1.0
   flutter_native_image: ^0.0.6
   flutter_launcher_icons: ^0.9.0
+  shared_preferences: ^2.0.6
 
   # dart linter
   effective_dart: ^1.3.2
