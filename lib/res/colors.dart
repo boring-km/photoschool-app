@@ -15,4 +15,5 @@ class CustomColors {
   static final Color friendsGreen = Color(0xFFBCFF7F);
   static final Color friendsGreenAccent = Color(0xFF83FD75);
 
+  static final Color lightAmber = Color(0xFFFFBE61);
 }

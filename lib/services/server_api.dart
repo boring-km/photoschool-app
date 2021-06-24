@@ -17,8 +17,8 @@ class CustomAPIService {
     return _getResult(result)['isRegistered'];
   }
 
-  static Future<String> getNickName() async {
-    final idToken = await FirebaseAuth.instance.currentUser!.getIdToken();
+  static Future<String> getNickName(User user) async {
+    final idToken = await user.getIdToken();
     final domain = dotenv.env["server_domain"]!;
     final result = await Http.getWithJWT("$domain/nickname", idToken);
     final json = _getResult(result);

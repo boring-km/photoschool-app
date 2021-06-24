@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../res/colors.dart';
@@ -6,11 +7,25 @@ import '../widgets/app_bar_base.dart';
 import 'search_creature_screen.dart';
 
 class SelectScreen extends StatefulWidget {
+
+  const SelectScreen({Key? key, required User user})
+      : _user = user,
+        super(key: key);
+
+  final User _user;
+
   @override
   _SelectScreenState createState() => _SelectScreenState();
 }
 
 class _SelectScreenState extends State<SelectScreen> {
+  late User _user;
+  @override
+  void initState() {
+    _user = widget._user;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     var w = MediaQuery.of(context).size.width;
@@ -27,7 +42,7 @@ class _SelectScreenState extends State<SelectScreen> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: CustomColors.firebaseNavy,
-        title: AppBarTitle(),
+        title: AppBarTitle(user: _user),
       ),
       body: SafeArea(
         child: Padding(
@@ -56,9 +71,9 @@ class _SelectScreenState extends State<SelectScreen> {
                         width: boxWidth, height: boxHeight),
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.of(context).push(
+                        Navigator.of(context).pushReplacement(
                           MaterialPageRoute(
-                            builder: (context) => SearchCreatureScreen()
+                            builder: (context) => SearchCreatureScreen(user: _user)
                           )
                         );
                       },

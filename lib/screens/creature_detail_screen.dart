@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,8 +15,10 @@ import '../widgets/app_bar_base.dart';
 
 class CreatureDetailScreen extends StatefulWidget {
   final SearchedDetailItem _creature;
+  final User _user;
 
-  CreatureDetailScreen(this._creature);
+  CreatureDetailScreen(this._creature, {Key? key, required User user}): _user = user,
+        super(key: key);
 
   @override
   _CreatureDetailScreenState createState() => _CreatureDetailScreenState(_creature);
@@ -23,6 +26,7 @@ class CreatureDetailScreen extends StatefulWidget {
 
 class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
   final SearchedDetailItem _creature;
+  late User _user;
   final _dialogTextController = TextEditingController();
   final picker = ImagePicker();
 
@@ -37,6 +41,7 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
 
   @override
   void initState() {
+    _user = widget._user;
     _buildOthersCardList(_creature.apiId);
     super.initState();
   }
@@ -54,7 +59,7 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: CustomColors.firebaseNavy,
-        title: AppBarTitle(),
+        title: AppBarTitle(user: _user,),
       ),
       body: SafeArea(
         child: Padding(
@@ -486,7 +491,7 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
     Navigator.pop(parentContext);
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
-        builder: (context) => CreatureDetailScreen(_creature),
+        builder: (context) => CreatureDetailScreen(_creature, user: _user,),
       ),
     );
   }

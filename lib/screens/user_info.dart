@@ -71,7 +71,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: CustomColors.firebaseNavy,
-        title: AppBarTitle(),
+        title: AppBarTitle(user: _user,),
       ),
       body: SafeArea(
         child: Padding(
@@ -477,7 +477,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                   onPressed: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => SelectScreen()
+                        builder: (context) => SelectScreen(user: _user,)
                       )
                     );
                   },

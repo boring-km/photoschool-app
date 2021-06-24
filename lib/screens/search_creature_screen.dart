@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -9,6 +10,13 @@ import '../widgets/app_bar_base.dart';
 import 'creature_detail_screen.dart';
 
 class SearchCreatureScreen extends StatefulWidget {
+
+  SearchCreatureScreen({Key? key, required User user})
+      : _user = user,
+        super(key: key);
+
+  final User _user;
+
   @override
   _FindCreatureState createState() => _FindCreatureState();
 }
@@ -18,9 +26,11 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
   int _currentPage = 1;
   int received = -1;
   List<SearchedDetailItem> dataList = [];
+  late User _user;
 
   @override
   void initState() {
+    _user = widget._user;
     _getCreatureSearchedListView(_creatureSearchController.text, _currentPage);
     super.initState();
   }
@@ -41,7 +51,7 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: CustomColors.firebaseNavy,
-        title: AppBarTitle(),
+        title: AppBarTitle(user: _user,),
       ),
       body: Padding(
         padding: EdgeInsets.all(w / 20),
@@ -130,7 +140,7 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
         onTap: () {
           Navigator.of(context).push(
               MaterialPageRoute(
-                  builder: (context) => CreatureDetailScreen(item)
+                  builder: (context) => CreatureDetailScreen(item, user: _user,)
               )
           );
         },

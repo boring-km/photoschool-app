@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import '../screens/user_info.dart';
+import '../screens/select_screen.dart';
 
 class Authentication {
   static Future<FirebaseApp> initializeFirebase({
@@ -15,9 +15,7 @@ class Authentication {
     if (user != null) {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => UserInfoScreen(
-            user: user,
-          ),
+          builder: (context) => SelectScreen(user: user,),
         ),
       );
     }

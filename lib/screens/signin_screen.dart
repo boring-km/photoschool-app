@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../res/colors.dart';
 import '../utils/auth.dart';
-import 'user_info.dart';
+import 'select_screen.dart';
 
 class SignInScreen extends StatefulWidget {
   @override
@@ -116,8 +116,8 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
                     if (user != null) {
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
-                          builder: (context) => UserInfoScreen(
-                            user: user,
+                          builder: (context) => SelectScreen(
+                            user: user
                           ),
                         ),
                       );
