@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-import '../domain/post_response.dart';
-import '../domain/school_rank.dart';
-import '../domain/school_search_response.dart';
-import '../domain/searched_post_detail.dart';
+import '../dto/post_response.dart';
+import '../dto/school_rank.dart';
+import '../dto/school_search_response.dart';
+import '../dto/searched_post_detail.dart';
 import '../utils/http_custom.dart';
 
 class CustomAPIService {

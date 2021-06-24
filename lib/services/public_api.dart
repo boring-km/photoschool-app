@@ -1,8 +1,8 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import '../domain/detail_request.dart';
-import '../domain/search_request.dart';
-import '../domain/searched_detail_item.dart';
-import '../domain/searched_item.dart';
+import '../dto/detail_request.dart';
+import '../dto/search_request.dart';
+import '../dto/searched_detail_item.dart';
+import '../dto/searched_item.dart';
 import '../utils/http_custom.dart';
 import '../utils/xml_custom.dart';
 

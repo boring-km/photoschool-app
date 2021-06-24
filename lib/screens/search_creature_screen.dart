@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-import '../domain/searched_detail_item.dart';
+import '../dto/searched_detail_item.dart';
 import '../res/colors.dart';
 import '../services/public_api.dart';
 import '../widgets/app_bar_base.dart';

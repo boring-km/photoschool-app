@@ -1,5 +1,5 @@
-import 'package:photoschool/domain/detail_request.dart';
-import 'package:photoschool/domain/search_request.dart';
+import 'package:photoschool/dto/detail_request.dart';
+import 'package:photoschool/dto/search_request.dart';
 import 'package:photoschool/utils/http_custom.dart';
 import 'package:photoschool/utils/xml_custom.dart';
 import 'package:test/test.dart';

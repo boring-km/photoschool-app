@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../domain/searched_detail_item.dart';
+import '../dto/searched_detail_item.dart';
 import '../res/colors.dart';
 import '../services/public_api.dart';
 import '../services/server_api.dart';
