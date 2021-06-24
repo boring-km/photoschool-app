@@ -10,7 +10,7 @@ import '../utils/auth.dart';
 import '../utils/screen_animation.dart';
 import '../widgets/app_bar_base.dart';
 import 'select_screen.dart';
-import 'signin_in.dart';
+import 'signin_screen.dart';
 
 class UserInfoScreen extends StatefulWidget {
   const UserInfoScreen({Key? key, required User user})

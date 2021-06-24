@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart' as firebase_core;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:photoschool/screens/signin_in.dart';
+import 'screens/signin_screen.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
