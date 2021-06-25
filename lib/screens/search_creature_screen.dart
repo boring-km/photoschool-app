@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:photoschool/screens/select_screen.dart';
+import 'package:photoschool/utils/screen_animation.dart';
 
 import '../dto/searched_detail_item.dart';
 import '../res/colors.dart';
@@ -47,10 +49,10 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
     var buttonFontSize = w > h ? h / 40 : w / 40;
 
     return Scaffold(
-      backgroundColor: CustomColors.firebaseNavy,
+      backgroundColor: CustomColors.amber,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: CustomColors.firebaseNavy,
+        backgroundColor: Colors.transparent,
         title: AppBarTitle(user: _user,),
       ),
       body: Padding(
@@ -73,6 +75,14 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  Padding(
+                    padding: EdgeInsets.only(bottom: h / 30),
+                    child: IconButton(
+                        onPressed: () {
+                          Navigator.of(context).pushReplacement(ScreenAnimation.routeTo(SelectScreen(user: _user)));
+                        },
+                        icon: Icon(CupertinoIcons.back, color: Colors.white, size: base/2,)),
+                  ),
                   Padding(
                     padding: EdgeInsets.all(h / 50),
                     child: Container(

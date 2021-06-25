@@ -19,8 +19,6 @@ class MyApp extends StatelessWidget {
       title: '포토스쿨',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.indigo,
-        brightness: Brightness.dark,
         fontFamily: 'DdoDdo'
       ),
       home: SignInScreen(),

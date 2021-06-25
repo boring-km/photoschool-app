@@ -51,7 +51,7 @@ class _AppBarTitleState extends State<AppBarTitle> {
     var nicknameSize = w > h ? h / 30 : w / 30;
 
     return Padding(
-      padding: EdgeInsets.only(top: h / 50),
+      padding: EdgeInsets.only(top: h / 40),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
