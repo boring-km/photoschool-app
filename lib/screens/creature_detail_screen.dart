@@ -58,10 +58,10 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
     var boxRounded = w > h ? h / 30 : w / 30;
 
     return Scaffold(
-      backgroundColor: CustomColors.firebaseNavy,
+      backgroundColor: CustomColors.amber,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: CustomColors.firebaseNavy,
+        backgroundColor: Colors.transparent,
         title: AppBarTitle(user: _user,),
       ),
       body: SafeArea(
@@ -621,7 +621,9 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                         Padding(
                           padding: EdgeInsets.only(right: baseSize/10),
                           child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+
+                              },
                               style: ElevatedButton.styleFrom(
                                   primary: Colors.white,
                                   onSurface: Colors.white70,

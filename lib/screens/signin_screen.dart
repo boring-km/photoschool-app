@@ -16,7 +16,7 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: CustomColors.firebaseNavy,
+      backgroundColor: CustomColors.amber,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.only(
@@ -84,6 +84,8 @@ class GoogleSignInButton extends StatefulWidget {
 class _GoogleSignInButtonState extends State<GoogleSignInButton> {
   bool _isSigningIn = false;
 
+  var _dialogTextController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -118,17 +120,22 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
                     if (user != null) {
 
                       // TODO: 닉네임과 학교 설정 AlertDialog 호출
-                      final prefs = await SharedPreferences.getInstance();
-                      final nickname = await CustomAPIService.getNickName(user);
-                      prefs.setString('nickname', nickname);
+                      final result = await CustomAPIService.checkUserRegistered();
+                      if (result) {
+                        final prefs = await SharedPreferences.getInstance();
+                        final nickname = await CustomAPIService.getNickName(user);
+                        prefs.setString('nickname', nickname);
 
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (context) => SelectScreen(
-                            user: user
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (context) => SelectScreen(
+                                user: user
+                            ),
                           ),
-                        ),
-                      );
+                        );
+                      } else {
+                        _buildUserDialog(context);
+                      }
                     }
                   },
                   child: Padding(
@@ -188,5 +195,70 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
         )
       ],
     );
+  }
+
+  void _buildUserDialog(BuildContext parentContext) {
+    showDialog(
+        context: parentContext,
+        builder: (context) {
+          var w = MediaQuery.of(context).size.width / 10;
+          var h = MediaQuery.of(context).size.height / 10;
+
+          return AlertDialog(
+            title: Text('학교 등록'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  autofocus: true,
+                  controller: _dialogTextController,
+                  decoration: InputDecoration(hintText: "학교 입력"),
+                  onSubmitted: (text) async {
+
+                  },
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(h / 8),
+                      child: Container(
+                        width: w * (2 / 3),
+                        height: h * (2 / 3),
+                        child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            style: ElevatedButton.styleFrom(primary: Colors.white, onSurface: Colors.white70, side: BorderSide(style: BorderStyle.none, width: 2.0, color: Colors.black)),
+                            child: Text(
+                              "닫기",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontSize: w / 8, color: Colors.black),
+                            )),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(h / 8),
+                      child: Container(
+                        width: w * (2 / 3),
+                        height: h * (2 / 3),
+                        child: ElevatedButton(
+                            onPressed: () async {
+                              // 학교 등록
+                            },
+                            style: ElevatedButton.styleFrom(primary: Colors.white, onSurface: Colors.white70, side: BorderSide(style: BorderStyle.none, width: 2.0, color: Colors.black)),
+                            child: Text(
+                              "학교 등록",
+                              style: TextStyle(fontSize: w / 8, color: Colors.black),
+                            )),
+                      ),
+                    )
+                  ],
+                )
+              ],
+            ),
+          );
+        });
   }
 }

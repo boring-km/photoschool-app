@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../res/colors.dart';
 import '../widgets/app_bar_base.dart';
@@ -39,89 +40,95 @@ class _SelectScreenState extends State<SelectScreen> {
     var boxRounded = w > h ? h / 30 : w / 30;
 
     return Scaffold(
-      backgroundColor: CustomColors.firebaseNavy,
+      backgroundColor: CustomColors.amber,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: CustomColors.firebaseNavy,
+        backgroundColor: Colors.transparent,
         title: AppBarTitle(user: _user),
       ),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(w / 20),
           child: Center(
-            child: Container(
-              width: w * (9 / 10),
-              height: h * (9 / 10),
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(width: 1, color: Colors.white30),
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.white10,
-                      offset: Offset(4.0, 4.0),
-                      blurRadius: 15.0,
-                      spreadRadius: 1.0,
-                    )
-                  ]),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ConstrainedBox(
-                    constraints: BoxConstraints.tightFor(
-                        width: boxWidth, height: boxHeight),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).pushReplacement(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ConstrainedBox(
+                  constraints: BoxConstraints.tightFor(
+                      width: boxWidth, height: boxHeight),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pushReplacement(
                           MaterialPageRoute(
-                            builder: (context) => SearchCreatureScreen(user: _user)
+                              builder: (context) => SearchCreatureScreen(user: _user)
                           )
-                        );
-                      },
-                      child: Text(
-                        "생물도감\n보기",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: boxFontSize,
-                            fontFamily: 'SDChild'),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(boxRounded)),
-                          primary: CustomColors.friendsGreen,
-                          onSurface: CustomColors.friendsGreenAccent),
+                      );
+                    },
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(top: boxHeight/8, bottom: boxHeight/9),
+                          child: SvgPicture.asset(
+                            'assets/book_reading.svg',
+                            height: boxHeight * (1/2),
+                          ),
+                        ),
+                        Text(
+                          "백과사전\n보기",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: boxFontSize,
+                              fontFamily: 'SDChild'),
+                        ),
+                      ],
                     ),
+                    style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(boxRounded)),
+                        primary: Color.fromARGB(206, 178, 198, 255),
+                        onSurface: Colors.white30),
                   ),
-                  Padding(padding: EdgeInsets.all(boxRounded)),
-                  ConstrainedBox(
-                    constraints: BoxConstraints.tightFor(
-                        width: boxWidth, height: boxHeight),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                                builder: (context) => FriendsMainScreen(user: _user)
-                            )
-                        );
-                      },
-                      child: Text(
-                        "친구들\n사진 보기",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: boxFontSize,
-                            fontFamily: 'SDChild'),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(boxRounded)),
-                          primary: CustomColors.friendsYellow,
-                          onSurface: CustomColors.friendsYellowAccent),
+                ),
+                Padding(padding: EdgeInsets.all(boxRounded)),
+                ConstrainedBox(
+                  constraints: BoxConstraints.tightFor(
+                      width: boxWidth, height: boxHeight),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                              builder: (context) => FriendsMainScreen(user: _user)
+                          )
+                      );
+                    },
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(top: boxHeight/8, bottom: boxHeight/9),
+                          child: SvgPicture.asset(
+                            'assets/friends.svg',
+                            height: boxHeight * (1/2),
+                          ),
+                        ),
+                        Text(
+                          "친구들\n사진 보기",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: boxFontSize,
+                              fontFamily: 'SDChild'),
+                        ),
+                      ],
                     ),
+                    style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(boxRounded)),
+                        primary: CustomColors.friendsYellow,
+                        onSurface: CustomColors.friendsYellowAccent),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),

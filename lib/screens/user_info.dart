@@ -67,10 +67,10 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     var w = MediaQuery.of(context).size.width;
     var h = MediaQuery.of(context).size.height;
     return Scaffold(
-      backgroundColor: CustomColors.firebaseNavy,
+      backgroundColor: CustomColors.amber,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: CustomColors.firebaseNavy,
+        backgroundColor: CustomColors.amber,
         title: AppBarTitle(user: _user,),
       ),
       body: SafeArea(
