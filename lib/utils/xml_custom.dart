@@ -2,12 +2,14 @@ import 'package:xml_parser/xml_parser.dart';
 
 class XMLParser {
   static List<XmlElement> parseXMLItems(String searched) {
-    var itemList = XmlDocument.from(searched)!
+    var parentList = XmlDocument.from(searched)!
         .getChild("response")!
         .getChild("body")!
-        .getChild("items")!
-        .getChildren("item")!;
-    return itemList;
+        .getChild("items");
+    if (parentList!.getChildren("item") == null) {
+      return [];
+    }
+    return parentList.getChildren("item")!;
   }
   
   static XmlElement parseXMLItem(String searched) {
