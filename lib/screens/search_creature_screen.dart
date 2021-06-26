@@ -75,29 +75,17 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
       ),
     ) : Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: CustomColors.orange,
+      backgroundColor: CustomColors.deepblue,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
         title: AppBarTitle(user: _user, image: "creature"),
       ),
       body: Padding(
-        padding: EdgeInsets.all(w / 20),
+        padding: EdgeInsets.only(top: base / 20, left: base / 4, right: base / 4),
         child: Column(
           children: [
             Container(
-              decoration: BoxDecoration(
-                  color: Colors.white30,
-                  border: Border.all(width: 1, color: Colors.white30),
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.white10,
-                      offset: Offset(4.0, 4.0),
-                      blurRadius: 15.0,
-                      spreadRadius: 1.0,
-                    )
-                  ]),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -113,6 +101,7 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
                     padding: EdgeInsets.all(h / 50),
                     child: Container(
                       width: w * (2 / 3),
+                      height: buttonHeight,
                       decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius:
@@ -123,8 +112,8 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
                         child: TextField(
                           decoration: InputDecoration(
                               border: InputBorder.none,
-                              labelText:
-                              '백과사전 검색',
+                              icon: Icon(Icons.search, size: base/3, color: Colors.black45,),
+                              labelText: '백과사전 검색',
                               labelStyle: TextStyle(color: Colors.black45),
                               fillColor: Colors.black),
                           style: TextStyle(color: Colors.black),
@@ -151,9 +140,9 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(h / 50),
                                 side: BorderSide(color: Colors.black, width: 2.0)),
-                            primary: CustomColors.lightGreen,
-                            onSurface: Colors.lightGreen),
-                        child: Text("검색", style: TextStyle(color: Colors.black, fontSize: buttonFontSize),)),
+                            primary: CustomColors.orange,
+                            onSurface: Colors.orangeAccent),
+                        child: Text("검색", style: TextStyle(color: Colors.black, fontSize: buttonFontSize, fontWeight: FontWeight.w700),)),
                   ),
                 ],
               ),

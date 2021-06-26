@@ -52,148 +52,158 @@ class _AppBarTitleState extends State<AppBarTitle> {
     var w = MediaQuery.of(context).size.width;
     var h = MediaQuery.of(context).size.height;
 
-    var nicknameSize = w > h ? h / 30 : w / 30;
+    var baseSize = w > h ? w / 20 : h / 20;
 
-    var image = Row(
-      children: [
-        Hero(tag: "", child: Container()),
-      ],
+    var image = Container(
+      child: Row(
+        children: [
+          Hero(tag: "", child: Container()),
+        ],
+      ),
     );
 
     if (_image == "creature") {
-      image = Row(
-        children: [
-          Hero(
-            tag: "SelectWiki",
-            child: SvgPicture.asset(
-              'assets/book_reading.svg',
-              height: h / 20,
-            ),
+      image = Container(
+        decoration: BoxDecoration(
+          color: CustomColors.orange,
+          borderRadius: BorderRadius.horizontal(left: Radius.circular(8.0), right: Radius.circular(8.0))
+        ),
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: baseSize/8, horizontal: baseSize/3),
+          child: Row(
+            children: [
+              Hero(
+                tag: "SelectWiki",
+                child: SvgPicture.asset(
+                  'assets/book_reading.svg',
+                  height: baseSize/2,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: w/40),
+                child: Text("백과사전 보기", style: TextStyle(color: Colors.black, fontSize: baseSize/2, fontWeight: FontWeight.w700),),
+              )
+            ],
           ),
-          Padding(
-            padding: EdgeInsets.only(left: w/40),
-            child: Text("백과사전 보기", style: TextStyle(color: Colors.black, fontSize: nicknameSize, fontWeight: FontWeight.w700),),
-          )
-        ],
+        ),
       );
     } else if (_image == "friends") {
-      image = Row(
-        children: [
-          Hero(
-            tag: "SelectFriends",
-            child: SvgPicture.asset(
-              'assets/friends.svg',
-              height: h / 20,
+      image = Container(
+        child: Row(
+          children: [
+            Hero(
+              tag: "SelectFriends",
+              child: SvgPicture.asset(
+                'assets/friends.svg',
+                height: h / 20,
+              ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: w/40),
-            child: Text("백과사전 보기", style: TextStyle(color: Colors.black, fontSize: nicknameSize, fontWeight: FontWeight.w700),),
-          )
-        ],
+            Padding(
+              padding: EdgeInsets.only(left: w/40),
+              child: Text("친구들 사진보기", style: TextStyle(color: Colors.black, fontSize: baseSize/2, fontWeight: FontWeight.w700),),
+            )
+          ],
+        ),
       );
     }
 
-    return Padding(
-      padding: EdgeInsets.only(top: h / 40),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            '포토스쿨',
-            style: TextStyle(
-              color: Colors.white,
-              fontFamily: 'SDSamlip',
-              fontSize: 28,
-            ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          '포토스쿨',
+          style: TextStyle(
+            color: Colors.white,
+            fontFamily: 'SDSamlip',
+            fontSize: 28,
           ),
-          Row(
-            children: [
-              image,
+        ),
+        Row(
+          children: [
+            image,
 
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.all(h / 50),
-            child: Container(
-              decoration: BoxDecoration(
-                color: CustomColors.orange,
-                borderRadius: BorderRadius.all(Radius.circular(4.0))
-              ),
-              child: Row(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: w/80),
-                    child: Text(
-                      _nickname,
-                      style: TextStyle(color: Colors.black, fontFamily: 'KCCDodam', fontSize: nicknameSize),
-                    ),
-                  ),
-                  _isSigningOut
-                      ? CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                  ) : PopupMenuButton(
-                      onSelected: (result) async {
-                        if (result == 1) {
-                          print("활동관리");
-                        } else {
-                          print("로그아웃");
-                          setState(() {
-                            _isSigningOut = true;
-                          });
-                          await Authentication.signOut(context: context);
-                          setState(() {
-                            _isSigningOut = false;
-                          });
-                          Navigator.of(context)
-                              .pushReplacement(ScreenAnimation.routeTo(SignInScreen()));
-                        }
-                      },
-                      color: CustomColors.lightAmber,
-                      offset: Offset(0, 45),
-                      icon: Icon(Icons.menu, color: Colors.black),
-                      itemBuilder: (context) => [
-                            PopupMenuItem(
-                                value: 1,
-                                child: Row(
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.all(2.0),
-                                      child: Icon(
-                                        Icons.manage_accounts,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                    Text(
-                                      '활동관리',
-                                      style: TextStyle(color: Colors.black, fontSize: nicknameSize),
-                                    )
-                                  ],
-                                )),
-                            PopupMenuItem(
-                                value: 2,
-                                child: Row(
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.all(2.0),
-                                      child: Icon(
-                                        Icons.logout,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                    Text(
-                                      '로그아웃',
-                                      style: TextStyle(color: Colors.black, fontSize: nicknameSize),
-                                    )
-                                  ],
-                                ))
-                          ])
-                ],
-              ),
+          ],
+        ),
+        Padding(
+          padding: EdgeInsets.all(h / 50),
+          child: Container(
+            decoration: BoxDecoration(
+              color: CustomColors.friendsYellow,
+              borderRadius: BorderRadius.all(Radius.circular(4.0))
             ),
-          )
-        ],
-      ),
+            child: Row(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: w/80),
+                  child: Text(
+                    _nickname,
+                    style: TextStyle(color: Colors.black, fontFamily: 'KCCDodam', fontSize: baseSize/2),
+                  ),
+                ),
+                _isSigningOut
+                    ? CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ) : PopupMenuButton(
+                    onSelected: (result) async {
+                      if (result == 1) {
+                        print("활동관리");
+                      } else {
+                        print("로그아웃");
+                        setState(() {
+                          _isSigningOut = true;
+                        });
+                        await Authentication.signOut(context: context);
+                        setState(() {
+                          _isSigningOut = false;
+                        });
+                        Navigator.of(context)
+                            .pushReplacement(ScreenAnimation.routeTo(SignInScreen()));
+                      }
+                    },
+                    color: CustomColors.lightAmber,
+                    offset: Offset(0, 45),
+                    icon: Icon(Icons.menu, color: Colors.black),
+                    itemBuilder: (context) => [
+                          PopupMenuItem(
+                              value: 1,
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.all(2.0),
+                                    child: Icon(
+                                      Icons.manage_accounts,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  Text(
+                                    '활동관리',
+                                    style: TextStyle(color: Colors.black, fontSize: baseSize/2),
+                                  )
+                                ],
+                              )),
+                          PopupMenuItem(
+                              value: 2,
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.all(2.0),
+                                    child: Icon(
+                                      Icons.logout,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  Text(
+                                    '로그아웃',
+                                    style: TextStyle(color: Colors.black, fontSize: baseSize/2),
+                                  )
+                                ],
+                              ))
+                        ])
+              ],
+            ),
+          ),
+        )
+      ],
     );
   }
 }
