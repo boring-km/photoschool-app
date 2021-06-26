@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../res/colors.dart';
@@ -11,11 +12,12 @@ import '../utils/screen_animation.dart';
 
 class AppBarTitle extends StatefulWidget {
 
-  AppBarTitle({Key? key, required User user})
-      : _user = user,
+  AppBarTitle({Key? key, required User user, String? image})
+      : _user = user, _image = image,
         super(key: key);
 
   final User _user;
+  final String? _image;
 
   @override
   _AppBarTitleState createState() => _AppBarTitleState();
@@ -25,12 +27,14 @@ class _AppBarTitleState extends State<AppBarTitle> {
   String _nickname = "";
   bool _isSigningOut = false;
   late User _user;
+  late String? _image;
 
   Timer? timer;
 
   @override
   void initState() {
     _user = widget._user;
+    _image = widget._image;
     setNickName();
     super.initState();
   }
@@ -50,6 +54,46 @@ class _AppBarTitleState extends State<AppBarTitle> {
 
     var nicknameSize = w > h ? h / 30 : w / 30;
 
+    var image = Row(
+      children: [
+        Hero(tag: "", child: Container()),
+      ],
+    );
+
+    if (_image == "creature") {
+      image = Row(
+        children: [
+          Hero(
+            tag: "SelectWiki",
+            child: SvgPicture.asset(
+              'assets/book_reading.svg',
+              height: h / 20,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: w/40),
+            child: Text("백과사전 보기", style: TextStyle(color: Colors.black, fontSize: nicknameSize, fontWeight: FontWeight.w700),),
+          )
+        ],
+      );
+    } else if (_image == "friends") {
+      image = Row(
+        children: [
+          Hero(
+            tag: "SelectFriends",
+            child: SvgPicture.asset(
+              'assets/friends.svg',
+              height: h / 20,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: w/40),
+            child: Text("백과사전 보기", style: TextStyle(color: Colors.black, fontSize: nicknameSize, fontWeight: FontWeight.w700),),
+          )
+        ],
+      );
+    }
+
     return Padding(
       padding: EdgeInsets.only(top: h / 40),
       child: Row(
@@ -62,6 +106,12 @@ class _AppBarTitleState extends State<AppBarTitle> {
               fontFamily: 'SDSamlip',
               fontSize: 28,
             ),
+          ),
+          Row(
+            children: [
+              image,
+
+            ],
           ),
           Padding(
             padding: EdgeInsets.all(h / 50),
