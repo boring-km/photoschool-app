@@ -565,6 +565,7 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                 child: Image.network(
                   item.tbImgURL,
                   width: 200,
+                  height: 150,
                 ),
               ),
               Padding(
