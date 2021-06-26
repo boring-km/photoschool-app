@@ -68,9 +68,12 @@ class _SelectScreenState extends State<SelectScreen> {
                       children: [
                         Padding(
                           padding: EdgeInsets.only(top: boxHeight/8, bottom: boxHeight/9),
-                          child: SvgPicture.asset(
-                            'assets/book_reading.svg',
-                            height: boxHeight * (1/2),
+                          child: Hero(
+                            tag: "SelectWiki",
+                            child: SvgPicture.asset(
+                              'assets/book_reading.svg',
+                              height: boxHeight * (1/2),
+                            ),
                           ),
                         ),
                         Text(
@@ -78,7 +81,7 @@ class _SelectScreenState extends State<SelectScreen> {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               color: Colors.black,
-                              fontSize: boxFontSize,
+                              fontSize: boxFontSize * (3/4),
                               fontFamily: 'DdoDdo'),
                         ),
                       ],
@@ -116,7 +119,7 @@ class _SelectScreenState extends State<SelectScreen> {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               color: Colors.black,
-                              fontSize: boxFontSize,
+                              fontSize: boxFontSize * (3/4),
                               fontFamily: 'DdoDdo'),
                         ),
                       ],

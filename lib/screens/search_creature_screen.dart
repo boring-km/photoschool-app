@@ -3,14 +3,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:photoschool/screens/select_screen.dart';
-import 'package:photoschool/utils/screen_animation.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../dto/searched_detail_item.dart';
 import '../res/colors.dart';
 import '../services/public_api.dart';
+import '../utils/screen_animation.dart';
 import '../widgets/app_bar_base.dart';
 import 'creature_detail_screen.dart';
+import 'select_screen.dart';
 
 class SearchCreatureScreen extends StatefulWidget {
 
@@ -28,7 +29,8 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
   final _creatureSearchController = TextEditingController();
   int _currentPage = 1;
   int received = -1;
-  List<SearchedDetailItem> dataList = [];
+  final _dataList = [];
+  bool _isLoading = true;
   late User _user;
 
   @override
@@ -49,17 +51,35 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
     var buttonHeight = w > h ? h / 15 : w / 15;
     var buttonFontSize = w > h ? h / 40 : w / 40;
 
-    return dataList.isEmpty ? Scaffold(
+    return _isLoading ? Scaffold(
       backgroundColor: CustomColors.orange,
       body: Center(
-        child: Text("로딩중"),
+        child: Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Hero(
+                tag: "SelectWiki",
+                child: SvgPicture.asset(
+                  'assets/book_reading.svg',
+                  height: h / 2,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(base/2),
+                child: Text("로딩중", style: TextStyle(color: Colors.black, fontSize: buttonFontSize * 2),),
+              )
+            ],
+          ),
+        ),
       ),
     ) : Scaffold(
-      backgroundColor: CustomColors.deepblue,
+      resizeToAvoidBottomInset: false,
+      backgroundColor: CustomColors.orange,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
-        title: AppBarTitle(user: _user,),
+        title: AppBarTitle(user: _user, image: "creature"),
       ),
       body: Padding(
         padding: EdgeInsets.all(w / 20),
@@ -111,7 +131,7 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
                           controller: _creatureSearchController,
                           onSubmitted: (str) async {
                             _currentPage = 1;
-                            dataList.clear();
+                            _dataList.clear();
                             await _getCreatureSearchedListView(str, _currentPage);
                           },
                         ),
@@ -124,7 +144,7 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
                     child: ElevatedButton(
                         onPressed: () async {
                           _currentPage = 1;
-                          dataList.clear();
+                          _dataList.clear();
                           await _getCreatureSearchedListView(_creatureSearchController.text, _currentPage);
                         },
                         style: ElevatedButton.styleFrom(
@@ -147,7 +167,8 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
 
   _buildListView(double base) {
     var resultList = <Widget>[];
-    for (var item in dataList) {
+    for (var item in _dataList) {
+      if (!(item is SearchedDetailItem)) continue;
       final name = item.name;
       final type = item.type;
       final imageURL = item.imgUrl1;
@@ -218,16 +239,18 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
   _getCreatureSearchedListView(String text, int page) async {
     var list = await PublicAPIService.getChildBookSearch(text, page);
     received = list.length;
-    var resultList = <SearchedDetailItem>[];
+    var resultList = [];
     for (var item in list) {
       final result = await PublicAPIService.getChildBookDetail(item.apiId);
       if (result != false) {
-        var item = (result as SearchedDetailItem);
-        resultList.add(item);
+        resultList.add(result as SearchedDetailItem);
       }
     }
-    setState(() {
-      dataList.addAll(resultList);
-    });
+    if (resultList.isNotEmpty) {
+      setState(() {
+        _dataList.addAll(resultList);
+        _isLoading = false;
+      });
+    }
   }
 }
