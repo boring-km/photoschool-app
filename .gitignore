@@ -50,6 +50,7 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
+test/services/public_api_test.dart
 lib/services/woongjin_api.dart
 lib/utils/http_wjdict.dart
 test/utils/http_woogjin_test.dart
