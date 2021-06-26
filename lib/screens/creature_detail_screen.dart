@@ -8,8 +8,8 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../dto/post_response.dart';
-import '../dto/searched_detail_item.dart';
+import '../dto/post/post_response.dart';
+import '../dto/creature/creature_detail_response.dart';
 import '../res/colors.dart';
 import '../services/server_api.dart';
 import '../utils/screen_animation.dart';
@@ -17,7 +17,7 @@ import '../widgets/app_bar_base.dart';
 import 'search_creature_screen.dart';
 
 class CreatureDetailScreen extends StatefulWidget {
-  final SearchedDetailItem _creature;
+  final CreatureDetailResponse _creature;
   final User _user;
 
   CreatureDetailScreen(this._creature, {Key? key, required User user}): _user = user,
@@ -28,7 +28,7 @@ class CreatureDetailScreen extends StatefulWidget {
 }
 
 class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
-  final SearchedDetailItem _creature;
+  final CreatureDetailResponse _creature;
   late User _user;
   final _dialogTextController = TextEditingController();
   final picker = ImagePicker();

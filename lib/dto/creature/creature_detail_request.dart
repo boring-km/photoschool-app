@@ -1,9 +1,9 @@
-class DetailRequest {
+class CreatureDetailRequest {
   late String baseUrl;
   final int q1;
   late String serviceKey;
 
-  DetailRequest(this.baseUrl, this.serviceKey, this.q1);
+  CreatureDetailRequest(this.baseUrl, this.serviceKey, this.q1);
 
   @override
   String toString() {

@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../dto/searched_detail_item.dart';
+import '../dto/creature/creature_detail_response.dart';
 import '../res/colors.dart';
 import '../services/public_api.dart';
 import '../services/server_api.dart';
@@ -148,7 +148,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                     for (var item in results) {
                       result += "이름: ${item.name}, 종류: ${item.type}, 도감번호: ${item.apiId}\n";
                     }
-                    final item = await PublicAPIService.getChildBookDetail(results[2].apiId) as SearchedDetailItem;
+                    final item = await PublicAPIService.getChildBookDetail(results[2].apiId) as CreatureDetailResponse;
                     result += "선택한 생물 이름: ${item.name}, 상세설명: ${item.detail}\n";
                     _apiResultURL = item.imgUrl1;
                     setState(() {

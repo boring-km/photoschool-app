@@ -1,4 +1,4 @@
-class SearchRequest {
+class CreatureRequest {
   late String baseUrl;
   late String serviceKey;
   final int st;
@@ -6,7 +6,7 @@ class SearchRequest {
   final int numOfRows;
   final int pageNo;
 
-  SearchRequest(this.baseUrl, this.serviceKey, this.st, this.keyword, this.numOfRows, this.pageNo);
+  CreatureRequest(this.baseUrl, this.serviceKey, this.st, this.keyword, this.numOfRows, this.pageNo);
 
   @override
   String toString() {

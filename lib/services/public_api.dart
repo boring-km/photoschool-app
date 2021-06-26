@@ -1,19 +1,20 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import '../dto/detail_request.dart';
-import '../dto/search_request.dart';
-import '../dto/searched_detail_item.dart';
-import '../dto/searched_item.dart';
+
+import '../dto/creature/creature_detail_request.dart';
+import '../dto/creature/creature_detail_response.dart';
+import '../dto/creature/creature_request.dart';
+import '../dto/creature/creature_response.dart';
 import '../utils/http_custom.dart';
 import '../utils/xml_custom.dart';
 
 class PublicAPIService {
 
-  static Future<List<SearchedCreature>> getChildBookSearch(String keyword, int page) async {
+  static Future<List<CreatureResponse>> getChildBookSearch(String keyword, int page) async {
     final baseUrl = dotenv.env["public_api_list_url"]!;
     final serviceKey = dotenv.env["public_api_key"]!;
     final numOfRows = 8;
-    final target = SearchRequest(baseUrl, serviceKey, 1, keyword, numOfRows, page).toString();
-    var creatureList = <SearchedCreature>[];
+    final target = CreatureRequest(baseUrl, serviceKey, 1, keyword, numOfRows, page).toString();
+    var creatureList = <CreatureResponse>[];
     var result = await Http.get(target);
     if (result['error'] != null) {
       print(result['errorCode']);
@@ -24,7 +25,7 @@ class PublicAPIService {
         final apiId = int.parse(item.getChild('childLvbngPilbkNo')!.text!);
         final name = item.getChild('lvbngKrlngNm')!.text!;
         final type = item.getChild('lvbngTpcdNm')!.text!;
-        creatureList.add(SearchedCreature(name, type, apiId));
+        creatureList.add(CreatureResponse(name, type, apiId));
       }
     }
     return creatureList;
@@ -33,7 +34,7 @@ class PublicAPIService {
   static Future<Object> getChildBookDetail(int apiId) async {
     final baseUrl = dotenv.env["public_api_detail_url"]!;
     final serviceKey = dotenv.env["public_api_key"]!;
-    final target = DetailRequest(baseUrl, serviceKey, apiId).toString();
+    final target = CreatureDetailRequest(baseUrl, serviceKey, apiId).toString();
     var result = await Http.get(target);
     if (result['error'] != null) {
       print(result['errorCode']);
@@ -41,7 +42,7 @@ class PublicAPIService {
     } else {
       final searched = result['data'];
       final item = XMLParser.parseXMLItem(searched);
-      return SearchedDetailItem(
+      return CreatureDetailResponse(
         apiId,
         item.getChild('lvbngKrlngNm')!.text != null ? item.getChild('lvbngKrlngNm')!.text! : "",
         item.getChild('lvbngTpcdNm')!.text!,
