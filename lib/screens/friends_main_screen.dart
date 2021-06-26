@@ -33,7 +33,7 @@ class _FriendsMainState extends State<FriendsMainScreen> {
     baseSize = w > h ? h / 10 : w / 10;
 
     return Scaffold(
-      backgroundColor: CustomColors.amber,
+      backgroundColor: CustomColors.deepblue,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,

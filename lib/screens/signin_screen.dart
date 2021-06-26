@@ -16,7 +16,7 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: CustomColors.amber,
+      backgroundColor: CustomColors.deepblue,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.only(
@@ -63,7 +63,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   }
                   return CircularProgressIndicator(
                     valueColor: AlwaysStoppedAnimation<Color>(
-                      CustomColors.firebaseOrange,
+                      CustomColors.orange,
                     ),
                   );
                 },

@@ -67,10 +67,10 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     var w = MediaQuery.of(context).size.width;
     var h = MediaQuery.of(context).size.height;
     return Scaffold(
-      backgroundColor: CustomColors.amber,
+      backgroundColor: CustomColors.deepblue,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: CustomColors.amber,
+        backgroundColor: CustomColors.deepblue,
         title: AppBarTitle(user: _user,),
       ),
       body: SafeArea(
@@ -96,7 +96,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
               Text(
                 '( ${_user.email!} )',
                 style: TextStyle(
-                  color: CustomColors.firebaseOrange,
+                  color: CustomColors.orange,
                   fontSize: 20,
                   letterSpacing: 0.5,
                 ),

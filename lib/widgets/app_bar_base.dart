@@ -67,7 +67,7 @@ class _AppBarTitleState extends State<AppBarTitle> {
             padding: EdgeInsets.all(h / 50),
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.amber,
+                color: CustomColors.orange,
                 borderRadius: BorderRadius.all(Radius.circular(4.0))
               ),
               child: Row(

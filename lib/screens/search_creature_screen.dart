@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -48,8 +49,13 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
     var buttonHeight = w > h ? h / 15 : w / 15;
     var buttonFontSize = w > h ? h / 40 : w / 40;
 
-    return Scaffold(
-      backgroundColor: CustomColors.amber,
+    return dataList.isEmpty ? Scaffold(
+      backgroundColor: CustomColors.orange,
+      body: Center(
+        child: Text("로딩중"),
+      ),
+    ) : Scaffold(
+      backgroundColor: CustomColors.deepblue,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -168,17 +174,10 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
               physics: ClampingScrollPhysics(),
               scrollDirection: Axis.horizontal,
               children: [
-                Image.network(imageURL, width: 150, loadingBuilder: (context, child, progress) {
-                  if (progress != null) {
-                    return CircularProgressIndicator(
-                      backgroundColor: Colors.black12,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
-                      value: progress.cumulativeBytesLoaded / progress.expectedTotalBytes!,
-                    );
-                  } else {
-                    return child;
-                  }
-                }),
+                Image(
+                  image: CachedNetworkImageProvider(imageURL),
+                  width: 150,
+                ),
                 Padding(padding: EdgeInsets.symmetric(horizontal: base/5)),
                 Center(child: Text("이름: $name", style: TextStyle(fontSize: base/5, fontWeight: FontWeight.w700, color: Colors.black),)),
                 Padding(padding: EdgeInsets.symmetric(horizontal: base/2)),

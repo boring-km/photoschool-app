@@ -58,7 +58,7 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
     var boxRounded = w > h ? h / 30 : w / 30;
 
     return Scaffold(
-      backgroundColor: CustomColors.amber,
+      backgroundColor: CustomColors.deepblue,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,

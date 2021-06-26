@@ -40,7 +40,7 @@ class _SelectScreenState extends State<SelectScreen> {
     var boxRounded = w > h ? h / 30 : w / 30;
 
     return Scaffold(
-      backgroundColor: CustomColors.amber,
+      backgroundColor: CustomColors.deepblue,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -79,14 +79,14 @@ class _SelectScreenState extends State<SelectScreen> {
                           style: TextStyle(
                               color: Colors.black,
                               fontSize: boxFontSize,
-                              fontFamily: 'SDChild'),
+                              fontFamily: 'DdoDdo'),
                         ),
                       ],
                     ),
                     style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(boxRounded)),
-                        primary: Color.fromARGB(206, 178, 198, 255),
+                        primary: CustomColors.orange,
                         onSurface: Colors.white30),
                   ),
                 ),
@@ -117,15 +117,15 @@ class _SelectScreenState extends State<SelectScreen> {
                           style: TextStyle(
                               color: Colors.black,
                               fontSize: boxFontSize,
-                              fontFamily: 'SDChild'),
+                              fontFamily: 'DdoDdo'),
                         ),
                       ],
                     ),
                     style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(boxRounded)),
-                        primary: CustomColors.friendsYellow,
-                        onSurface: CustomColors.friendsYellowAccent),
+                        primary: CustomColors.friendsGreen,
+                        onSurface: CustomColors.friendsGreenAccent),
                   ),
                 ),
               ],
