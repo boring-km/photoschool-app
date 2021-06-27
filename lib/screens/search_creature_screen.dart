@@ -5,12 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../dto/searched_detail_item.dart';
+import '../dto/creature/creature_detail_response.dart';
+import '../dto/dict/dict_response.dart';
 import '../res/colors.dart';
 import '../services/public_api.dart';
+import '../services/woongjin_api.dart';
 import '../utils/screen_animation.dart';
 import '../widgets/app_bar_base.dart';
 import 'creature_detail_screen.dart';
+import 'pedia_detail_screen.dart';
 import 'select_screen.dart';
 
 class SearchCreatureScreen extends StatefulWidget {
@@ -29,14 +32,15 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
   final _creatureSearchController = TextEditingController();
   int _currentPage = 1;
   int received = -1;
-  final _dataList = [];
-  bool _isLoading = true;
+  final List<CreatureDetailResponse> _creatureDataList = [];
+  final List<DictResponse> _wjPediaList = [];
+  bool _isFirstLoading = true;
   late User _user;
 
   @override
   void initState() {
     _user = widget._user;
-    _getCreatureSearchedListView(_creatureSearchController.text, _currentPage);
+    _searchCreature(_creatureSearchController.text, _currentPage); // 처음에 기본 생물만 검색
     super.initState();
   }
 
@@ -51,7 +55,7 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
     var buttonHeight = w > h ? h / 15 : w / 15;
     var buttonFontSize = w > h ? h / 40 : w / 40;
 
-    return _isLoading ? Scaffold(
+    return _isFirstLoading ? Scaffold(
       backgroundColor: CustomColors.orange,
       body: Center(
         child: Container(
@@ -111,17 +115,20 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
                         padding: EdgeInsets.only(left: h / 80, right: 80),
                         child: TextField(
                           decoration: InputDecoration(
-                              border: InputBorder.none,
-                              icon: Icon(Icons.search, size: base/3, color: Colors.black45,),
-                              labelText: '백과사전 검색',
-                              labelStyle: TextStyle(color: Colors.black45),
-                              fillColor: Colors.black),
-                          style: TextStyle(color: Colors.black),
+                            floatingLabelBehavior:FloatingLabelBehavior.never,
+                            border: InputBorder.none,
+                            icon: Icon(Icons.search, size: base/3, color: Colors.black45,),
+                            labelText: '백과사전 검색',
+                            labelStyle: TextStyle(color: Colors.black45),
+                            fillColor: Colors.black,),
+                          style: TextStyle(color: Colors.black, fontSize: base/4),
                           controller: _creatureSearchController,
                           onSubmitted: (str) async {
                             _currentPage = 1;
-                            _dataList.clear();
-                            await _getCreatureSearchedListView(str, _currentPage);
+                            _creatureDataList.clear();
+                            _wjPediaList.clear();
+                            await _searchWJDict(str);
+                            await _searchCreature(str, _currentPage);
                           },
                         ),
                       ),
@@ -133,8 +140,9 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
                     child: ElevatedButton(
                         onPressed: () async {
                           _currentPage = 1;
-                          _dataList.clear();
-                          await _getCreatureSearchedListView(_creatureSearchController.text, _currentPage);
+                          _creatureDataList.clear();
+                          await _searchWJDict(_creatureSearchController.text);
+                          await _searchCreature(_creatureSearchController.text, _currentPage);
                         },
                         style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
@@ -147,99 +155,230 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
                 ],
               ),
             ),
-            _buildListView(base)
+            Container(
+              child: Expanded(
+                child: GridView.count(
+                  crossAxisCount: 3,
+                  childAspectRatio: (200/250),
+                  children: _buildGridViewItems(base),
+                ),
+              ),
+            )
+            // _buildListView(base)
           ],
         ),
       ),
     );
   }
 
-  _buildListView(double base) {
-    var resultList = <Widget>[];
-    for (var item in _dataList) {
-      if (!(item is SearchedDetailItem)) continue;
-      final name = item.name;
-      final type = item.type;
-      final imageURL = item.imgUrl1;
+  _searchCreature(String text, int page) async {
+    var list = await PublicAPIService.getChildBookSearch(text, page);
+    received = list.length;
+    var resultList = <CreatureDetailResponse>[];
+    for (var item in list) {
+      final result = await PublicAPIService.getChildBookDetail(item.apiId, text);
+      if (result != false) {
+        resultList.add(result as CreatureDetailResponse);
+      }
+    }
+    if (resultList.isNotEmpty) {
+      setState(() {
+        _creatureDataList.addAll(resultList);
+        _isFirstLoading = false;
+      });
+    }
+  }
 
-      final widget = GestureDetector(
+  _searchWJDict(String keyword) async {
+    _wjPediaList.clear();
+    _wjPediaList.addAll(await WoongJinAPIService.searchWJPedia(keyword));
+  }
+
+  List<Widget> _buildGridViewItems(double base) {
+    var resultList = <Widget>[];
+    var firstPediaList = [];
+    var secondPediaList = [];
+    var firstCreatureList = [];
+    var secondCreatureList = [];
+
+    for (var item in _wjPediaList) {
+      if (item.isExactly) {
+        firstPediaList.add(item);
+      } else {
+        secondPediaList.add(item);
+      }
+    }
+
+    for (var item in _creatureDataList) {
+      if (item.isExactly) {
+        firstCreatureList.add(item);
+      } else {
+        secondCreatureList.add(item);
+      }
+    }
+
+    for (var item in firstPediaList) {
+      resultList.add(_buildGridViewItem("pedia", item, base));
+    }
+
+    for (var item in firstCreatureList) {
+      resultList.add(_buildGridViewItem("creature", item, base));
+    }
+
+    for (var item in secondPediaList) {
+      resultList.add(_buildGridViewItem("pedia", item, base));
+    }
+
+    for (var item in secondCreatureList) {
+      resultList.add(_buildGridViewItem("creature", item, base));
+    }
+
+    return resultList;
+  }
+
+  Widget _buildGridViewItem(String type, dynamic item, double base) {
+    if (type == "pedia") {
+      final pedia = item as DictResponse;
+      return GestureDetector(
         onTap: () {
           Navigator.of(context).pushReplacement(
               MaterialPageRoute(
-                  builder: (context) => CreatureDetailScreen(item, user: _user,)
+                  builder: (context) => PediaDetailScreen(pedia, user: _user,)
               )
           );
         },
-        child: Container(
-          height: 200,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(base/10)),
-            border: Border.all(width: 2, color: Colors.black),
-          ),
-          child: Padding(
-            padding: EdgeInsets.all(base/5),
-            child: ListView(
-              shrinkWrap: true,
-              physics: ClampingScrollPhysics(),
-              scrollDirection: Axis.horizontal,
+        child: Padding(
+          padding: EdgeInsets.all(base/10),
+          child: Container(
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(base/2))
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Image(
-                  image: CachedNetworkImageProvider(imageURL),
-                  width: 150,
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: base * (2/5)),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: CustomColors.orange,
+                        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(base/4), bottomRight: Radius.circular(base/4))
+                    ),
+                    height: base/3,
+                    child: Center(
+                      child: Text("웅진학습백과", style: TextStyle(color: Colors.white, fontSize: base/4),),
+                    ),
+                  ),
                 ),
-                Padding(padding: EdgeInsets.symmetric(horizontal: base/5)),
-                Center(child: Text("이름: $name", style: TextStyle(fontSize: base/5, fontWeight: FontWeight.w700, color: Colors.black),)),
-                Padding(padding: EdgeInsets.symmetric(horizontal: base/2)),
-                Center(child: Text("추가 정보: $type", style: TextStyle(fontSize: base/8, color: Colors.black),))
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(top: base/8, left: base/6),
+                      child: Text(pedia.name, style: TextStyle(color: Colors.black, fontSize: base/3),),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(bottom: base/20),
+                      child: Text('(${pedia.subName})', style: TextStyle(color: Colors.black, fontSize: base/6),),
+                    )
+                  ],
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: base/6),
+                    child: Text(pedia.description, style: TextStyle(color: Colors.black, fontSize: base/5),),
+                  ),
+                ),
+                pedia.imageURLs.isNotEmpty ? Padding(
+                  padding: EdgeInsets.only(top: base/6, left: base/6, right: base/6),
+                  child: Image(
+                    image: CachedNetworkImageProvider(pedia.imageURLs[0]),
+                    height: base*2,
+                  ),
+                ) : Container()
               ],
             ),
           ),
         ),
       );
-      resultList.add(widget);
-    }
 
-    return Expanded(
-        child: NotificationListener<ScrollEndNotification>(
-          onNotification: (scrollEnd) {
-            var metrics = scrollEnd.metrics;
-            if (metrics.atEdge) {
-              if (metrics.pixels != 0) {
-                print('page: $_currentPage, received: $received');
-                if (received == -1 || received == 8) {
-                  _currentPage++;
-                  _getCreatureSearchedListView(_creatureSearchController.text, _currentPage);
-                }
-              }
-            }
-            return true;
-          },
-          child: ListView.builder(
-            itemCount: resultList.length,
-            itemBuilder: (context, index) {
-              return resultList[index];
-            },
-          )
-        )
-    );
+    } else if (type == "creature") {
+      final creature = item as CreatureDetailResponse;
+      return GestureDetector(
+        onTap: () {
+          Navigator.of(context).push(
+              MaterialPageRoute(
+                  builder: (context) => CreatureDetailScreen(creature, user: _user,)
+              )
+          );
+        },
+        child: Padding(
+          padding: EdgeInsets.all(base/10),
+          child: Container(
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(base/2))
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: base * (2/5)),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: CustomColors.creatureGreen,
+                        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(base/4), bottomRight: Radius.circular(base/4))
+                    ),
+                    height: base/3,
+                    child: Center(
+                      child: Text("어린이생물도감", style: TextStyle(color: Colors.white, fontSize: base/4),),
+                    ),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: EdgeInsets.only(top: base/8, left: base/6),
+                    child: Text(creature.name, style: TextStyle(color: Colors.black, fontSize: base/3),),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: base/6),
+                    child: Text(creature.familyType, style: TextStyle(color: Colors.black, fontSize: base/5),),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: base/6, left: base/6, right: base/6),
+                  child: Image(
+                    image: CachedNetworkImageProvider(creature.imgUrl1),
+                    height: base*2,
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: EdgeInsets.only(top: base/8, left: base/6, right: base/6),
+                    child: Text("출처: 국립수목원", style: TextStyle(color: Colors.black, fontSize: base/6),),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+      );
+    } else {
+      return Padding(
+        padding: const EdgeInsets.all(0),
+        child: Container(),
+      );
+    }
   }
 
-  _getCreatureSearchedListView(String text, int page) async {
-    var list = await PublicAPIService.getChildBookSearch(text, page);
-    received = list.length;
-    var resultList = [];
-    for (var item in list) {
-      final result = await PublicAPIService.getChildBookDetail(item.apiId);
-      if (result != false) {
-        resultList.add(result as SearchedDetailItem);
-      }
-    }
-    if (resultList.isNotEmpty) {
-      setState(() {
-        _dataList.addAll(resultList);
-        _isLoading = false;
-      });
-    }
-  }
 }
+
+
