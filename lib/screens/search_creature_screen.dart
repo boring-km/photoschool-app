@@ -241,7 +241,7 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
       final pedia = item as DictResponse;
       return GestureDetector(
         onTap: () {
-          Navigator.of(context).pushReplacement(
+          Navigator.of(context).push(
               MaterialPageRoute(
                   builder: (context) => PediaDetailScreen(pedia, user: _user,)
               )
@@ -292,7 +292,7 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
                   ),
                 ),
                 pedia.imageURLs.isNotEmpty ? Padding(
-                  padding: EdgeInsets.only(top: base/6, left: base/6, right: base/6),
+                  padding: EdgeInsets.only(top: base/10, left: base/6, right: base/6),
                   child: Image(
                     image: CachedNetworkImageProvider(pedia.imageURLs[0]),
                     height: base*2,
@@ -353,7 +353,7 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: base/6, left: base/6, right: base/6),
+                  padding: EdgeInsets.only(top: base/20, left: base/6, right: base/6),
                   child: Image(
                     image: CachedNetworkImageProvider(creature.imgUrl1),
                     height: base*2,
@@ -362,7 +362,7 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Padding(
-                    padding: EdgeInsets.only(top: base/8, left: base/6, right: base/6),
+                    padding: EdgeInsets.only(top: base/8, left: base/5, right: base/6),
                     child: Text("출처: 국립수목원", style: TextStyle(color: Colors.black, fontSize: base/6),),
                   ),
                 )
