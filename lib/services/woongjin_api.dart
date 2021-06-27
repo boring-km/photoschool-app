@@ -9,13 +9,13 @@ import '../dto/dict/dict_response.dart';
 import '../utils/http_wjdict.dart';
 
 class WoongJinAPIService {
-  static Future<List> searchWJPedia(String keyword) async {
+  static Future<List<DictResponse>> searchWJPedia(String keyword) async {
     final domain = dotenv.env["woongjin_domain"]!;
     final apiPath = dotenv.env["woongjin_search_wjpedia"];
     final response = await HttpWJDict.get("$domain$apiPath$keyword");
     var jsonResult = jsonDecode(response['data'])['RESP_RESULT'];
     var searchedItemList = jsonResult['SEARCH_WORD_WJPEDIA_MEAN'];
-    var resultList = [];
+    var resultList = <DictResponse>[];
 
     if (searchedItemList.isNotEmpty) {
       for (var item in searchedItemList) {
@@ -30,7 +30,9 @@ class WoongJinAPIService {
         var name = item['HEADWD'];
         var subName = item['ORG_HEADWD'];
         var description = item['HEAD_WORD_DSCR'];
-        resultList.add(DictResponse(apiId, name, subName, imageURLs, description));
+        var isExactly = name == keyword;
+        var dictResponse = DictResponse(apiId, name, subName, imageURLs, description, isExactly);
+        resultList.add(dictResponse);
       }
     }
 

@@ -148,7 +148,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                     for (var item in results) {
                       result += "이름: ${item.name}, 종류: ${item.type}, 도감번호: ${item.apiId}\n";
                     }
-                    final item = await PublicAPIService.getChildBookDetail(results[2].apiId) as CreatureDetailResponse;
+                    final item = await PublicAPIService.getChildBookDetail(results[2].apiId, "") as CreatureDetailResponse;
                     result += "선택한 생물 이름: ${item.name}, 상세설명: ${item.detail}\n";
                     _apiResultURL = item.imgUrl1;
                     setState(() {

@@ -31,7 +31,7 @@ class PublicAPIService {
     return creatureList;
   }
 
-  static Future<Object> getChildBookDetail(int apiId) async {
+  static Future<Object> getChildBookDetail(int apiId, String keyword) async {
     final baseUrl = dotenv.env["public_api_detail_url"]!;
     final serviceKey = dotenv.env["public_api_key"]!;
     final target = CreatureDetailRequest(baseUrl, serviceKey, apiId).toString();
@@ -43,15 +43,16 @@ class PublicAPIService {
       final searched = result['data'];
       final item = XMLParser.parseXMLItem(searched);
       return CreatureDetailResponse(
-        apiId,
-        item.getChild('lvbngKrlngNm')!.text != null ? item.getChild('lvbngKrlngNm')!.text! : "",
-        item.getChild('lvbngTpcdNm')!.text!,
-        item.getChild('famlKrlngNm')!.text!,
-        item.getChild('hbttNm')!.text != null ? item.getChild('hbttNm')!.text! : "",
-        item.getChild('lvbngDscrt')!.text != null ? item.getChild('lvbngDscrt')!.text! : "",
-        item.getChild('imgUrl1')!.text!,
-        item.getChild('imgUrl2')!.text!,
-        item.getChild('imgUrl3')!.text!,);
+          apiId,
+          item.getChild('lvbngKrlngNm')!.text != null ? item.getChild('lvbngKrlngNm')!.text! : "",
+          item.getChild('lvbngTpcdNm')!.text!,
+          item.getChild('famlKrlngNm')!.text!,
+          item.getChild('hbttNm')!.text != null ? item.getChild('hbttNm')!.text! : "",
+          item.getChild('lvbngDscrt')!.text != null ? item.getChild('lvbngDscrt')!.text! : "",
+          item.getChild('imgUrl1')!.text!,
+          item.getChild('imgUrl2')!.text!,
+          item.getChild('imgUrl3')!.text!,
+          keyword == item.getChild('lvbngTpcdNm')!.text!);
     }
   }
 
