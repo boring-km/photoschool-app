@@ -11,6 +11,7 @@ class CustomColors {
   static final Color friendsYellow = Color(0xFFFFDE14);
   static final Color friendsYellowAccent = Color(0xFFFAE141);
 
+  static final Color creatureGreen = Color(0xFF88c669);
   static final Color lightGreen = Color(0xE6C5ECB3);
   static final Color friendsGreen = Color(0xFF9AEC71);
   static final Color friendsGreenAccent = Color(0xFF83FD75);
