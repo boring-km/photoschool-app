@@ -53,7 +53,7 @@ class CustomAPIService {
     return { "schoolName": schoolName, "posts": postList };
   }
 
-  static Future<Map<String, dynamic>> getOthersPostBy(String apiId, int index) async {
+  static Future<List<PostResponse>> getOthersPostBy(String apiId, int index) async {
     final domain = dotenv.env["server_domain"]!;
     final result = await Http.get("$domain/others/$apiId/$index");
     final json = _getResult(result);
@@ -65,10 +65,10 @@ class CustomAPIService {
       postResponse.nickname = item['nickname'];
       postList.add(postResponse);
     }
-    return { "posts": postList };
+    return postList;
   }
 
-  static Future<Map<String, dynamic>> getAwardPosts(int index) async {
+  static Future<List<PostResponse>> getAwardPosts(int index) async {
     final domain = dotenv.env["server_domain"]!;
     final result = await Http.get("$domain/awards/$index");
     final json = _getResult(result);
@@ -80,7 +80,7 @@ class CustomAPIService {
       postResponse.awardName = item['awardName'];
       postList.add(postResponse);
     }
-    return { "posts": postList };
+    return postList;
   }
 
   static Future<List<SchoolRank>> getSchoolRank() async {
@@ -95,7 +95,7 @@ class CustomAPIService {
     return schoolList;
   }
 
-  static Future<Map<String, dynamic>> getAllPosts(int index) async {
+  static Future<List<PostResponse>> getAllPosts(int index) async {
     final domain = dotenv.env["server_domain"]!;
     final result = await Http.get("$domain/post/all/$index");
     final json = _getResult(result);
@@ -107,7 +107,7 @@ class CustomAPIService {
       postResponse.nickname = item['nickname'];
       postList.add(postResponse);
     }
-    return { "posts": postList };
+    return postList;
   }
 
   static Future<List<PostResponse>> searchPost(String searchType, String searchText, String sortType, int index) async {

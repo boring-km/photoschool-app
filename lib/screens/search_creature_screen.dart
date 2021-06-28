@@ -51,7 +51,7 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
     var base = w > h ? w / 10 : h / 15;
     var buttonWidth = w > h ? w / 15 : h / 15;
     var buttonHeight = w > h ? h / 15 : w / 15;
-    var buttonFontSize = w > h ? h / 40 : w / 40;
+    var buttonFontSize = w > h ? h / 35 : w / 35;
 
     return _isFirstLoading ? Scaffold(
       backgroundColor: CustomColors.orange,
@@ -69,7 +69,17 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
               ),
               Padding(
                 padding: EdgeInsets.all(base/2),
-                child: Text("로딩중", style: TextStyle(color: Colors.black, fontSize: buttonFontSize * 2),),
+                child: Text("로딩중",
+                  style: TextStyle(
+                      color: Colors.white,
+                      shadows: [
+                        Shadow(
+                            blurRadius: 4.0,
+                            color: Colors.black45,
+                            offset: Offset(3.0, 3.0)
+                        )
+                      ],
+                      fontSize: buttonFontSize * 3),),
               )
             ],
           ),
@@ -128,19 +138,29 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
                     constraints: BoxConstraints.tightFor(
                         width: buttonWidth, height: buttonHeight),
                     child: ElevatedButton(
-                        onPressed: () async {
-                          _currentPage = 1;
-                          _creatureDataList.clear();
-                          await _searchWJDict(_creatureSearchController.text);
-                          await _searchCreature(_creatureSearchController.text, _currentPage);
-                        },
-                        style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(h / 50),
-                                side: BorderSide(color: Colors.black, width: 2.0)),
-                            primary: CustomColors.orange,
-                            onSurface: Colors.orangeAccent),
-                        child: Text("검색", style: TextStyle(color: Colors.black, fontSize: buttonFontSize, fontWeight: FontWeight.w700),)),
+                      onPressed: () async {
+                        _currentPage = 1;
+                        _creatureDataList.clear();
+                        await _searchWJDict(_creatureSearchController.text);
+                        await _searchCreature(_creatureSearchController.text, _currentPage);
+                      },
+                      style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(h / 50),),
+                          primary: CustomColors.orange,
+                          onSurface: Colors.orangeAccent),
+                      child: Text("검색",
+                        style: TextStyle(
+                            color: Colors.white,
+                            shadows: [
+                              Shadow(
+                                  blurRadius: 4.0,
+                                  color: Colors.black45,
+                                  offset: Offset(2.0, 2.0)
+                              )
+                            ],
+                            fontSize: buttonFontSize,
+                            fontWeight: FontWeight.w700),)),
                   ),
                 ],
               ),
@@ -242,6 +262,13 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
           child: Container(
             decoration: BoxDecoration(
                 color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.orangeAccent,
+                      blurRadius: 8.0,
+                      offset: Offset(4.0, 4.0)
+                  )
+                ],
                 borderRadius: BorderRadius.all(Radius.circular(base/2))
             ),
             child: Column(
@@ -310,6 +337,13 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
           child: Container(
             decoration: BoxDecoration(
                 color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.lightGreenAccent,
+                    blurRadius: 8.0,
+                    offset: Offset(4.0, 4.0)
+                  )
+                ],
                 borderRadius: BorderRadius.all(Radius.circular(base/2))
             ),
             child: Column(

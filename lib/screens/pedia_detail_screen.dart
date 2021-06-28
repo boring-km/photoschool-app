@@ -10,18 +10,18 @@ import 'package:image_picker/image_picker.dart';
 import '../dto/dict/dict_detail_response.dart';
 import '../dto/dict/dict_response.dart';
 import '../dto/photos/photo_response.dart';
-import '../dto/post/post_response.dart';
 import '../res/colors.dart';
 import '../services/server_api.dart';
 import '../services/woongjin_api.dart';
+import '../utils/user_image_card.dart';
 import '../widgets/app_bar_base.dart';
 
 class PediaDetailScreen extends StatefulWidget {
-
   final DictResponse _pedia;
   final User _user;
 
-  PediaDetailScreen(this._pedia, {Key? key, required User user}): _user = user,
+  PediaDetailScreen(this._pedia, {Key? key, required User user})
+      : _user = user,
         super(key: key);
 
   @override
@@ -29,7 +29,6 @@ class PediaDetailScreen extends StatefulWidget {
 }
 
 class _PediaDetailState extends State<PediaDetailScreen> {
-
   final DictResponse _pedia;
   late DictDetailResponse _pediaDetail;
   late User _user;
@@ -46,7 +45,7 @@ class _PediaDetailState extends State<PediaDetailScreen> {
 
   final _dialogTextController = TextEditingController();
 
-  int received = 0;
+  int _received = -1;
   int _othersIndex = 0;
 
   _PediaDetailState(this._pedia);
@@ -68,7 +67,6 @@ class _PediaDetailState extends State<PediaDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     var w = MediaQuery.of(context).size.width;
     var h = MediaQuery.of(context).size.height;
 
@@ -91,7 +89,7 @@ class _PediaDetailState extends State<PediaDetailScreen> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(baseSize/3),
+          padding: EdgeInsets.all(baseSize / 3),
           child: Center(
             child: Container(
               decoration: BoxDecoration(color: Colors.white, border: Border.all(width: 1, color: Colors.white30), borderRadius: BorderRadius.all(Radius.circular(10)), boxShadow: [
@@ -116,146 +114,160 @@ class _PediaDetailState extends State<PediaDetailScreen> {
                           Row(
                             children: [
                               Padding(
-                                padding: EdgeInsets.symmetric(horizontal: baseSize/10),
+                                padding: EdgeInsets.symmetric(horizontal: baseSize / 10),
                                 child: Icon(Icons.assistant_navigation),
                               ),
-                              Text(_pediaDetail.category1, style: TextStyle(color: Colors.black, fontSize: baseSize/3),),
+                              Text(
+                                _pediaDetail.category1,
+                                style: TextStyle(color: Colors.black, fontSize: baseSize / 3),
+                              ),
                               Padding(
-                                padding: EdgeInsets.symmetric(horizontal: baseSize/10),
+                                padding: EdgeInsets.symmetric(horizontal: baseSize / 10),
                                 child: Icon(Icons.arrow_forward_ios_rounded),
                               ),
-                              Text(_pediaDetail.category2, style: TextStyle(color: Colors.black, fontSize: baseSize/3),),
+                              Text(
+                                _pediaDetail.category2,
+                                style: TextStyle(color: Colors.black, fontSize: baseSize / 3),
+                              ),
                               Padding(
-                                padding: EdgeInsets.symmetric(horizontal: baseSize/10),
+                                padding: EdgeInsets.symmetric(horizontal: baseSize / 10),
                                 child: Icon(Icons.arrow_forward_ios_rounded),
                               ),
-                              Text(_pediaDetail.category3, style: TextStyle(color: Colors.black, fontSize: baseSize/3),),
+                              Text(
+                                _pediaDetail.category3,
+                                style: TextStyle(color: Colors.black, fontSize: baseSize / 3),
+                              ),
                             ],
                           ),
-                          _pedia.imageURLs.isNotEmpty ? ElevatedButton(
-                              style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(boxRounded)), primary: Colors.blue, onSurface: Colors.blueAccent),
-                              onPressed: () {
-                                _showSelectSource(context);
-                              },
-                              child: Container(
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      CupertinoIcons.camera,
-                                      color: Colors.white,
+                          _pedia.imageURLs.isNotEmpty
+                              ? ElevatedButton(
+                                  style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(boxRounded)), primary: Colors.blue, onSurface: Colors.blueAccent),
+                                  onPressed: () {
+                                    _showSelectSource(context);
+                                  },
+                                  child: Container(
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          CupertinoIcons.camera,
+                                          color: Colors.white,
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(left: baseSize / 5),
+                                          child: Text(
+                                            "사진 올리기",
+                                            style: TextStyle(fontSize: baseSize / 5, color: Colors.white),
+                                          ),
+                                        )
+                                      ],
                                     ),
-                                    Padding(
-                                      padding: EdgeInsets.only(left: baseSize / 5),
-                                      child: Text(
-                                        "사진 올리기",
-                                        style: TextStyle(fontSize: baseSize / 5, color: Colors.white),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              )
-                          ) : Container(),
+                                  ))
+                              : Container(),
                         ],
                       ),
                     ),
                   ),
                   Expanded(
                       child: ListView(
+                    children: [
+                      Flex(
+                        direction: Axis.horizontal,
                         children: [
-                          Flex(
-                            direction: Axis.horizontal,
+                          Expanded(
+                              child: Container(
+                            height: 350,
+                            child: Center(
+                              child: ListView(
+                                shrinkWrap: true,
+                                scrollDirection: Axis.horizontal,
+                                children: _buildImages(baseSize, boxRounded),
+                              ),
+                            ),
+                          ))
+                        ],
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: baseSize / 6, left: baseSize / 2),
+                        child: Align(
+                          alignment: Alignment.bottomLeft,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              Expanded(
-                                child: Container(
-                                  height: 350,
-                                  child: Center(
-                                    child: ListView(
-                                      shrinkWrap: true,
-                                      scrollDirection: Axis.horizontal,
-                                      children: _buildImages(baseSize, boxRounded),
-                                    ),
-                                  ),
-                                )
+                              Text(
+                                _pedia.name,
+                                style: TextStyle(fontSize: baseSize * (2 / 3), fontWeight: FontWeight.w700, color: Colors.black),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(bottom: baseSize / 10),
+                                child: Text(
+                                  "(${_pedia.subName})",
+                                  style: TextStyle(fontSize: baseSize * (1 / 3), color: Colors.black),
+                                ),
                               )
                             ],
                           ),
-                          Padding(
-                            padding: EdgeInsets.only(top: baseSize / 6, left: baseSize / 2),
-                            child: Align(
-                              alignment: Alignment.bottomLeft,
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Text(_pedia.name, style: TextStyle(fontSize: baseSize * (2 / 3), fontWeight: FontWeight.w700, color: Colors.black),),
-                                  Padding(
-                                    padding: EdgeInsets.only(bottom: baseSize / 10),
-                                    child: Text("(${_pedia.subName})", style: TextStyle(fontSize: baseSize * (1 / 3), color: Colors.black),),
-                                  )
-                                ],
+                        ),
+                      ),
+                      Padding(
+                          padding: EdgeInsets.only(top: baseSize / 10, left: baseSize / 2, right: baseSize / 2),
+                          child: Text(
+                            _pediaDetail.detail,
+                            style: TextStyle(color: Colors.black, fontSize: baseSize / 3),
+                          )),
+                      _othersImageCardList.length == 1
+                          ? Padding(
+                              padding: EdgeInsets.symmetric(vertical: baseSize / 4),
+                              child: Text(
+                                "아직 관련 생물을 찍은 친구가 없어요!",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: Colors.black, fontSize: baseSize * (1 / 3)),
+                              ),
+                            )
+                          : Padding(
+                              padding: EdgeInsets.symmetric(vertical: baseSize / 3),
+                              child: Text(
+                                "친구들이 찍은 사진",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: Colors.black, fontSize: baseSize * (2 / 3)),
                               ),
                             ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: baseSize / 10, left: baseSize / 2, right: baseSize / 2),
-                            child: Text(_pediaDetail.detail, style: TextStyle(color: Colors.black, fontSize: baseSize / 3),)
-                          ),
-                          _othersImageCardList.length == 1
-                              ? Padding(
-                            padding: EdgeInsets.symmetric(vertical: baseSize / 4),
-                            child: Text(
-                              "아직 관련 생물을 찍은 친구가 없어요!",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: Colors.black, fontSize: baseSize * (1 / 3)),
-                            ),
-                          )
-                              : Padding(
-                            padding: EdgeInsets.symmetric(vertical: baseSize / 3),
-                            child: Text(
-                              "친구들이 찍은 사진",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: Colors.black, fontSize: baseSize * (2 / 3)),
-                            ),
-                          ),
-                          _othersImageCardList.length == 1
-                              ? Container()
-                              : Padding(
-                            padding: EdgeInsets.symmetric(horizontal: baseSize / 4),
-                            child: Flex(
-                              direction: Axis.horizontal,
-                              children: [
-                                Expanded(
-                                    child: Container(
-                                        height: 350,
-                                        child: NotificationListener<ScrollEndNotification>(
-                                          onNotification: (scrollEnd) {
-                                            var metrics = scrollEnd.metrics;
-                                            if (metrics.atEdge) {
-                                              if (metrics.pixels != 0) {
-                                                if (received == -1 || received == 5) {
-                                                  _othersIndex++;
-                                                  _buildOthersCardList();
+                      _othersImageCardList.length == 1
+                          ? Container()
+                          : Padding(
+                              padding: EdgeInsets.symmetric(horizontal: baseSize / 4),
+                              child: Flex(
+                                direction: Axis.horizontal,
+                                children: [
+                                  Expanded(
+                                      child: Container(
+                                          height: 350,
+                                          child: NotificationListener<ScrollEndNotification>(
+                                            onNotification: (scrollEnd) {
+                                              final metrics = scrollEnd.metrics;
+                                              if (metrics.atEdge) {
+                                                if (metrics.pixels != 0) {
+                                                  if (_received == -1 || _received == 5) {
+                                                    _othersIndex++;
+                                                    _buildOthersCardList();
+                                                  }
                                                 }
                                               }
-                                            }
-                                            return true;
-                                          },
-                                          child: ListView.builder(
-                                            shrinkWrap: true,
-                                            scrollDirection: Axis.horizontal,
-                                            itemCount: _othersImageCardList.length,
-                                            itemBuilder: (context, index) {
-                                              return _othersImageCardList[index];
+                                              return true;
                                             },
-                                          ),
-                                        )
-                                    )
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      )
-                  ),
+                                            child: ListView.builder(
+                                              shrinkWrap: true,
+                                              scrollDirection: Axis.horizontal,
+                                              itemCount: _othersImageCardList.length,
+                                              itemBuilder: (context, index) {
+                                                return _othersImageCardList[index];
+                                              },
+                                            ),
+                                          )))
+                                ],
+                              ),
+                            )
+                    ],
+                  )),
                 ],
               ),
             ),
@@ -269,7 +281,10 @@ class _PediaDetailState extends State<PediaDetailScreen> {
     return Scaffold(
       backgroundColor: CustomColors.deepblue,
       body: Center(
-        child: Text(message, style: TextStyle(color: Colors.white, fontSize: baseSize * 3),),
+        child: Text(
+          message,
+          style: TextStyle(color: Colors.white, fontSize: baseSize * 3),
+        ),
       ),
     );
   }
@@ -289,10 +304,9 @@ class _PediaDetailState extends State<PediaDetailScreen> {
             child: Container(
               child: Center(
                   child: Image.network(
-                    url,
-                    height: baseSize * 8,
-                  )
-              ),
+                url,
+                height: baseSize * 8,
+              )),
             ),
           ),
         ),
@@ -318,97 +332,9 @@ class _PediaDetailState extends State<PediaDetailScreen> {
   }
 
   _buildOthersCardList() async {
-    // TODO index
-    final result = await CustomAPIService.getOthersPostBy("P${_pedia.apiId}", _othersIndex);
-    final posts = result['posts'] as List<PostResponse>;
-    received = posts.length;
-    var resultList = <Widget>[];
-    for (var item in posts) {
-      final widget = Padding(
-        padding: EdgeInsets.all(baseSize / 4),
-        child: Container(
-          width: 300,
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(baseSize / 2)), border: Border.all(color: Colors.black, width: 2.0)),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: EdgeInsets.all(baseSize / 8),
-                child: Image.network(
-                  item.tbImgURL,
-                  width: 200,
-                  height: 150,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: baseSize / 4),
-                child: Column(
-                  children: [
-                    Text(
-                      item.title,
-                      style: TextStyle(color: Colors.black, fontSize: baseSize / 3),
-                    ),
-                    Text(
-                      item.nickname!,
-                      style: TextStyle(color: Colors.black, fontSize: baseSize / 4),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Icon(
-                                  Icons.thumb_up,
-                                  color: Colors.red,
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(left: baseSize / 8),
-                                  child: Text(
-                                    item.likes.toString(),
-                                    style: TextStyle(color: Colors.red, fontSize: baseSize / 4),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Icon(CupertinoIcons.eye, color: Colors.black),
-                                Padding(
-                                  padding: EdgeInsets.only(left: baseSize / 8),
-                                  child: Text(
-                                    item.views.toString(),
-                                    style: TextStyle(color: Colors.black, fontSize: baseSize / 4),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(right: baseSize / 10),
-                          child: ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(primary: Colors.white, onSurface: Colors.white70, side: BorderSide(color: Colors.black, width: 2.0), shadowColor: Colors.white10),
-                              child: Text(
-                                "상세보기",
-                                style: TextStyle(color: Colors.black, fontSize: baseSize / 5),
-                              )),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-      resultList.add(widget);
-    }
+    final posts = await CustomAPIService.getOthersPostBy("P${_pedia.apiId}", _othersIndex);
+    _received = posts.length;
+    var resultList = UserImageCard.buildImageCard(posts, baseSize);
     setState(() {
       _othersImageCardList.addAll(resultList);
     });
@@ -690,7 +616,7 @@ class _PediaDetailState extends State<PediaDetailScreen> {
                   padding: EdgeInsets.only(top: baseWidth / 8),
                   child: Container(
                     width: baseWidth * 2,
-                    height: baseHeight * (2/3),
+                    height: baseHeight * (2 / 3),
                     child: ElevatedButton(
                         onPressed: () {
                           Navigator.pop(context);

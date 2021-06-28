@@ -80,17 +80,25 @@ class _SelectScreenState extends State<SelectScreen> {
                           "백과사전\n보기",
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                              color: Colors.black,
+                              color: Colors.white,
+                              shadows: [
+                                Shadow(
+                                  blurRadius: 4.0,
+                                  color: Colors.black45,
+                                  offset: Offset(2.0, 2.0)
+                                )
+                              ],
                               fontSize: boxFontSize * (3/4),
-                              fontFamily: 'DdoDdo'),
+                              fontFamily: 'DdoDdo',),
                         ),
                       ],
                     ),
                     style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(boxRounded)),
+                        shadowColor: CustomColors.orangeAccent,
                         primary: CustomColors.orange,
-                        onSurface: Colors.white30),
+                        onSurface: CustomColors.orangeAccent),
                   ),
                 ),
                 Padding(padding: EdgeInsets.all(boxRounded)),
@@ -109,16 +117,26 @@ class _SelectScreenState extends State<SelectScreen> {
                       children: [
                         Padding(
                           padding: EdgeInsets.only(top: boxHeight/8, bottom: boxHeight/9),
-                          child: SvgPicture.asset(
-                            'assets/friends.svg',
-                            height: boxHeight * (1/2),
+                          child: Hero(
+                            tag: "Friends",
+                            child: SvgPicture.asset(
+                              'assets/friends.svg',
+                              height: boxHeight * (1/2),
+                            ),
                           ),
                         ),
                         Text(
                           "친구들\n사진 보기",
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                              color: Colors.black,
+                              color: Colors.white,
+                              shadows: [
+                                Shadow(
+                                    blurRadius: 4.0,
+                                    color: Colors.black45,
+                                    offset: Offset(2.0, 2.0)
+                                )
+                              ],
                               fontSize: boxFontSize * (3/4),
                               fontFamily: 'DdoDdo'),
                         ),
@@ -126,9 +144,11 @@ class _SelectScreenState extends State<SelectScreen> {
                     ),
                     style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(boxRounded)),
-                        primary: CustomColors.friendsGreen,
-                        onSurface: CustomColors.friendsGreenAccent),
+                            borderRadius: BorderRadius.circular(boxRounded),
+                        ),
+                        shadowColor: CustomColors.friendsGreenAccent,
+                        primary: CustomColors.creatureGreen,
+                        onSurface: CustomColors.friendsGreenAccent,),
                   ),
                 ),
               ],

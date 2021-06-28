@@ -66,7 +66,7 @@ class _AppBarTitleState extends State<AppBarTitle> {
       image = Container(
         decoration: BoxDecoration(
           color: CustomColors.orange,
-          borderRadius: BorderRadius.horizontal(left: Radius.circular(8.0), right: Radius.circular(8.0))
+          borderRadius: BorderRadius.horizontal(left: Radius.circular(16.0), right: Radius.circular(16.0))
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: baseSize/8, horizontal: baseSize/3),
@@ -81,7 +81,17 @@ class _AppBarTitleState extends State<AppBarTitle> {
               ),
               Padding(
                 padding: EdgeInsets.only(left: w/40),
-                child: Text("백과사전 보기", style: TextStyle(color: Colors.black, fontSize: baseSize/2, fontWeight: FontWeight.w700),),
+                child: Text("백과사전 보기",
+                  style: TextStyle(
+                      color: Colors.white,
+                      shadows: [
+                        Shadow(
+                          blurRadius: 4.0,
+                          color: Colors.black45,
+                          offset: Offset(2.0, 2.0)
+                        )
+                      ],
+                      fontSize: baseSize/2,),),
               )
             ],
           ),
@@ -89,20 +99,37 @@ class _AppBarTitleState extends State<AppBarTitle> {
       );
     } else if (_image == "friends") {
       image = Container(
-        child: Row(
-          children: [
-            Hero(
-              tag: "SelectFriends",
-              child: SvgPicture.asset(
-                'assets/friends.svg',
-                height: h / 20,
+        decoration: BoxDecoration(
+            color: CustomColors.creatureGreen,
+            borderRadius: BorderRadius.horizontal(left: Radius.circular(16.0), right: Radius.circular(16.0))
+        ),
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: baseSize/8, horizontal: baseSize/3),
+          child: Row(
+            children: [
+              Hero(
+                tag: "Friends",
+                child: SvgPicture.asset(
+                  'assets/friends.svg',
+                  height: h / 20,
+                ),
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: w/40),
-              child: Text("친구들 사진보기", style: TextStyle(color: Colors.black, fontSize: baseSize/2, fontWeight: FontWeight.w700),),
-            )
-          ],
+              Padding(
+                padding: EdgeInsets.only(left: w/40),
+                child: Text("친구들 사진보기",
+                  style: TextStyle(
+                    color: Colors.white,
+                    shadows: [
+                      Shadow(
+                          blurRadius: 4.0,
+                          color: Colors.black45,
+                          offset: Offset(2.0, 2.0)
+                      )
+                    ],
+                    fontSize: baseSize/2,),),
+              )
+            ],
+          ),
         ),
       );
     }
