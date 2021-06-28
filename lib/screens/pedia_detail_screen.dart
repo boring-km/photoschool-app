@@ -47,6 +47,7 @@ class _PediaDetailState extends State<PediaDetailScreen> {
   final _dialogTextController = TextEditingController();
 
   int received = 0;
+  int _othersIndex = 0;
 
   _PediaDetailState(this._pedia);
 
@@ -230,7 +231,10 @@ class _PediaDetailState extends State<PediaDetailScreen> {
                                             var metrics = scrollEnd.metrics;
                                             if (metrics.atEdge) {
                                               if (metrics.pixels != 0) {
-                                                _buildOthersCardList();
+                                                if (received == -1 || received == 5) {
+                                                  _othersIndex++;
+                                                  _buildOthersCardList();
+                                                }
                                               }
                                             }
                                             return true;
@@ -315,7 +319,7 @@ class _PediaDetailState extends State<PediaDetailScreen> {
 
   _buildOthersCardList() async {
     // TODO index
-    final result = await CustomAPIService.getOthersPostBy("P${_pedia.apiId}", 0);
+    final result = await CustomAPIService.getOthersPostBy("P${_pedia.apiId}", _othersIndex);
     final posts = result['posts'] as List<PostResponse>;
     received = posts.length;
     var resultList = <Widget>[];
