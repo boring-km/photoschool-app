@@ -58,7 +58,7 @@ class _SelectScreenState extends State<SelectScreen> {
                       width: boxWidth, height: boxHeight),
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).pushReplacement(
+                      Navigator.of(context).push(
                           MaterialPageRoute(
                               builder: (context) => SearchCreatureScreen(user: _user)
                           )
@@ -99,7 +99,7 @@ class _SelectScreenState extends State<SelectScreen> {
                       width: boxWidth, height: boxHeight),
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).pushReplacement(
+                      Navigator.of(context).push(
                           MaterialPageRoute(
                               builder: (context) => FriendsMainScreen(user: _user)
                           )
