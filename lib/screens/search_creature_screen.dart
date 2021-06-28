@@ -50,7 +50,7 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
     var w = MediaQuery.of(context).size.width;
     var h = MediaQuery.of(context).size.height;
 
-    var base = w > h ? w / 10 : h / 10;
+    var base = w > h ? w / 10 : h / 15;
     var buttonWidth = w > h ? w / 15 : h / 15;
     var buttonHeight = w > h ? h / 15 : w / 15;
     var buttonFontSize = w > h ? h / 40 : w / 40;
