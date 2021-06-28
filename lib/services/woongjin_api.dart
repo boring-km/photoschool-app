@@ -1,11 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 import '../dto/dict/dict_detail_response.dart';
 import '../dto/dict/dict_main_image_response.dart';
 import '../dto/dict/dict_reference.dart';
 import '../dto/dict/dict_response.dart';
-
+import '../dto/photos/photo_detail_response.dart';
+import '../dto/photos/photo_response.dart';
 import '../utils/http_wjdict.dart';
 
 class WoongJinAPIService {
@@ -39,12 +41,11 @@ class WoongJinAPIService {
     return resultList;
   }
 
-  static Future<List<DictDetailResponse>> searchDetailWJPedia(int pid) async {
+  static Future<DictDetailResponse> searchDetailWJPedia(String pid) async {
     final domain = dotenv.env["woongjin_domain"]!;
     final apiPath = dotenv.env["woongjin_search_detail_wjpedia"];
     final response = await HttpWJDict.get("$domain$apiPath$pid");
     final jsonResult = jsonDecode(response['data'])['RESP_RESULT'] as List;
-    final resultList = <DictDetailResponse>[];
 
     if (jsonResult.isNotEmpty) {
       var item = jsonResult[0];
@@ -81,27 +82,57 @@ class WoongJinAPIService {
         }
       }
 
-      var detail = item['headwd_cntt'];
+      var detail = item['headwd_cntt'] as String;
+      var exp = RegExp(
+          r"<[^>]*>",
+          multiLine: true,
+          caseSensitive: true
+      );
+      detail = detail.replaceAll(exp, "");
 
-      resultList.add(DictDetailResponse(category1, category2, category3, refList, apiId, name, subName, description, mainImages, detail));
+      return DictDetailResponse(category1, category2, category3, refList, apiId, name, subName, description, mainImages, detail);
     }
-
-    return resultList;
+    throw "에러";
   }
 
-  static Future searchPhotoLibrary(String keyword) async {
+  static Future<List<PhotoResponse>> searchPhotoLibrary(String keyword) async {
     final domain = dotenv.env["woongjin_domain"]!;
     final apiPath = dotenv.env["woongjin_search_photo"];
     final response = await HttpWJDict.get("$domain$apiPath$keyword");
-    var array = jsonDecode(response['data'])['RESP_RESULT']['PHOTOLIB']['SEARCH_PHOTOLIB_CONTENTS'];
-    return array;
+    final array = jsonDecode(response['data'])['RESP_RESULT']['PHOTOLIB']['SEARCH_PHOTOLIB_CONTENTS'];
+
+    final resultList = <PhotoResponse>[];
+    if (array.isNotEmpty) {
+      for (var item in array) {
+        final imgURL = item['THUMIMG_FILE_PATH'];
+        final apiId = item['IMG_CTTS_SEQ'];
+        resultList.add(PhotoResponse(apiId, imgURL));
+      }
+    }
+    return resultList;
   }
 
-  static Future searchPhotoDetail(int pid) async {
+  static Future<List<PhotoDetailResponse>> searchPhotoDetail(int pid) async {
     final domain = dotenv.env["woongjin_domain"]!;
     final apiPath = dotenv.env["woongjin_search_detail_photo"];
     final response = await HttpWJDict.get("$domain$apiPath$pid");
-    var data = jsonDecode(response['data'])['RESP_RESULT']['PHOTOLIB'];
-    return data;
+    final array = jsonDecode(response['data'])['RESP_RESULT']['PHOTOLIB']['SEARCH_PHOTOLIB_CONTENTS'];
+
+    final resultList = <PhotoDetailResponse>[];
+    if (array.isNotEmpty) {
+      for (var item in array) {
+        final apiId = item['IMG_CTTS_SEQ'];
+        final name = item['CTTS_NAME'];
+        final source = item['STPT_USER'];
+        final thumbURL = item['THUMIMG_FILE_PATH'];
+        final imgURL = item['ORG_IMG_FILE_PATH'];
+        final mainCategory = item['MAIN_CTGR_NAME'];
+        final subCategory = item['SUB_CTGR_NAME'];
+        final description = item['CTTS_DSCR'];
+        resultList.add(PhotoDetailResponse(apiId, name, source, thumbURL, imgURL, mainCategory, subCategory, description));
+      }
+    }
+
+    return resultList;
   }
 }

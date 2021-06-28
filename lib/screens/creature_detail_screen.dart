@@ -68,7 +68,7 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.only(top: baseSize / 3, left: baseSize / 3, right: baseSize / 3),
+          padding: EdgeInsets.all(baseSize/3),
           child: Center(
             child: Container(
               decoration: BoxDecoration(color: Colors.white, border: Border.all(width: 1, color: Colors.white30), borderRadius: BorderRadius.all(Radius.circular(10)), boxShadow: [
