@@ -1,7 +1,7 @@
 class CreatureResponse {
   final String name;
   final String type;
-  final int apiId;
+  final String apiId;
 
   CreatureResponse(this.name, this.type, this.apiId);
 

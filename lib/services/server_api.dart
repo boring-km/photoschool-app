@@ -53,7 +53,7 @@ class CustomAPIService {
     return { "schoolName": schoolName, "posts": postList };
   }
 
-  static Future<Map<String, dynamic>> getOthersPostBy(int apiId, int index) async {
+  static Future<Map<String, dynamic>> getOthersPostBy(String apiId, int index) async {
     final domain = dotenv.env["server_domain"]!;
     final result = await Http.get("$domain/others/$apiId/$index");
     final json = _getResult(result);
@@ -141,7 +141,7 @@ class CustomAPIService {
     return _getResult(result)['result'];
   }
 
-  static Future<int> registerPost(int apiId, String title) async {
+  static Future<int> registerPost(String apiId, String title) async {
     final domain = dotenv.env["server_domain"]!;
     final idToken = await FirebaseAuth.instance.currentUser!.getIdToken();
     final result = await Http.postWithJWT("$domain/register/post", idToken, { "apiId": "$apiId", "title": title });

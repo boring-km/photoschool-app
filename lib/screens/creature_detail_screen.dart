@@ -39,6 +39,9 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
   File? _thumbnailFileToUpload;
   int received = -1;
 
+  bool _isDetailLoaded = false;
+  bool _isUploaded = true;
+
   _CreatureDetailScreenState(this._creature);
 
   @override
@@ -55,6 +58,12 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
 
     baseSize = w > h ? h / 10 : w / 10;
     var boxRounded = w > h ? h / 30 : w / 30;
+
+    if (!_isDetailLoaded) {
+      return _buildLoadingView("로딩중");
+    } else if (!_isUploaded) {
+      return _buildLoadingView("업로드중");
+    }
 
     return Scaffold(
       backgroundColor: CustomColors.deepblue,
@@ -85,20 +94,11 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                   Container(
                     width: w * (9 / 10),
                     child: Padding(
-                      padding: EdgeInsets.all(baseSize / 10),
+                      padding: EdgeInsets.only(top: baseSize / 10),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          IconButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              icon: Icon(
-                                CupertinoIcons.back,
-                                color: Colors.black,
-                                size: baseSize / 2,
-                              )),
                           ElevatedButton(
                               style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(boxRounded)), primary: Colors.blue, onSurface: Colors.blueAccent),
                               onPressed: () {
@@ -236,7 +236,9 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                                                   return _othersImageCardList[index];
                                                 },
                                               ),
-                                            )))
+                                            )
+                                        )
+                                    )
                                   ],
                                 ),
                               )
@@ -248,6 +250,15 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Scaffold _buildLoadingView(String message) {
+    return Scaffold(
+      backgroundColor: CustomColors.deepblue,
+      body: Center(
+        child: Text(message, style: TextStyle(color: Colors.white, fontSize: baseSize * 3),),
       ),
     );
   }
@@ -436,7 +447,12 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                   controller: _dialogTextController,
                   decoration: InputDecoration(hintText: "사진 이름"),
                   onSubmitted: (text) async {
-                    await _uploadImage(rootContext, context, parentContext, _dialogTextController.text);
+                    setState(() {
+                      Navigator.pop(context);
+                      Navigator.pop(parentContext);
+                      _isUploaded = false;
+                    });
+                    await _uploadImage(rootContext, _dialogTextController.text);
                   },
                 ),
                 Row(
@@ -467,7 +483,13 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                         height: h * (2 / 3),
                         child: ElevatedButton(
                             onPressed: () async {
-                              await _uploadImage(rootContext, context, parentContext, _dialogTextController.text);
+                              setState(() {
+                                Navigator.pop(context);
+                                Navigator.pop(parentContext);
+                                FocusScope.of(context).unfocus();
+                                _isUploaded = false;
+                              });
+                              await _uploadImage(rootContext, _dialogTextController.text);
                             },
                             style: ElevatedButton.styleFrom(primary: Colors.white, onSurface: Colors.white70, side: BorderSide(style: BorderStyle.none, width: 2.0, color: Colors.black)),
                             child: Text(
@@ -484,10 +506,10 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
         });
   }
 
-  Future<void> _uploadImage(BuildContext rootContext, BuildContext context, BuildContext parentContext, String title) async {
+  Future<void> _uploadImage(BuildContext rootContext, String title) async {
     if (_imageFileToUpload != null && _thumbnailFileToUpload != null) {
       // 1. 이미지 없이 등록 후 postId 받아서
-      var postId = await CustomAPIService.registerPost(_creature.apiId, title);
+      var postId = await CustomAPIService.registerPost("C${_creature.apiId}", title);
 
       // 2. storage에 썸네일 및 원본 이미지 저장 후 url 추출
       var realImageRef = FirebaseStorage.instance.ref().child('real/$postId.png');
@@ -503,15 +525,13 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
 
       // 3. 다시 이미지 등록
       final result = await CustomAPIService.updateImage(postId, _thumbImgURL, _realImgURL);
-      if (result) {
-        ScaffoldMessenger.of(rootContext).showSnackBar(customSnackBar(content: '업로드 완료!'));
-      } else {
-        ScaffoldMessenger.of(rootContext).showSnackBar(customSnackBar(content: '업로드 실패!'));
-      }
+      print(result);
+
+      setState(() {
+        _isUploaded = true;
+      });
     }
-    Navigator.pop(context);
-    Navigator.pop(parentContext);
-    Navigator.of(context).pushReplacement(
+    Navigator.of(rootContext).pushReplacement(
       MaterialPageRoute(
         builder: (context) => CreatureDetailScreen(
           _creature,
@@ -533,8 +553,8 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 InteractiveViewer(
-                  panEnabled: false,
-                  minScale: 0.5,
+                  panEnabled: true,
+                  minScale: 1,
                   maxScale: 4,
                   child: Image.network(
                     imageURL,
@@ -563,8 +583,8 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
         });
   }
 
-  _buildOthersCardList(int apiId) async {
-    final result = await CustomAPIService.getOthersPostBy(apiId, _othersIndex);
+  _buildOthersCardList(String apiId) async {
+    final result = await CustomAPIService.getOthersPostBy("C$apiId", _othersIndex);
     final posts = result['posts'] as List<PostResponse>;
     received = posts.length;
     var resultList = <Widget>[];
@@ -656,16 +676,7 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
     }
     setState(() {
       _othersImageCardList.addAll(resultList);
+      _isDetailLoaded = true;
     });
-  }
-
-  static SnackBar customSnackBar({required String content}) {
-    return SnackBar(
-      backgroundColor: Colors.black,
-      content: Text(
-        content,
-        style: TextStyle(color: Colors.yellowAccent, letterSpacing: 0.5),
-      ),
-    );
   }
 }

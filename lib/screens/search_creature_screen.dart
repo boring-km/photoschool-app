@@ -10,11 +10,9 @@ import '../dto/dict/dict_response.dart';
 import '../res/colors.dart';
 import '../services/public_api.dart';
 import '../services/woongjin_api.dart';
-import '../utils/screen_animation.dart';
 import '../widgets/app_bar_base.dart';
 import 'creature_detail_screen.dart';
 import 'pedia_detail_screen.dart';
-import 'select_screen.dart';
 
 class SearchCreatureScreen extends StatefulWidget {
 
@@ -93,14 +91,6 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Padding(
-                    padding: EdgeInsets.only(bottom: h / 30),
-                    child: IconButton(
-                        onPressed: () {
-                          Navigator.of(context).pushReplacement(ScreenAnimation.routeTo(SelectScreen(user: _user)));
-                        },
-                        icon: Icon(CupertinoIcons.back, color: Colors.white, size: base/2,)),
-                  ),
                   Padding(
                     padding: EdgeInsets.all(h / 50),
                     child: Container(
@@ -296,6 +286,7 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
                   child: Image(
                     image: CachedNetworkImageProvider(pedia.imageURLs[0]),
                     height: base*2,
+                    fit: BoxFit.fitWidth,
                   ),
                 ) : Container()
               ],
@@ -357,6 +348,7 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
                   child: Image(
                     image: CachedNetworkImageProvider(creature.imgUrl1),
                     height: base*2,
+                    fit: BoxFit.fitWidth,
                   ),
                 ),
                 Align(

@@ -5,7 +5,7 @@ class PostResponse {
   final int views;
   final String tbImgURL;
   String? nickname;
-  int? apiId;
+  String? apiId;
   String? imgURL;
   String? awardName;
   final String regTime;
