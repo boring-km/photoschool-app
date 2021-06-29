@@ -46,10 +46,11 @@ class _FriendsMainState extends State<FriendsMainScreen> {
     super.initState();
   }
 
-  void _initialize() {
+  void _initialize() async {
     _user = widget._user;
-    _buildPosts();
-    _buildAwardView();
+    await Future.delayed(const Duration(milliseconds: 500));
+    await _buildPosts();
+    await _buildAwardView();
   }
 
   @override

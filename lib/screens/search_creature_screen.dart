@@ -35,10 +35,11 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
   bool _isFirstLoading = true;
   late User _user;
 
+  bool _isSearching = false;
+
   @override
   void initState() {
-    _user = widget._user;
-    _searchCreature(_creatureSearchController.text, _currentPage); // 처음에 기본 생물만 검색
+    _initialize();
     super.initState();
   }
 
@@ -127,8 +128,13 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
                             _currentPage = 1;
                             _creatureDataList.clear();
                             _wjPediaList.clear();
-                            await _searchWJDict(str);
-                            await _searchCreature(str, _currentPage);
+                            setState(() {
+                              _isSearching = true;
+                            });
+                            await _allSearch(str);
+                            setState(() {
+                              _isSearching = false;
+                            });
                           },
                         ),
                       ),
@@ -141,8 +147,13 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
                       onPressed: () async {
                         _currentPage = 1;
                         _creatureDataList.clear();
-                        await _searchWJDict(_creatureSearchController.text);
-                        await _searchCreature(_creatureSearchController.text, _currentPage);
+                        setState(() {
+                          _isSearching = true;
+                        });
+                        await _allSearch(_creatureSearchController.text);
+                        setState(() {
+                          _isSearching = false;
+                        });
                       },
                       style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
@@ -165,7 +176,7 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
                 ],
               ),
             ),
-            Container(
+            !_isSearching ? Container(
               child: Expanded(
                 child: GridView.count(
                   crossAxisCount: 3,
@@ -173,11 +184,39 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
                   children: _buildGridViewItems(base),
                 ),
               ),
+            ) : Container(
+              child: Center(
+                child: Padding(
+                  padding: EdgeInsets.all(base/2),
+                  child: Text("로딩중",
+                    style: TextStyle(
+                        color: Colors.white,
+                        shadows: [
+                          Shadow(
+                              blurRadius: 4.0,
+                              color: Colors.black45,
+                              offset: Offset(3.0, 3.0)
+                          )
+                        ],
+                        fontSize: buttonFontSize * 2),),
+                )
+              ),
             )
           ],
         ),
       ),
     );
+  }
+
+  void _initialize() async {
+    _user = widget._user;
+    await Future.delayed(const Duration(milliseconds: 300));
+    await _searchCreature(_creatureSearchController.text, _currentPage); // 처음에 기본 생물만 검색
+  }
+
+  Future<void> _allSearch(String str) async {
+    await _searchWJDict(str);
+    await _searchCreature(str, _currentPage);
   }
 
   _searchCreature(String text, int page) async {
@@ -194,6 +233,7 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
       setState(() {
         _creatureDataList.addAll(resultList);
         _isFirstLoading = false;
+        _isSearching = false;
       });
     }
   }
