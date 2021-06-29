@@ -3,24 +3,19 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../screens/select_screen.dart';
+import '../screens/signup_screen.dart';
+import '../services/server_api.dart';
 
 class Authentication {
   static Future<FirebaseApp> initializeFirebase({
     required BuildContext context,
   }) async {
     var firebaseApp = await Firebase.initializeApp();
-
     var user = FirebaseAuth.instance.currentUser;
-
-    if (user != null) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => SelectScreen(user: user,),
-        ),
-      );
-    }
-
+    signUp(user, context);
     return firebaseApp;
   }
 
@@ -84,6 +79,33 @@ class Authentication {
     }
 
     return user;
+  }
+
+  // ignore: type_annotate_public_apis
+  static signUp(User? user, BuildContext context) async {
+    if (user != null) {
+      // TODO: 닉네임과 학교 설정 AlertDialog 호출
+      final result = await CustomAPIService.checkUserRegistered();
+      if (result) {
+        final prefs = await SharedPreferences.getInstance();
+        final nickname = await CustomAPIService.getNickName(user);
+        prefs.setString('nickname', nickname);
+
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => SelectScreen(
+                user: user
+            ),
+          ),
+        );
+      } else {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => SignUpScreen(),
+          ),
+        );
+      }
+    }
   }
 
   static Future<void> signOut({required BuildContext context}) async {
