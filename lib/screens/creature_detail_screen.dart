@@ -207,7 +207,7 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                                   children: [
                                     Expanded(
                                         child: Container(
-                                            height: 350,
+                                            height: 400,
                                             child: NotificationListener<ScrollEndNotification>(
                                               onNotification: (scrollEnd) {
                                                 final metrics = scrollEnd.metrics;

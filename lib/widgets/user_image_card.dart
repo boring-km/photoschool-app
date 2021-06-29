@@ -6,7 +6,7 @@ class UserImageCard {
   static List<Widget> buildImageCard(List<PostResponse> posts, double baseSize) {
     final resultList = <Widget>[];
     for (var item in posts) {
-      final school = item.schoolName!.replaceFirst("등학교", "");
+      final school = item.schoolName == null ? "" : item.schoolName!.replaceFirst("등학교", "");
       final widget = Padding(
         padding: EdgeInsets.all(baseSize / 4),
         child: Container(

@@ -169,7 +169,7 @@ class _PediaDetailState extends State<PediaDetailScreen> {
                         children: [
                           Expanded(
                               child: Container(
-                            height: 350,
+                            height: 400,
                             child: Center(
                               child: ListView(
                                 shrinkWrap: true,
@@ -234,7 +234,7 @@ class _PediaDetailState extends State<PediaDetailScreen> {
                                 children: [
                                   Expanded(
                                       child: Container(
-                                          height: 350,
+                                          height: 400,
                                           child: NotificationListener<ScrollEndNotification>(
                                             onNotification: (scrollEnd) {
                                               final metrics = scrollEnd.metrics;

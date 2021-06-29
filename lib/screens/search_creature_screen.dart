@@ -174,7 +174,6 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
                 ),
               ),
             )
-            // _buildListView(base)
           ],
         ),
       ),
