@@ -48,13 +48,16 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
 
   @override
   void initState() {
-    _user = widget._user;
-    _buildOthersCardList(_creature.apiId);
     super.initState();
+    _user = widget._user;
+    Future.delayed(Duration.zero,() {
+      _buildOthersCardList(_creature.apiId, context);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+
     var w = MediaQuery.of(context).size.width;
     var h = MediaQuery.of(context).size.height;
 
@@ -185,7 +188,7 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                         _othersImageCardList.length == 1 ? Padding(
                           padding: EdgeInsets.symmetric(vertical: _baseSize / 4),
                           child: Text(
-                            "아직 관련 생물을 찍은 친구가 없어요!",
+                            "아직 관련 사진을 찍은 친구가 없어요!",
                             textAlign: TextAlign.center,
                             style: TextStyle(color: Colors.black, fontSize: _baseSize * (1 / 3)),
                           ),
@@ -212,7 +215,7 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                                             if (metrics.pixels != 0) {
                                               if (received == -1 || received == 5) {
                                                 _othersIndex++;
-                                                _buildOthersCardList(_creature.apiId);
+                                                _buildOthersCardList(_creature.apiId, context);
                                               }
                                             }
                                           }
@@ -561,10 +564,10 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
         });
   }
 
-  _buildOthersCardList(String apiId) async {
+  _buildOthersCardList(String apiId, BuildContext context) async {
     final posts = await CustomAPIService.getOthersPostBy("C$apiId", _othersIndex);
     received = posts.length;
-    var resultList = UserImageCard.buildImageCard(posts);
+    var resultList = UserImageCard.buildImageCard(posts, context, _user);
     setState(() {
       _othersImageCardList.addAll(resultList);
       _isDetailLoaded = true;

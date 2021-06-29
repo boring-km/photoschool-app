@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -53,10 +54,12 @@ class _PediaDetailState extends State<PediaDetailScreen> {
 
   @override
   void initState() {
+    super.initState();
     _user = widget._user;
     _loadPediaDetail();
-    _buildOthersCardList();
-    super.initState();
+    Future.delayed(Duration.zero,() {
+      _buildOthersCardList(context);
+    });
   }
 
   _loadPediaDetail() async {
@@ -133,30 +136,28 @@ class _PediaDetailState extends State<PediaDetailScreen> {
                               ),
                             ],
                           ),
-                          _pedia.imageURLs.isNotEmpty
-                              ? ElevatedButton(
-                                  style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(boxRounded)), primary: Colors.blue, onSurface: Colors.blueAccent),
-                                  onPressed: () {
-                                    _showSelectSource(context);
-                                  },
-                                  child: Container(
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          CupertinoIcons.camera,
-                                          color: Colors.white,
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.only(left: baseSize / 5),
-                                          child: Text(
-                                            "사진 올리기",
-                                            style: TextStyle(fontSize: baseSize / 5, color: Colors.white),
-                                          ),
-                                        )
-                                      ],
+                          ElevatedButton(
+                              style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(boxRounded)), primary: Colors.blue, onSurface: Colors.blueAccent),
+                              onPressed: () {
+                                _showSelectSource(context);
+                              },
+                              child: Container(
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      CupertinoIcons.camera,
+                                      color: Colors.white,
                                     ),
-                                  ))
-                              : Container(),
+                                    Padding(
+                                      padding: EdgeInsets.only(left: baseSize / 5),
+                                      child: Text(
+                                        "사진 올리기",
+                                        style: TextStyle(fontSize: baseSize / 5, color: Colors.white),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ))
                         ],
                       ),
                     ),
@@ -202,17 +203,25 @@ class _PediaDetailState extends State<PediaDetailScreen> {
                           ),
                         ),
                       ),
-                      Padding(
-                          padding: EdgeInsets.only(top: baseSize / 10, left: baseSize / 2, right: baseSize / 2),
-                          child: Text(
-                            _pediaDetail.detail,
-                            style: TextStyle(color: Colors.black, fontSize: baseSize / 3),
-                          )),
+                          Padding(
+                            padding: EdgeInsets.only(top: baseSize / 10, left: baseSize / 2, right: baseSize / 2),
+                            child: Html(
+                              data: _pediaDetail.detail,
+                              style: {
+                                "html": Style(color: Colors.black, fontSize: FontSize(baseSize/3)),
+                                "a": Style(color: Colors.black),
+                              },
+                            ),
+                          // child: Text(
+                          //   _pediaDetail.detail,
+                          //   style: TextStyle(color: Colors.black, fontSize: baseSize / 3),
+                          // )
+                      ),
                       _othersImageCardList.length == 1
                           ? Padding(
                               padding: EdgeInsets.symmetric(vertical: baseSize / 4),
                               child: Text(
-                                "아직 관련 생물을 찍은 친구가 없어요!",
+                                "아직 관련 사진을 찍은 친구가 없어요!",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(color: Colors.black, fontSize: baseSize * (1 / 3)),
                               ),
@@ -242,7 +251,7 @@ class _PediaDetailState extends State<PediaDetailScreen> {
                                                 if (metrics.pixels != 0) {
                                                   if (_received == -1 || _received == 5) {
                                                     _othersIndex++;
-                                                    _buildOthersCardList();
+                                                    _buildOthersCardList(context);
                                                   }
                                                 }
                                               }
@@ -325,10 +334,10 @@ class _PediaDetailState extends State<PediaDetailScreen> {
     return resultList;
   }
 
-  _buildOthersCardList() async {
+  _buildOthersCardList(BuildContext context) async {
     final posts = await CustomAPIService.getOthersPostBy("P${_pedia.apiId}", _othersIndex);
     _received = posts.length;
-    var resultList = UserImageCard.buildImageCard(posts);
+    var resultList = UserImageCard.buildImageCard(posts, context, _user);
     setState(() {
       _othersImageCardList.addAll(resultList);
     });
@@ -506,7 +515,6 @@ class _PediaDetailState extends State<PediaDetailScreen> {
                     Padding(
                       padding: EdgeInsets.all(h / 8),
                       child: Container(
-                        width: w * (2 / 3),
                         height: h * (2 / 3),
                         child: ElevatedButton(
                             onPressed: () {
@@ -516,14 +524,13 @@ class _PediaDetailState extends State<PediaDetailScreen> {
                             child: Text(
                               "닫기",
                               textAlign: TextAlign.center,
-                              style: TextStyle(fontSize: w / 8, color: Colors.black),
+                              style: TextStyle(fontSize: w / 4, color: Colors.black),
                             )),
                       ),
                     ),
                     Padding(
                       padding: EdgeInsets.all(h / 8),
                       child: Container(
-                        width: w * (2 / 3),
                         height: h * (2 / 3),
                         child: ElevatedButton(
                             onPressed: () async {
@@ -538,7 +545,7 @@ class _PediaDetailState extends State<PediaDetailScreen> {
                             style: ElevatedButton.styleFrom(primary: Colors.white, onSurface: Colors.white70, side: BorderSide(style: BorderStyle.none, width: 2.0, color: Colors.black)),
                             child: Text(
                               "업로드",
-                              style: TextStyle(fontSize: w / 8, color: Colors.black),
+                              style: TextStyle(fontSize: w / 4, color: Colors.black),
                             )),
                       ),
                     )

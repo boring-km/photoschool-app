@@ -81,15 +81,8 @@ class WoongJinAPIService {
           mainImages.add(DictMainImageResponse(file['dtl_file_thm'], file['dtl_file_dscr']));
         }
       }
-
       var detail = item['headwd_cntt'] as String;
-      var exp = RegExp(
-          r"<[^>]*>",
-          multiLine: true,
-          caseSensitive: true
-      );
-      detail = detail.replaceAll(exp, "");
-
+      detail = detail.replaceAll("\n", "<br/><br/>").replaceAll("<style type='italic'>", "").replaceAll("</style>", "");
       return DictDetailResponse(category1, category2, category3, refList, apiId, name, subName, description, mainImages, detail);
     }
     throw "에러";

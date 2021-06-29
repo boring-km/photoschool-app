@@ -48,9 +48,11 @@ class _FriendsMainState extends State<FriendsMainScreen> {
 
   void _initialize() async {
     _user = widget._user;
-    await Future.delayed(const Duration(milliseconds: 500));
-    await _buildPosts();
-    await _buildAwardView();
+    await Future.delayed(const Duration(milliseconds: 500), () async {
+      await _buildPosts(context);
+      await _buildAwardView(context);
+    });
+
   }
 
   @override
@@ -177,9 +179,10 @@ class _FriendsMainState extends State<FriendsMainScreen> {
                                         _postIndex++;
                                         if (_isSearched) {
                                           _searchPosts(
-                                              _searchTextController.text.isEmpty ? "%" : _searchTextController.text);
+                                          _searchTextController.text.isEmpty ? "%" : _searchTextController.text,
+                                          context);
                                         } else {
-                                          _buildPosts();
+                                          _buildPosts(context);
                                         }
                                       }
                                     }
@@ -217,7 +220,7 @@ class _FriendsMainState extends State<FriendsMainScreen> {
                                                   if (_awardReceived == -1 ||
                                                       _awardReceived == 4) {
                                                     _awardIndex++;
-                                                    _buildAwardView();
+                                                    _buildAwardView(context);
                                                   }
                                                 }
                                               }
@@ -311,7 +314,7 @@ class _FriendsMainState extends State<FriendsMainScreen> {
                                                 onSubmitted: (str) async {
                                                   _searchedList.clear();
                                                   _postIndex = 0;
-                                                  _searchPosts(str.isEmpty ? "%" : str);
+                                                  _searchPosts(str.isEmpty ? "%" : str, context);
                                                 },
                                               ),
                                             ),
@@ -326,7 +329,7 @@ class _FriendsMainState extends State<FriendsMainScreen> {
                                               _searchedList.clear();
                                               _postIndex = 0;
                                               _searchPosts(
-                                                  _searchTextController.text.isEmpty ? "%" : _searchTextController.text);
+                                                  _searchTextController.text.isEmpty ? "%" : _searchTextController.text, context);
                                             },
                                             style: ElevatedButton.styleFrom(
                                                 shape: RoundedRectangleBorder(
@@ -384,7 +387,7 @@ class _FriendsMainState extends State<FriendsMainScreen> {
                                                     _selectedSortType = value as String;
                                                     _postIndex = 0;
                                                     _searchedList.clear();
-                                                    _searchPosts(_searchTextController.text.isEmpty ? "%" : _searchTextController.text);
+                                                    _searchPosts(_searchTextController.text.isEmpty ? "%" : _searchTextController.text, context);
                                                   });
                                                 },
                                               ),
@@ -419,19 +422,19 @@ class _FriendsMainState extends State<FriendsMainScreen> {
     );
   }
 
-  _buildAwardView() async {
+  _buildAwardView(BuildContext context) async {
     final posts = await CustomAPIService.getAwardPosts(_awardIndex);
     _awardReceived = posts.length;
-    var resultList = UserImageCard.buildAwardImageCard(posts);
+    var resultList = UserImageCard.buildAwardImageCard(posts, context, _user);
     setState(() {
       _awardImageCardList.addAll(resultList);
     });
   }
 
-  _buildPosts() async {
+  _buildPosts(BuildContext context) async {
     final posts = await CustomAPIService.getAllPosts(_postIndex);
     _postReceived = posts.length;
-    final resultList = UserImageCard.buildImageCard(posts);
+    final resultList = UserImageCard.buildImageCard(posts, context, _user);
     setState(() {
       _searchedList.addAll(resultList);
       _isSearched = false;
@@ -439,7 +442,7 @@ class _FriendsMainState extends State<FriendsMainScreen> {
     });
   }
 
-  void _searchPosts(String str) async {
+  void _searchPosts(String str, BuildContext context) async {
     String sortType;
     String searchType;
     if (_selectedSearchType == _searchTypeList[0]) {
@@ -459,7 +462,7 @@ class _FriendsMainState extends State<FriendsMainScreen> {
     final posts = await CustomAPIService.searchPost(
         searchType, str, sortType, _postIndex);
     _postReceived = posts.length;
-    final resultList = UserImageCard.buildImageCard(posts);
+    final resultList = UserImageCard.buildImageCard(posts, context, _user);
     setState(() {
       _searchedList.addAll(resultList);
       _isSearched = true;

@@ -1,9 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import '../dto/post/post_response.dart';
+import '../screens/friends_detail_screen.dart';
 
 class UserImageCard {
-  static List<Widget> buildImageCard(List<PostResponse> posts) {
+  static List<Widget> buildImageCard(List<PostResponse> posts, BuildContext context, User user) {
     final resultList = <Widget>[];
     for (var item in posts) {
       final school = item.schoolName == null ? "" : item.schoolName!.replaceFirst("등학교", "");
@@ -76,7 +79,10 @@ class UserImageCard {
                         Padding(
                           padding: EdgeInsets.only(right: 10),
                           child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+                                    FriendsDetailScreen(item.postId, user: user)), (route) => false);
+                              },
                               style: ElevatedButton.styleFrom(primary: Colors.white, onSurface: Colors.white70, side: BorderSide(color: Colors.black, width: 2.0), shadowColor: Colors.white10),
                               child: Text(
                                 "상세보기",
@@ -97,7 +103,7 @@ class UserImageCard {
     return resultList;
   }
 
-  static List<Widget> buildAwardImageCard(List<PostResponse> posts) {
+  static List<Widget> buildAwardImageCard(List<PostResponse> posts, BuildContext context, User user) {
     final resultList = <Widget>[];
     for (var item in posts) {
       var month = item.month!.substring(4);
@@ -175,7 +181,10 @@ class UserImageCard {
                           ),
                         ),
                         ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+                                  FriendsDetailScreen(item.postId, user: user)), (route) => false);
+                            },
                             style: ElevatedButton.styleFrom(primary: Colors.white, onSurface: Colors.white70, side: BorderSide(color: Colors.black, width: 2.0), shadowColor: Colors.white10),
                             child: Text(
                               "상세보기",

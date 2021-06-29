@@ -84,13 +84,11 @@ class Authentication {
   // ignore: type_annotate_public_apis
   static signUp(User? user, BuildContext context) async {
     if (user != null) {
-      // TODO: 닉네임과 학교 설정 AlertDialog 호출
       final result = await CustomAPIService.checkUserRegistered();
       if (result) {
         final prefs = await SharedPreferences.getInstance();
         final nickname = await CustomAPIService.getNickName(user);
         prefs.setString('nickname', nickname);
-
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (context) => SelectScreen(
