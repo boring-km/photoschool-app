@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../res/colors.dart';
 import '../services/server_api.dart';
 import '../widgets/app_bar_base.dart';
+import '../widgets/box_decoration.dart';
 import '../widgets/user_image_card.dart';
 
 class FriendsMainScreen extends StatefulWidget {
@@ -103,14 +104,7 @@ class _FriendsMainState extends State<FriendsMainScreen> {
                 padding: EdgeInsets.all(_baseSize / 3),
                 child: Center(
                   child: Container(
-                    decoration: BoxDecoration(color: Colors.white, border: Border.all(width: 1, color: Colors.white30), borderRadius: BorderRadius.all(Radius.circular(10)), boxShadow: [
-                      BoxShadow(
-                        color: Colors.white10,
-                        offset: Offset(4.0, 4.0),
-                        blurRadius: 15.0,
-                        spreadRadius: 1.0,
-                      )
-                    ]),
+                    decoration: CustomBoxDecoration.buildWhiteBoxDecoration(),
                     child: Flex(
                       direction: Axis.vertical,
                       children: [
