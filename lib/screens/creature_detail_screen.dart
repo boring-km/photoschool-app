@@ -571,7 +571,7 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
   _buildOthersCardList(String apiId) async {
     final posts = await CustomAPIService.getOthersPostBy("C$apiId", _othersIndex);
     received = posts.length;
-    var resultList = UserImageCard.buildImageCard(posts, _baseSize);
+    var resultList = UserImageCard.buildImageCard(posts);
     setState(() {
       _othersImageCardList.addAll(resultList);
       _isDetailLoaded = true;

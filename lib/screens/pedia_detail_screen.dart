@@ -328,7 +328,7 @@ class _PediaDetailState extends State<PediaDetailScreen> {
   _buildOthersCardList() async {
     final posts = await CustomAPIService.getOthersPostBy("P${_pedia.apiId}", _othersIndex);
     _received = posts.length;
-    var resultList = UserImageCard.buildImageCard(posts, baseSize);
+    var resultList = UserImageCard.buildImageCard(posts);
     setState(() {
       _othersImageCardList.addAll(resultList);
     });

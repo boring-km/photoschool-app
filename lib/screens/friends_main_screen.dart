@@ -57,7 +57,7 @@ class _FriendsMainState extends State<FriendsMainScreen> {
     var w = MediaQuery.of(context).size.width;
     var h = MediaQuery.of(context).size.height;
 
-    _baseSize = w > h ? h / 10 : w / 20;
+    _baseSize = w > h ? h / 10 : w / 18;
     var buttonWidth = w > h ? w / 15 : h / 15;
     var buttonHeight = w > h ? h / 15 : w / 15;
     var buttonFontSize = w > h ? h / 40 : w / 40;
@@ -185,7 +185,7 @@ class _FriendsMainState extends State<FriendsMainScreen> {
                                       children: [
                                         Expanded(
                                             child: Container(
-                                              height: _baseSize * 8,
+                                              height: 450,
                                               child: NotificationListener<ScrollEndNotification>(
                                                 onNotification: (scrollEnd) {
                                                   final metrics = scrollEnd.metrics;
@@ -227,7 +227,7 @@ class _FriendsMainState extends State<FriendsMainScreen> {
                                                       (value) {
                                                         return DropdownMenuItem(
                                                             value: value,
-                                                            child: Text(value, style: TextStyle(color: Colors.black, fontSize: buttonFontSize * 1.5),)
+                                                            child: Text(value, style: TextStyle(color: Colors.black, fontSize: buttonFontSize * 1.2),)
                                                     );
                                                   }
                                               ).toList(),
@@ -242,7 +242,7 @@ class _FriendsMainState extends State<FriendsMainScreen> {
                                         Padding(
                                           padding: EdgeInsets.all(h / 50),
                                           child: Container(
-                                            width: w * (3 / 5),
+                                            width: w * (2 / 5),
                                             height: buttonHeight,
                                             decoration: BoxDecoration(
                                                 color: Colors.white,
@@ -278,7 +278,6 @@ class _FriendsMainState extends State<FriendsMainScreen> {
                                               _searchedList.clear();
                                               _postIndex = 0;
                                               _searchPosts(_searchTextController.text);
-                                              // _buildPosts();
                                             },
                                             style: ElevatedButton.styleFrom(
                                                 shape: RoundedRectangleBorder(
@@ -303,7 +302,7 @@ class _FriendsMainState extends State<FriendsMainScreen> {
                                         Padding(
                                           padding: EdgeInsets.only(left: _baseSize/3),
                                           child: Container(
-                                            width: w/15,
+                                            width: w/10,
                                             child: DropdownButtonHideUnderline(
                                               child: DropdownButton(
                                                 value: _selectedSortType,
@@ -337,7 +336,7 @@ class _FriendsMainState extends State<FriendsMainScreen> {
                                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                         crossAxisCount: 3,
                                         mainAxisSpacing: 2.0,
-                                        childAspectRatio: 8/9
+                                        childAspectRatio: 2/3
                                       ),
                                       itemCount: _searchedList.length,
                                       itemBuilder: (context, index) {
@@ -359,7 +358,7 @@ class _FriendsMainState extends State<FriendsMainScreen> {
   _buildAwardView() async {
     final posts = await CustomAPIService.getAwardPosts(_awardIndex);
     _awardReceived = posts.length;
-    var resultList = UserImageCard.buildAwardImageCard(posts, _baseSize);
+    var resultList = UserImageCard.buildAwardImageCard(posts);
     setState(() {
       _awardImageCardList.addAll(resultList);
     });
@@ -368,7 +367,7 @@ class _FriendsMainState extends State<FriendsMainScreen> {
   _buildPosts() async {
     final posts = await CustomAPIService.getAllPosts(_postIndex);
     _postReceived = posts.length;
-    final resultList = UserImageCard.buildImageCard(posts, _baseSize);
+    final resultList = UserImageCard.buildImageCard(posts);
     setState(() {
       _searchedList.addAll(resultList);
       _isSearched = false;
@@ -395,7 +394,7 @@ class _FriendsMainState extends State<FriendsMainScreen> {
     }
     final posts = await CustomAPIService.searchPost(searchType, str, sortType, _postIndex);
     _postReceived = posts.length;
-    final resultList = UserImageCard.buildImageCard(posts, _baseSize);
+    final resultList = UserImageCard.buildImageCard(posts);
     setState(() {
       _searchedList.addAll(resultList);
       _isSearched = true;
