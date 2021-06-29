@@ -13,6 +13,7 @@ import '../res/colors.dart';
 import '../services/server_api.dart';
 import '../widgets/app_bar_base.dart';
 import '../widgets/box_decoration.dart';
+import '../widgets/loading.dart';
 import '../widgets/user_image_card.dart';
 
 class CreatureDetailScreen extends StatefulWidget {
@@ -36,7 +37,7 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
   File? _imageFileToUpload;
   int _othersIndex = 0;
   final List<Widget> _othersImageCardList = [Container()];
-  double baseSize = 100;
+  double _baseSize = 100;
   File? _thumbnailFileToUpload;
   int received = -1;
 
@@ -57,13 +58,13 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
     var w = MediaQuery.of(context).size.width;
     var h = MediaQuery.of(context).size.height;
 
-    baseSize = w > h ? h / 10 : w / 10;
+    _baseSize = w > h ? h / 10 : w / 10;
     var boxRounded = w > h ? h / 30 : w / 30;
 
     if (!_isDetailLoaded) {
-      return _buildLoadingView("로딩중");
+      return LoadingWidget.buildLoadingView("로딩중", _baseSize);
     } else if (!_isUploaded) {
-      return _buildLoadingView("업로드중");
+      return LoadingWidget.buildLoadingView("업로드중", _baseSize);
     }
 
     return Scaffold(
@@ -78,7 +79,7 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(baseSize/3),
+          padding: EdgeInsets.all(_baseSize/3),
           child: Center(
             child: Container(
               decoration: CustomBoxDecoration.buildWhiteBoxDecoration(),
@@ -88,7 +89,7 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                   Container(
                     width: w * (9 / 10),
                     child: Padding(
-                      padding: EdgeInsets.only(top: baseSize / 10),
+                      padding: EdgeInsets.only(top: _baseSize / 10),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.end,
@@ -106,10 +107,10 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                                       color: Colors.white,
                                     ),
                                     Padding(
-                                      padding: EdgeInsets.only(left: baseSize / 5),
+                                      padding: EdgeInsets.only(left: _baseSize / 5),
                                       child: Text(
                                         "사진 올리기",
-                                        style: TextStyle(fontSize: baseSize / 5, color: Colors.white),
+                                        style: TextStyle(fontSize: _baseSize / 5, color: Colors.white),
                                       ),
                                     )
                                   ],
@@ -133,8 +134,8 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                                     shrinkWrap: true,
                                     scrollDirection: Axis.horizontal,
                                     children: [
-                                      _drawImage(_creature.imgUrl1, baseSize, boxRounded),
-                                      _drawImage(_creature.imgUrl2, baseSize, boxRounded),
+                                      _drawImage(_creature.imgUrl1, _baseSize, boxRounded),
+                                      _drawImage(_creature.imgUrl2, _baseSize, boxRounded),
                                     ],
                                   ),
                                 ),
@@ -146,19 +147,19 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Padding(
-                              padding: EdgeInsets.only(top: baseSize / 2, left: baseSize / 2),
+                              padding: EdgeInsets.only(top: _baseSize / 2, left: _baseSize / 2),
                               child: Text(
                                 "${_creature.name}",
-                                style: TextStyle(fontSize: baseSize * (2 / 3), fontWeight: FontWeight.w700, color: Colors.black),
+                                style: TextStyle(fontSize: _baseSize * (2 / 3), fontWeight: FontWeight.w700, color: Colors.black),
                               ),
                             ),
                             Padding(
-                              padding: EdgeInsets.only(top: baseSize / 2, right: baseSize / 2),
+                              padding: EdgeInsets.only(top: _baseSize / 2, right: _baseSize / 2),
                               child: Column(
                                 children: [
                                   Text(
                                     "종류: ${_creature.type}",
-                                    style: TextStyle(fontSize: baseSize / 4, fontWeight: FontWeight.w700, color: Colors.black),
+                                    style: TextStyle(fontSize: _baseSize / 4, fontWeight: FontWeight.w700, color: Colors.black),
                                   ),
                                 ],
                               ),
@@ -166,14 +167,14 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                           ],
                         ),
                         Padding(
-                          padding: EdgeInsets.symmetric(vertical: baseSize / 3, horizontal: baseSize / 2),
+                          padding: EdgeInsets.symmetric(vertical: _baseSize / 3, horizontal: _baseSize / 2),
                           child: Container(
                             height: 2,
                             color: Colors.black,
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(bottom: baseSize / 3, left: baseSize / 2, right: baseSize / 2),
+                          padding: EdgeInsets.only(bottom: _baseSize / 3, left: _baseSize / 2, right: _baseSize / 2),
                           child: Html(
                             data: _creature.detail,
                             style: {
@@ -183,25 +184,25 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                         ),
                         _othersImageCardList.length == 1
                             ? Padding(
-                                padding: EdgeInsets.symmetric(vertical: baseSize / 4),
+                                padding: EdgeInsets.symmetric(vertical: _baseSize / 4),
                                 child: Text(
                                   "아직 관련 생물을 찍은 친구가 없어요!",
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(color: Colors.black, fontSize: baseSize * (1 / 3)),
+                                  style: TextStyle(color: Colors.black, fontSize: _baseSize * (1 / 3)),
                                 ),
                               )
                             : Padding(
-                                padding: EdgeInsets.symmetric(vertical: baseSize / 3),
+                                padding: EdgeInsets.symmetric(vertical: _baseSize / 3),
                                 child: Text(
                                   "친구들이 찍은 사진",
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(color: Colors.black, fontSize: baseSize * (2 / 3)),
+                                  style: TextStyle(color: Colors.black, fontSize: _baseSize * (2 / 3)),
                                 ),
                               ),
                         _othersImageCardList.length == 1
                             ? Container()
                             : Padding(
-                                padding: EdgeInsets.symmetric(horizontal: baseSize / 4),
+                                padding: EdgeInsets.symmetric(horizontal: _baseSize / 4),
                                 child: Flex(
                                   direction: Axis.horizontal,
                                   children: [
@@ -243,15 +244,6 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Scaffold _buildLoadingView(String message) {
-    return Scaffold(
-      backgroundColor: CustomColors.deepblue,
-      body: Center(
-        child: Text(message, style: TextStyle(color: Colors.white, fontSize: baseSize * 3),),
       ),
     );
   }
@@ -579,7 +571,7 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
   _buildOthersCardList(String apiId) async {
     final posts = await CustomAPIService.getOthersPostBy("C$apiId", _othersIndex);
     received = posts.length;
-    var resultList = UserImageCard.buildImageCard(posts, baseSize);
+    var resultList = UserImageCard.buildImageCard(posts, _baseSize);
     setState(() {
       _othersImageCardList.addAll(resultList);
       _isDetailLoaded = true;
