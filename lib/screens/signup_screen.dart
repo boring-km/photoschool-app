@@ -34,6 +34,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   void initState() {
     _user = widget._user;
+    _searchSchool("%");
     super.initState();
   }
 
@@ -47,7 +48,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget build(BuildContext context) {
     var w = MediaQuery.of(context).size.width;
     var h = MediaQuery.of(context).size.height;
-    var _baseSize = w > h ? h / 10 : w / 15;
+    var _baseSize = w > h ? h / 10 : w / 10;
 
     return Scaffold(
       backgroundColor: CustomColors.deepblue,
@@ -83,7 +84,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     fillColor: Colors.black,),
                                   style: TextStyle(color: Colors.black, fontSize: _baseSize/4),
                                   controller: _nicknameController,
-                                  autofocus: true,
                                   onSubmitted: (text) {
                                     FocusScope.of(context).requestFocus(_focus);
                                   },
@@ -111,9 +111,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                       style: TextStyle(color: Colors.black, fontSize: _baseSize/4),
                                       controller: _schoolController,
                                       focusNode: _focus,
-                                      onSubmitted: (str) {
-                                        _searchSchool(str, _baseSize);
-                                      },
+                                      onSubmitted: _searchSchool,
                                     ),
                                   ),
                                 ),
@@ -123,7 +121,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     height: _baseSize * 0.8,
                                     child: ElevatedButton(
                                       onPressed: () async {
-                                        _searchSchool(_schoolController.text, _baseSize);
+                                        var text = _schoolController.text;
+                                        if (text.isEmpty) {
+                                          text = "%";
+                                        }
+                                        _searchSchool(text);
                                       },
                                       child: Text("찾기", style: TextStyle(fontSize: _baseSize/3),),
                                     ),
@@ -195,7 +197,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  _searchSchool(String schoolName, double baseSize) async {
+  _searchSchool(String schoolName) async {
     _schoolList.clear();
     final result = await CustomAPIService.searchSchool(schoolName);
     setState(() {
