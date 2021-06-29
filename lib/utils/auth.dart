@@ -101,7 +101,7 @@ class Authentication {
       } else {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (context) => SignUpScreen(),
+            builder: (context) => SignUpScreen(user: user),
           ),
         );
       }

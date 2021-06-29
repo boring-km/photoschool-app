@@ -160,6 +160,14 @@ class CustomAPIService {
     return _getResult(result)['result'];
   }
 
+  static Future registerUser(String nickname, int schoolId) async {
+    final domain = dotenv.env["server_domain"]!;
+    final idToken = await FirebaseAuth.instance.currentUser!.getIdToken();
+    final result = await Http.postWithJWT("$domain/register/user", idToken,
+        { "nickname": nickname, "schoolId": "$schoolId" });
+    return _getResult(result)['result'];
+  }
+
   static dynamic _getResult(Map<String, dynamic> result) {
     if (result['error'] == null) {
       return jsonDecode(result['data']);
