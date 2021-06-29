@@ -12,7 +12,7 @@ class PublicAPIService {
   static Future<List<CreatureResponse>> getChildBookSearch(String keyword, int page) async {
     final baseUrl = dotenv.env["public_api_list_url"]!;
     final serviceKey = dotenv.env["public_api_key"]!;
-    final numOfRows = 8;
+    final numOfRows = 9;
     final target = CreatureRequest(baseUrl, serviceKey, 1, keyword, numOfRows, page).toString();
     var creatureList = <CreatureResponse>[];
     var result = await Http.get(target);

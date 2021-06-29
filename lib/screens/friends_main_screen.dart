@@ -82,7 +82,15 @@ class _FriendsMainState extends State<FriendsMainScreen> {
                       padding: EdgeInsets.all(_baseSize / 2),
                       child: Text(
                         "로딩중",
-                        style: TextStyle(color: Colors.white, shadows: [Shadow(blurRadius: 4.0, color: Colors.black45, offset: Offset(3.0, 3.0))], fontSize: buttonFontSize * 3),
+                        style: TextStyle(
+                            color: Colors.white,
+                            shadows: [
+                              Shadow(
+                                  blurRadius: 4.0,
+                                  color: Colors.black45,
+                                  offset: Offset(3.0, 3.0))
+                            ],
+                            fontSize: buttonFontSize * 3),
                       ),
                     )
                   ],
@@ -119,12 +127,18 @@ class _FriendsMainState extends State<FriendsMainScreen> {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 ElevatedButton(
-                                    style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(_baseSize / 2)), primary: CustomColors.lightRed, onSurface: CustomColors.red),
+                                    style: ElevatedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                                _baseSize / 2)),
+                                        primary: CustomColors.lightRed,
+                                        onSurface: CustomColors.red),
                                     onPressed: () {
                                       // TODO: 학교 랭킹 다이얼로그 띄우기
                                     },
                                     child: Padding(
-                                      padding: EdgeInsets.symmetric(horizontal: _baseSize / 8),
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: _baseSize / 8),
                                       child: Container(
                                         height: _baseSize * (2 / 3),
                                         child: Row(
@@ -135,10 +149,13 @@ class _FriendsMainState extends State<FriendsMainScreen> {
                                               size: _baseSize / 2,
                                             ),
                                             Padding(
-                                              padding: EdgeInsets.only(left: _baseSize / 5),
+                                              padding: EdgeInsets.only(
+                                                  left: _baseSize / 5),
                                               child: Text(
                                                 "학교 랭킹",
-                                                style: TextStyle(fontSize: _baseSize / 3, color: Colors.white),
+                                                style: TextStyle(
+                                                    fontSize: _baseSize / 3,
+                                                    color: Colors.white),
                                               ),
                                             )
                                           ],
@@ -155,10 +172,12 @@ class _FriendsMainState extends State<FriendsMainScreen> {
                                   final metrics = scrollEnd.metrics;
                                   if (metrics.atEdge) {
                                     if (metrics.pixels != 0) {
-                                      if (_postReceived == -1 || _postReceived == 9) {
+                                      if (_postReceived == -1 ||
+                                          _postReceived == 9) {
                                         _postIndex++;
                                         if (_isSearched) {
-                                          _searchPosts(_searchTextController.text);
+                                          _searchPosts(
+                                              _searchTextController.text.isEmpty ? "%" : _searchTextController.text);
                                         } else {
                                           _buildPosts();
                                         }
@@ -177,7 +196,9 @@ class _FriendsMainState extends State<FriendsMainScreen> {
                                         ),
                                         child: Text(
                                           "축하해요!",
-                                          style: TextStyle(fontSize: buttonFontSize * 3, color: Colors.black),
+                                          style: TextStyle(
+                                              fontSize: buttonFontSize * 3,
+                                              color: Colors.black),
                                         ),
                                       ),
                                     ),
@@ -186,60 +207,71 @@ class _FriendsMainState extends State<FriendsMainScreen> {
                                       children: [
                                         Expanded(
                                             child: Container(
-                                              height: 450,
-                                              child: NotificationListener<ScrollEndNotification>(
-                                                onNotification: (scrollEnd) {
-                                                  final metrics = scrollEnd.metrics;
-                                                  if (metrics.atEdge) {
-                                                    if (metrics.pixels != 0) {
-                                                      if (_awardReceived == -1 || _awardReceived == 4) {
-                                                        _awardIndex++;
-                                                        _buildAwardView();
-                                                      }
-                                                    }
+                                          height: 450,
+                                          child: NotificationListener<
+                                              ScrollEndNotification>(
+                                            onNotification: (scrollEnd) {
+                                              final metrics = scrollEnd.metrics;
+                                              if (metrics.atEdge) {
+                                                if (metrics.pixels != 0) {
+                                                  if (_awardReceived == -1 ||
+                                                      _awardReceived == 4) {
+                                                    _awardIndex++;
+                                                    _buildAwardView();
                                                   }
-                                                  return true;
-                                                },
-                                                child: ListView.builder(
-                                                    shrinkWrap: true,
-                                                    scrollDirection: Axis.horizontal,
-                                                    itemCount: _awardImageCardList.length,
-                                                    itemBuilder: (context, index) {
-                                                      return _awardImageCardList[index];
-                                                    }
-                                                ),
-                                              ),
-                                            )
-                                        )
+                                                }
+                                              }
+                                              return true;
+                                            },
+                                            child: ListView.builder(
+                                                shrinkWrap: true,
+                                                scrollDirection:
+                                                    Axis.horizontal,
+                                                itemCount:
+                                                    _awardImageCardList.length,
+                                                itemBuilder: (context, index) {
+                                                  return _awardImageCardList[
+                                                      index];
+                                                }),
+                                          ),
+                                        ))
                                       ],
                                     ),
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         Container(
-                                          width: w/12,
-                                          child: DropdownButtonHideUnderline(
-                                            child: DropdownButton(
-                                              value: _selectedSearchType,
-                                              isExpanded: true,
-                                              icon: Icon(Icons.arrow_drop_down_circle),
-                                              iconEnabledColor: CustomColors.creatureGreen,
-                                              items: _searchTypeList.map(
-                                                      (value) {
-                                                        return DropdownMenuItem(
-                                                            value: value,
-                                                            child: Text(value, style: TextStyle(color: Colors.black, fontSize: buttonFontSize * 1.2),)
-                                                    );
-                                                  }
-                                              ).toList(),
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  _selectedSearchType = value as String;
-                                                });
-                                              },
-                                            ),
-                                          )
-                                        ),
+                                            width: w / 12,
+                                            child: DropdownButtonHideUnderline(
+                                              child: DropdownButton(
+                                                value: _selectedSearchType,
+                                                isExpanded: true,
+                                                icon: Icon(Icons
+                                                    .arrow_drop_down_circle),
+                                                iconEnabledColor:
+                                                    CustomColors.creatureGreen,
+                                                items: _searchTypeList
+                                                    .map((value) {
+                                                  return DropdownMenuItem(
+                                                      value: value,
+                                                      child: Text(
+                                                        value,
+                                                        style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontSize:
+                                                                buttonFontSize *
+                                                                    1.2),
+                                                      ));
+                                                }).toList(),
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    _selectedSearchType =
+                                                        value as String;
+                                                  });
+                                                },
+                                              ),
+                                            )),
                                         Padding(
                                           padding: EdgeInsets.all(h / 50),
                                           child: Container(
@@ -247,25 +279,39 @@ class _FriendsMainState extends State<FriendsMainScreen> {
                                             height: buttonHeight,
                                             decoration: BoxDecoration(
                                                 color: Colors.white,
-                                                borderRadius:
-                                                BorderRadius.all(Radius.circular(h / 40)),
-                                                border: Border.all(width: 2, color: Colors.black)),
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(h / 40)),
+                                                border: Border.all(
+                                                    width: 2,
+                                                    color: Colors.black)),
                                             child: Padding(
-                                              padding: EdgeInsets.only(left: h / 80, right: 80),
+                                              padding: EdgeInsets.only(
+                                                  left: h / 80, right: 80),
                                               child: TextField(
                                                 decoration: InputDecoration(
-                                                  floatingLabelBehavior:FloatingLabelBehavior.never,
+                                                  floatingLabelBehavior:
+                                                      FloatingLabelBehavior
+                                                          .never,
                                                   border: InputBorder.none,
-                                                  icon: Icon(Icons.search, size: _baseSize/3, color: Colors.black45,),
+                                                  icon: Icon(
+                                                    Icons.search,
+                                                    size: _baseSize / 3,
+                                                    color: Colors.black45,
+                                                  ),
                                                   labelText: '제목, 닉네임, 학교 입력',
-                                                  labelStyle: TextStyle(color: Colors.black45),
-                                                  fillColor: Colors.black,),
-                                                style: TextStyle(color: Colors.black, fontSize: _baseSize/4),
-                                                controller: _searchTextController,
+                                                  labelStyle: TextStyle(
+                                                      color: Colors.black45),
+                                                  fillColor: Colors.black,
+                                                ),
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: buttonFontSize),
+                                                controller:
+                                                    _searchTextController,
                                                 onSubmitted: (str) async {
                                                   _searchedList.clear();
                                                   _postIndex = 0;
-                                                  _searchPosts(str);
+                                                  _searchPosts(str.isEmpty ? "%" : str);
                                                 },
                                               ),
                                             ),
@@ -273,27 +319,33 @@ class _FriendsMainState extends State<FriendsMainScreen> {
                                         ),
                                         ConstrainedBox(
                                           constraints: BoxConstraints.tightFor(
-                                              width: buttonWidth, height: buttonHeight),
+                                              width: buttonWidth,
+                                              height: buttonHeight),
                                           child: ElevatedButton(
                                             onPressed: () async {
                                               _searchedList.clear();
                                               _postIndex = 0;
-                                              _searchPosts(_searchTextController.text);
+                                              _searchPosts(
+                                                  _searchTextController.text.isEmpty ? "%" : _searchTextController.text);
                                             },
                                             style: ElevatedButton.styleFrom(
                                                 shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(h / 50),),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          h / 50),
+                                                ),
                                                 primary: CustomColors.orange,
                                                 onSurface: Colors.orangeAccent),
-                                            child: Text("검색",
+                                            child: Text(
+                                              "검색",
                                               style: TextStyle(
                                                   color: Colors.white,
                                                   shadows: [
                                                     Shadow(
                                                         blurRadius: 4.0,
                                                         color: Colors.black45,
-                                                        offset: Offset(2.0, 2.0)
-                                                    )
+                                                        offset:
+                                                            Offset(2.0, 2.0))
                                                   ],
                                                   fontSize: buttonFontSize,
                                                   fontWeight: FontWeight.w700),
@@ -301,26 +353,38 @@ class _FriendsMainState extends State<FriendsMainScreen> {
                                           ),
                                         ),
                                         Padding(
-                                          padding: EdgeInsets.only(left: _baseSize/3),
+                                          padding: EdgeInsets.only(
+                                              left: _baseSize / 3),
                                           child: Container(
-                                            width: w/10,
+                                            width: w / 10,
                                             child: DropdownButtonHideUnderline(
                                               child: DropdownButton(
                                                 value: _selectedSortType,
                                                 isExpanded: true,
-                                                icon: Icon(Icons.sort_rounded, size: _baseSize/2,),
-                                                iconEnabledColor: CustomColors.red,
-                                                items: _sortTypeList.map(
-                                                    (value) {
-                                                      return DropdownMenuItem(
-                                                        value: value,
-                                                        child: Text(value, style: TextStyle(color: Colors.black, fontSize: buttonFontSize),)
-                                                      );
-                                                    }
-                                                ).toList(),
+                                                icon: Icon(
+                                                  Icons.sort_rounded,
+                                                  size: _baseSize / 2,
+                                                ),
+                                                iconEnabledColor:
+                                                    CustomColors.red,
+                                                items:
+                                                    _sortTypeList.map((value) {
+                                                  return DropdownMenuItem(
+                                                      value: value,
+                                                      child: Text(
+                                                        value,
+                                                        style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontSize:
+                                                                buttonFontSize),
+                                                      ));
+                                                }).toList(),
                                                 onChanged: (value) {
                                                   setState(() {
                                                     _selectedSortType = value as String;
+                                                    _postIndex = 0;
+                                                    _searchedList.clear();
+                                                    _searchPosts(_searchTextController.text.isEmpty ? "%" : _searchTextController.text);
                                                   });
                                                 },
                                               ),
@@ -334,26 +398,25 @@ class _FriendsMainState extends State<FriendsMainScreen> {
                                       physics: ClampingScrollPhysics(),
                                       scrollDirection: Axis.vertical,
                                       primary: true,
-                                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 3,
-                                        mainAxisSpacing: 2.0,
-                                        childAspectRatio: 2/3
-                                      ),
+                                      gridDelegate:
+                                          SliverGridDelegateWithFixedCrossAxisCount(
+                                              crossAxisCount: 3,
+                                              mainAxisSpacing: 2.0,
+                                              childAspectRatio: 2 / 3),
                                       itemCount: _searchedList.length,
                                       itemBuilder: (context, index) {
                                         return _searchedList[index];
                                       },
                                     ),
                                   ],
-                                )
-                            )
-                        )
+                                )))
                       ],
                     ),
                   ),
                 ),
               ),
-            ));
+            )
+    );
   }
 
   _buildAwardView() async {
@@ -393,7 +456,8 @@ class _FriendsMainState extends State<FriendsMainScreen> {
     } else {
       sortType = 'highlikes';
     }
-    final posts = await CustomAPIService.searchPost(searchType, str, sortType, _postIndex);
+    final posts = await CustomAPIService.searchPost(
+        searchType, str, sortType, _postIndex);
     _postReceived = posts.length;
     final resultList = UserImageCard.buildImageCard(posts);
     setState(() {

@@ -27,15 +27,14 @@ class SearchCreatureScreen extends StatefulWidget {
 }
 
 class _FindCreatureState extends State<SearchCreatureScreen> {
+  late User _user;
   final _creatureSearchController = TextEditingController();
-  int _currentPage = 1;
-  int received = -1;
   final List<CreatureDetailResponse> _creatureDataList = [];
   final List<DictResponse> _wjPediaList = [];
   bool _isFirstLoading = true;
-  late User _user;
-
   bool _isSearching = false;
+  int _creatureReceived = -1;
+  int _currentPage = 1;
 
   @override
   void initState() {
@@ -178,10 +177,24 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
             ),
             !_isSearching ? Container(
               child: Expanded(
-                child: GridView.count(
-                  crossAxisCount: 3,
-                  childAspectRatio: (200/250),
-                  children: _buildGridViewItems(base),
+                child: NotificationListener<ScrollEndNotification>(
+                  onNotification: (scrollEnd) {
+                    final metrics = scrollEnd.metrics;
+                    if (metrics.atEdge) {
+                      if (metrics.pixels != 0) {
+                        if (_creatureReceived == -1 || _creatureReceived == 9) {
+                          _currentPage++;
+                          _searchCreature(_creatureSearchController.text, _currentPage);
+                        }
+                      }
+                    }
+                    return true;
+                  },
+                  child: GridView.count(
+                    crossAxisCount: 3,
+                    childAspectRatio: (200/250),
+                    children: _buildGridViewItems(base),
+                  ),
                 ),
               ),
             ) : Container(
@@ -215,13 +228,14 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
   }
 
   Future<void> _allSearch(String str) async {
+    _currentPage = 1;
     await _searchWJDict(str);
     await _searchCreature(str, _currentPage);
   }
 
   _searchCreature(String text, int page) async {
     var list = await PublicAPIService.getChildBookSearch(text, page);
-    received = list.length;
+    _creatureReceived = list.length;
     var resultList = <CreatureDetailResponse>[];
     for (var item in list) {
       final result = await PublicAPIService.getChildBookDetail(item.apiId, text);
