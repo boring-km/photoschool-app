@@ -13,8 +13,8 @@ import '../dto/photos/photo_response.dart';
 import '../res/colors.dart';
 import '../services/server_api.dart';
 import '../services/woongjin_api.dart';
-import '../utils/user_image_card.dart';
 import '../widgets/app_bar_base.dart';
+import '../widgets/user_image_card.dart';
 
 class PediaDetailScreen extends StatefulWidget {
   final DictResponse _pedia;

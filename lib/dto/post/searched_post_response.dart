@@ -1,4 +1,4 @@
-class SearchedPostDetail {
+class SearchedPostResponse {
   final String title;
   final String nickname;
   final int apiId;
@@ -7,5 +7,5 @@ class SearchedPostDetail {
   final String imgURL;
   final String regTime;
 
-  SearchedPostDetail(this.title, this.nickname, this.apiId, this.likes, this.views, this.imgURL, this.regTime);
+  SearchedPostResponse(this.title, this.nickname, this.apiId, this.likes, this.views, this.imgURL, this.regTime);
 }

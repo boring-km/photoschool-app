@@ -5,8 +5,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../res/colors.dart';
 import '../services/server_api.dart';
-import '../utils/user_image_card.dart';
 import '../widgets/app_bar_base.dart';
+import '../widgets/user_image_card.dart';
 
 class FriendsMainScreen extends StatefulWidget {
   FriendsMainScreen({Key? key, required User user})
@@ -56,7 +56,7 @@ class _FriendsMainState extends State<FriendsMainScreen> {
     var w = MediaQuery.of(context).size.width;
     var h = MediaQuery.of(context).size.height;
 
-    _baseSize = w > h ? h / 10 : w / 10;
+    _baseSize = w > h ? h / 10 : w / 20;
     var buttonWidth = w > h ? w / 15 : h / 15;
     var buttonHeight = w > h ? h / 15 : w / 15;
     var buttonFontSize = w > h ? h / 40 : w / 40;
@@ -160,7 +160,7 @@ class _FriendsMainState extends State<FriendsMainScreen> {
                                   final metrics = scrollEnd.metrics;
                                   if (metrics.atEdge) {
                                     if (metrics.pixels != 0) {
-                                      if (_postReceived == -1 || _postReceived == 10) {
+                                      if (_postReceived == -1 || _postReceived == 9) {
                                         _postIndex++;
                                         if (_isSearched) {
                                           _searchPosts(_searchTextController.text);
@@ -191,7 +191,7 @@ class _FriendsMainState extends State<FriendsMainScreen> {
                                       children: [
                                         Expanded(
                                             child: Container(
-                                              height: 350,
+                                              height: _baseSize * 8,
                                               child: NotificationListener<ScrollEndNotification>(
                                                 onNotification: (scrollEnd) {
                                                   final metrics = scrollEnd.metrics;
@@ -342,8 +342,8 @@ class _FriendsMainState extends State<FriendsMainScreen> {
                                       primary: true,
                                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                         crossAxisCount: 3,
-                                        mainAxisSpacing: 4.0,
-                                        childAspectRatio: 1.0
+                                        mainAxisSpacing: 2.0,
+                                        childAspectRatio: 8/9
                                       ),
                                       itemCount: _searchedList.length,
                                       itemBuilder: (context, index) {
@@ -365,7 +365,7 @@ class _FriendsMainState extends State<FriendsMainScreen> {
   _buildAwardView() async {
     final posts = await CustomAPIService.getAwardPosts(_awardIndex);
     _awardReceived = posts.length;
-    var resultList = UserImageCard.buildImageCard(posts, _baseSize);
+    var resultList = UserImageCard.buildAwardImageCard(posts, _baseSize);
     setState(() {
       _awardImageCardList.addAll(resultList);
     });

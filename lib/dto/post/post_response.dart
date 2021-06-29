@@ -8,6 +8,8 @@ class PostResponse {
   String? apiId;
   String? imgURL;
   String? awardName;
+  String? month;
+  String? schoolName;
   final String regTime;
 
   PostResponse(this.postId, this.title, this.likes, this.views, this.tbImgURL, this.regTime);

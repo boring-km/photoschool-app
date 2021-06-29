@@ -78,6 +78,8 @@ class CustomAPIService {
       var postResponse = PostResponse(item['postId'], item['title'], item['likes'], item['views'], item['tbImgURL'], item['regTime']);
       postResponse.nickname = item['nickname'];
       postResponse.awardName = item['awardName'];
+      postResponse.month = item['month'].toString();
+      postResponse.schoolName = item['schoolName'];
       postList.add(postResponse);
     }
     return postList;
@@ -105,6 +107,7 @@ class CustomAPIService {
     for (var item in posts) {
       var postResponse = PostResponse(item['postId'], item['title'], item['likes'], item['views'], item['tbImgURL'], item['regTime']);
       postResponse.nickname = item['nickname'];
+      postResponse.schoolName = item['schoolName'];
       postList.add(postResponse);
     }
     return postList;
@@ -120,17 +123,18 @@ class CustomAPIService {
     for (var item in posts) {
       var postResponse = PostResponse(item['postId'], item['title'], item['likes'], item['views'], item['tbImgURL'], item['regTime']);
       postResponse.nickname = item['nickname'];
+      postResponse.schoolName = item['schoolName'];
       postList.add(postResponse);
     }
     return postList;
   }
 
-  static Future<SearchedPostDetail> searchDetailPost(int postId) async {
+  static Future<SearchedPostResponse> searchDetailPost(int postId) async {
     final domain = dotenv.env["server_domain"]!;
     final result = await Http.get("$domain/post/detail/$postId");
     final json = _getResult(result);
     final post = json['post'];
-    final detailResult = SearchedPostDetail(post['title'], post['nickname'], post['apiId'], post['likes'], post['views'], post['imgURL'], post['regTime']);
+    final detailResult = SearchedPostResponse(post['title'], post['nickname'], post['apiId'], post['likes'], post['views'], post['imgURL'], post['regTime']);
     return detailResult;
   }
 

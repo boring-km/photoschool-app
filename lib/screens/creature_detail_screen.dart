@@ -11,8 +11,8 @@ import 'package:image_picker/image_picker.dart';
 import '../dto/creature/creature_detail_response.dart';
 import '../res/colors.dart';
 import '../services/server_api.dart';
-import '../utils/user_image_card.dart';
 import '../widgets/app_bar_base.dart';
+import '../widgets/user_image_card.dart';
 
 class CreatureDetailScreen extends StatefulWidget {
   final CreatureDetailResponse _creature;
