@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:photoschool/res/colors.dart';
 
 import '../dto/post/post_response.dart';
 import '../screens/friends_detail_screen.dart';
@@ -30,6 +31,10 @@ class UserImageCard {
                     width: 300,
                     height: 200,
                     fit: BoxFit.fitWidth,
+                    loadingBuilder: (context, child, progress) {
+                      if (progress == null) return child;
+                      return Container(child: Center(child: Text("로딩중", style: TextStyle(color: CustomColors.orange, fontSize: 24),),),);
+                    },
                   ),
                 ),
                 Padding(
@@ -135,6 +140,10 @@ class UserImageCard {
                     width: 300,
                     height: 200,
                     fit: BoxFit.fitWidth,
+                    loadingBuilder: (context, child, progress) {
+                      if (progress == null) return child;
+                      return Container(child: Center(child: Text("로딩중", style: TextStyle(color: CustomColors.orange, fontSize: 16),),),);
+                    },
                   ),
                 ),
                 Padding(

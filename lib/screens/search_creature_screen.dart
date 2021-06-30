@@ -36,6 +36,8 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
   int _creatureReceived = -1;
   int _currentPage = 1;
 
+  bool _isLoading = false;
+
   @override
   void initState() {
     _initialize();
@@ -46,8 +48,6 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
 
   @override
   Widget build(BuildContext context) {
-
-    print("친구들 사진보기");
 
     var w = MediaQuery.of(context).size.width;
     var h = MediaQuery.of(context).size.height;
@@ -187,17 +187,50 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
                     if (metrics.atEdge) {
                       if (metrics.pixels != 0) {
                         if (_creatureReceived == -1 || _creatureReceived == 9) {
-                          _currentPage++;
-                          _searchCreature(_creatureSearchController.text, _currentPage);
+                          setState(() {
+                            _isLoading = true;
+                            _currentPage++;
+                            _searchCreature(_creatureSearchController.text, _currentPage);
+                          });
+                        } else {
+                          // TODO 필요없는 로직인지 확인 필요
+                          setState(() {
+                            _isLoading = false;
+                          });
                         }
                       }
                     }
                     return true;
                   },
-                  child: GridView.count(
-                    crossAxisCount: 3,
-                    childAspectRatio: (200/250),
-                    children: _buildGridViewItems(base),
+                  child: GridView.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        childAspectRatio: 4 / 5,
+                    ),
+                    itemCount: _creatureDataList.length + _wjPediaList.length + 1,
+                    itemBuilder: (context, index) {
+                      if (index < _wjPediaList.length) {
+                        return _buildGridViewItem("pedia", _wjPediaList[index], base);
+                      } else if (index < _wjPediaList.length + _creatureDataList.length) {
+                        return _buildGridViewItem("creature", _creatureDataList[index-_wjPediaList.length], base);
+                      } else {
+                        return _isLoading ? Container(
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                CircularProgressIndicator(color: Colors.white,),
+                                Padding(
+                                  padding: EdgeInsets.all(base/10),
+                                  child: Text("로딩중", style: TextStyle(color: Colors.white, fontSize: base/2),),
+                                )
+                              ],
+                            ),
+                          ),
+                        ) : Container();
+                      }
+                    },
                   ),
                 ),
               ),
@@ -244,7 +277,7 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
     for (var item in list) {
       final result = await PublicAPIService.getChildBookDetail(item.apiId, text);
       if (result != false) {
-        resultList.add(result as CreatureDetailResponse);
+        resultList.add(result);
       }
     }
     if (resultList.isNotEmpty) {
@@ -252,6 +285,10 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
         _creatureDataList.addAll(resultList);
         _isFirstLoading = false;
         _isSearching = false;
+      });
+    } else {
+      setState(() {
+        _isLoading = false;
       });
     }
   }
@@ -261,51 +298,15 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
     _wjPediaList.addAll(await WoongJinAPIService.searchWJPedia(keyword));
   }
 
-  List<Widget> _buildGridViewItems(double base) {
-    var resultList = <Widget>[];
-    var firstPediaList = [];
-    var secondPediaList = [];
-    var firstCreatureList = [];
-    var secondCreatureList = [];
-
-    for (var item in _wjPediaList) {
-      if (item.isExactly) {
-        firstPediaList.add(item);
-      } else {
-        secondPediaList.add(item);
-      }
-    }
-
-    for (var item in _creatureDataList) {
-      if (item.isExactly) {
-        firstCreatureList.add(item);
-      } else {
-        secondCreatureList.add(item);
-      }
-    }
-
-    for (var item in firstPediaList) {
-      resultList.add(_buildGridViewItem("pedia", item, base));
-    }
-
-    for (var item in firstCreatureList) {
-      resultList.add(_buildGridViewItem("creature", item, base));
-    }
-
-    for (var item in secondPediaList) {
-      resultList.add(_buildGridViewItem("pedia", item, base));
-    }
-
-    for (var item in secondCreatureList) {
-      resultList.add(_buildGridViewItem("creature", item, base));
-    }
-
-    return resultList;
-  }
-
   Widget _buildGridViewItem(String type, dynamic item, double base) {
     if (type == "pedia") {
       final pedia = item as DictResponse;
+      var name = pedia.name.length > 9 ? pedia.name.substring(0,9) : pedia.name;
+      var subName = pedia.subName.length > 15 || name.length > 5
+          ? '${pedia.subName.substring(0,4)}...' : pedia.subName;
+      if (name.length > 7) {
+        subName = '...';
+      }
       return GestureDetector(
         onTap: () {
           Navigator.of(context).push(
@@ -350,11 +351,11 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
                   children: [
                     Padding(
                       padding: EdgeInsets.only(top: base/8, left: base/6),
-                      child: Text(pedia.name, style: TextStyle(color: Colors.black, fontSize: base/3),),
+                      child: Text(name, style: TextStyle(color: Colors.black, fontSize: base/3),),
                     ),
                     Padding(
                       padding: EdgeInsets.only(bottom: base/20),
-                      child: Text('(${pedia.subName})', style: TextStyle(color: Colors.black, fontSize: base/6),),
+                      child: Text('($subName)', style: TextStyle(color: Colors.black, fontSize: base/6),),
                     )
                   ],
                 ),
@@ -367,11 +368,13 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
                 ),
                 pedia.imageURLs.isNotEmpty ? Padding(
                   padding: EdgeInsets.only(top: base/10, left: base/6, right: base/6),
-                  child: Image(
-                    image: CachedNetworkImageProvider(pedia.imageURLs[0]),
+                  child: CachedNetworkImage(
+                    imageUrl: pedia.imageURLs[0],
+                    placeholder: (context, url) => Container(child: Center(child: Text("로딩중", style: TextStyle(color: CustomColors.orange, fontSize: base/2),),),),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
                     height: base*2,
                     fit: BoxFit.fitWidth,
-                  ),
+                  )
                 ) : Container()
               ],
             ),
@@ -381,6 +384,7 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
 
     } else if (type == "creature") {
       final creature = item as CreatureDetailResponse;
+      var creatureName = creature.name.length > 8 ? "${creature.name.substring(0, 8)}..." : creature.name;
       return GestureDetector(
         onTap: () {
           Navigator.of(context).push(
@@ -424,7 +428,7 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
                   alignment: Alignment.centerLeft,
                   child: Padding(
                     padding: EdgeInsets.only(top: base/8, left: base/6),
-                    child: Text(creature.name, style: TextStyle(color: Colors.black, fontSize: base/3),),
+                    child: Text(creatureName, style: TextStyle(color: Colors.black, fontSize: base/3),),
                   ),
                 ),
                 Align(
@@ -435,12 +439,14 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: base/20, left: base/6, right: base/6),
-                  child: Image(
-                    image: CachedNetworkImageProvider(creature.imgUrl1),
-                    height: base*2,
-                    fit: BoxFit.fitWidth,
-                  ),
+                    padding: EdgeInsets.only(top: base/20, left: base/6, right: base/6),
+                    child: CachedNetworkImage(
+                      imageUrl: creature.imgUrl1,
+                      placeholder: (context, url) => Container(child: Center(child: Text("로딩중", style: TextStyle(color: CustomColors.creatureGreen, fontSize: base/2),),),),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                      height: base*2,
+                      fit: BoxFit.fitWidth,
+                    )
                 ),
                 Align(
                   alignment: Alignment.centerLeft,

@@ -50,6 +50,7 @@ class _PediaDetailState extends State<PediaDetailScreen> {
 
   int _received = -1;
   int _othersIndex = 0;
+  bool _isLoading = false;
 
   _PediaDetailState(this._pedia);
 
@@ -254,6 +255,11 @@ class _PediaDetailState extends State<PediaDetailScreen> {
                                               if (metrics.atEdge) {
                                                 if (metrics.pixels != 0) {
                                                   if (_received == -1 || _received == 5) {
+
+                                                    setState(() {
+                                                      _isLoading = true;
+                                                    });
+
                                                     _othersIndex++;
                                                     _buildOthersCardList(context);
                                                   }
@@ -264,8 +270,25 @@ class _PediaDetailState extends State<PediaDetailScreen> {
                                             child: ListView.builder(
                                               shrinkWrap: true,
                                               scrollDirection: Axis.horizontal,
-                                              itemCount: _othersImageCardList.length,
+                                              itemCount: _othersImageCardList.length + 1,
                                               itemBuilder: (context, index) {
+                                                if (index == _othersImageCardList.length) {
+                                                  return _isLoading ? Container(
+                                                    child: Center(
+                                                      child: Column(
+                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                        children: [
+                                                          CircularProgressIndicator(color: Colors.red,),
+                                                          Padding(
+                                                            padding: EdgeInsets.all(_baseSize/10),
+                                                            child: Text("로딩중", style: TextStyle(color: Colors.red, fontSize: _baseSize/2),),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ) : Container();
+                                                }
                                                 return _othersImageCardList[index];
                                               },
                                             ),
@@ -299,9 +322,14 @@ class _PediaDetailState extends State<PediaDetailScreen> {
             child: Container(
               child: Center(
                   child: Image.network(
-                url,
-                height: baseSize * 8,
-              )),
+                    url,
+                    height: baseSize * 8,
+                    loadingBuilder: (context, child, progress) {
+                      if (progress == null) return child;
+                      return Container(child: Center(child: Text("로딩중", style: TextStyle(color: CustomColors.orange, fontSize: _baseSize/2),),),);
+                    },
+                  )
+              ),
             ),
           ),
         ),
@@ -318,6 +346,10 @@ class _PediaDetailState extends State<PediaDetailScreen> {
             child: Image.network(
               subItem.imgURL,
               width: 400,
+              loadingBuilder: (context, child, progress) {
+                if (progress == null) return child;
+                return Container(child: Center(child: Text("로딩중", style: TextStyle(color: CustomColors.orange, fontSize: _baseSize/2),),),);
+              },
             ),
           ),
         ),
@@ -332,6 +364,9 @@ class _PediaDetailState extends State<PediaDetailScreen> {
     var resultList = UserImageCard.buildImageCard(posts, context, _user);
     setState(() {
       _othersImageCardList.addAll(resultList);
+      if (_received == 0) {
+        _isLoading = false;
+      }
     });
   }
 

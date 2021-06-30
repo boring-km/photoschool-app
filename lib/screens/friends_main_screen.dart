@@ -39,6 +39,8 @@ class _FriendsMainState extends State<FriendsMainScreen> {
   final _sortTypeList = ['최신순', '조회수', '좋아요'];
   var _selectedSortType = '최신순';
   bool _isSearched = false;
+  bool _isPostsLoading = false;
+  bool _isAwardLoading = false;
 
   @override
   void initState() {
@@ -174,16 +176,21 @@ class _FriendsMainState extends State<FriendsMainScreen> {
                                   final metrics = scrollEnd.metrics;
                                   if (metrics.atEdge) {
                                     if (metrics.pixels != 0) {
-                                      if (_postReceived == -1 ||
-                                          _postReceived == 9) {
+                                      if (_postReceived == -1 || _postReceived == 9) {
                                         _postIndex++;
+                                        setState(() {
+                                          _isPostsLoading = true;
+                                        });
                                         if (_isSearched) {
-                                          _searchPosts(
-                                          _searchTextController.text.isEmpty ? "%" : _searchTextController.text,
-                                          context);
+                                          _searchPosts(_searchTextController.text.isEmpty ? "%" : _searchTextController.text, context);
                                         } else {
                                           _buildPosts(context);
                                         }
+                                      } else {
+                                        // TODO 필요없는 로직인지 확인 필요
+                                        setState(() {
+                                          _isPostsLoading = false;
+                                        });
                                       }
                                     }
                                   }
@@ -217,10 +224,17 @@ class _FriendsMainState extends State<FriendsMainScreen> {
                                               final metrics = scrollEnd.metrics;
                                               if (metrics.atEdge) {
                                                 if (metrics.pixels != 0) {
-                                                  if (_awardReceived == -1 ||
-                                                      _awardReceived == 4) {
+                                                  if (_awardReceived == -1 || _awardReceived == 4) {
+                                                    setState(() {
+                                                      _isAwardLoading = true;
+                                                    });
                                                     _awardIndex++;
                                                     _buildAwardView(context);
+                                                  } else {
+                                                    // TODO 필요없는 로직인지 확인 필요
+                                                    setState(() {
+                                                      _isAwardLoading = false;
+                                                    });
                                                   }
                                                 }
                                               }
@@ -228,13 +242,27 @@ class _FriendsMainState extends State<FriendsMainScreen> {
                                             },
                                             child: ListView.builder(
                                                 shrinkWrap: true,
-                                                scrollDirection:
-                                                    Axis.horizontal,
-                                                itemCount:
-                                                    _awardImageCardList.length,
+                                                scrollDirection: Axis.horizontal,
+                                                itemCount: _awardImageCardList.length + 1,
                                                 itemBuilder: (context, index) {
-                                                  return _awardImageCardList[
-                                                      index];
+                                                  if (index == _awardImageCardList.length) {
+                                                    return _isAwardLoading ? Container(
+                                                      child: Center(
+                                                        child: Column(
+                                                          mainAxisAlignment: MainAxisAlignment.center,
+                                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                                          children: [
+                                                            CircularProgressIndicator(color: Colors.red,),
+                                                            Padding(
+                                                              padding: EdgeInsets.all(_baseSize/10),
+                                                              child: Text("로딩중", style: TextStyle(color: Colors.red, fontSize: _baseSize/2),),
+                                                            )
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ) : Container();
+                                                  }
+                                                  return _awardImageCardList[index];
                                                 }),
                                           ),
                                         ))
@@ -406,8 +434,25 @@ class _FriendsMainState extends State<FriendsMainScreen> {
                                               crossAxisCount: 3,
                                               mainAxisSpacing: 2.0,
                                               childAspectRatio: 2 / 3),
-                                      itemCount: _searchedList.length,
+                                      itemCount: _searchedList.length + 1,
                                       itemBuilder: (context, index) {
+                                        if (_searchedList.length == index) {
+                                          return _isPostsLoading  ? Container(
+                                            child: Center(
+                                              child: Column(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                children: [
+                                                  CircularProgressIndicator(color: Colors.blue,),
+                                                  Padding(
+                                                    padding: EdgeInsets.all(_baseSize/10),
+                                                    child: Text("로딩중", style: TextStyle(color: Colors.blue, fontSize: _baseSize/2),),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          ) : Container();
+                                        }
                                         return _searchedList[index];
                                       },
                                     ),
@@ -428,6 +473,9 @@ class _FriendsMainState extends State<FriendsMainScreen> {
     var resultList = UserImageCard.buildAwardImageCard(posts, context, _user);
     setState(() {
       _awardImageCardList.addAll(resultList);
+      if (_awardReceived < 4) {
+        _isAwardLoading = false;
+      }
     });
   }
 
@@ -439,6 +487,9 @@ class _FriendsMainState extends State<FriendsMainScreen> {
       _searchedList.addAll(resultList);
       _isSearched = false;
       _isLoaded = true;
+      if (_postReceived < 9) {
+        _isPostsLoading = false;
+      }
     });
   }
 
@@ -466,6 +517,9 @@ class _FriendsMainState extends State<FriendsMainScreen> {
     setState(() {
       _searchedList.addAll(resultList);
       _isSearched = true;
+      if (_postReceived < 9) {
+        _isPostsLoading = false;
+      }
     });
   }
 }

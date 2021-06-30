@@ -39,10 +39,11 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
   final List<Widget> _othersImageCardList = [Container()];
   double _baseSize = 100;
   File? _thumbnailFileToUpload;
-  int received = -1;
+  int _received = -1;
 
   bool _isDetailLoaded = false;
   bool _isUploaded = true;
+  bool _isLoading = false;
 
   _CreatureDetailScreenState(this._creature);
 
@@ -220,7 +221,10 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                                           final metrics = scrollEnd.metrics;
                                           if (metrics.atEdge) {
                                             if (metrics.pixels != 0) {
-                                              if (received == -1 || received == 5) {
+                                              if (_received == -1 || _received == 5) {
+                                                setState(() {
+                                                  _isLoading = true;
+                                                });
                                                 _othersIndex++;
                                                 _buildOthersCardList(_creature.apiId, context);
                                               }
@@ -231,8 +235,25 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                                         child: ListView.builder(
                                           shrinkWrap: true,
                                           scrollDirection: Axis.horizontal,
-                                          itemCount: _othersImageCardList.length,
+                                          itemCount: _othersImageCardList.length + 1,
                                           itemBuilder: (context, index) {
+                                            if (index == _othersImageCardList.length) {
+                                              return _isLoading ? Container(
+                                                child: Center(
+                                                  child: Column(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                    children: [
+                                                      CircularProgressIndicator(color: Colors.red,),
+                                                      Padding(
+                                                        padding: EdgeInsets.all(_baseSize/10),
+                                                        child: Text("로딩중", style: TextStyle(color: Colors.red, fontSize: _baseSize/2),),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              ) : Container();
+                                            }
                                             return _othersImageCardList[index];
                                           },
                                         ),
@@ -272,6 +293,10 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                 child: Image.network(
                   imageUrl,
                   height: baseSize * 3,
+                  loadingBuilder: (context, child, progress) {
+                    if (progress == null) return child;
+                    return Container(child: Center(child: Text("로딩중", style: TextStyle(color: CustomColors.creatureGreen, fontSize: _baseSize/2),),),);
+                  },
                 )
             ),
           ),
@@ -573,11 +598,14 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
 
   _buildOthersCardList(String apiId, BuildContext context) async {
     final posts = await CustomAPIService.getOthersPostBy("C$apiId", _othersIndex);
-    received = posts.length;
+    _received = posts.length;
     var resultList = UserImageCard.buildImageCard(posts, context, _user);
     setState(() {
       _othersImageCardList.addAll(resultList);
       _isDetailLoaded = true;
+      if (_received == 0) {
+        _isLoading = false;
+      }
     });
   }
 }
