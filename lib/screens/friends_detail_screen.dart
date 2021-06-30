@@ -1,6 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:photoschool/dto/dict/dict_response.dart';
+import 'package:photoschool/screens/creature_detail_screen.dart';
+import 'package:photoschool/screens/pedia_detail_screen.dart';
 
 import '../dto/creature/creature_detail_response.dart';
 import '../dto/dict/dict_detail_response.dart';
@@ -33,11 +36,13 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
   late User _user;
   late SearchedPostResponse _post;
   bool _isLoading = true;
-  late CreatureDetailResponse _originalCreature;
-  late DictDetailResponse _originalDict;
+  late dynamic _original;
 
   var _isLiked = false;
   int _likes = 0;
+  String _regTime = "";
+  String _dictImgUrl = "";
+  late DictResponse _pedia;
 
   @override
   void initState() {
@@ -51,12 +56,15 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
   _searchDetailPost(int postId) async {
     _post = await CustomAPIService.searchDetailPost(postId);
     if (_post.apiId[0] == 'C') {
-      _originalCreature = await PublicAPIService.getChildBookDetail(_post.apiId.substring(1), "");
+      _original = await PublicAPIService.getChildBookDetail(_post.apiId.substring(1), "");
     } else if (_post.apiId[0] == 'P') {
-      _originalDict = await WoongJinAPIService.searchDetailWJPedia(_post.apiId.substring(1));
+      _original = await WoongJinAPIService.searchDetailWJPedia(_post.apiId.substring(1));
+      _pedia = (await WoongJinAPIService.searchWJPedia((_original as DictDetailResponse).name))[0];
+      _dictImgUrl = _pedia.imageURLs[0];
     }
     _isLiked = await CustomAPIService.checkDoLikeBefore(widget._postId);
     _likes = _post.likes;
+    _regTime = "${_post.regTime.substring(5,10).replaceFirst('-', '월 ')}일";
     setState(() {
       _isLoading = false;
     });
@@ -149,7 +157,6 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
                                 children: [
                                   Text(_post.title, style: TextStyle(fontSize: _baseSize),),
                                   Text(_post.nickname, style: TextStyle(fontSize: _baseSize/2),),
-                                  Text(_post.schoolName!, style: TextStyle(fontSize: _baseSize/3),),
                                 ],
                               ),
                               Padding(
@@ -166,8 +173,8 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
                                             }
                                           },
                                           style: ElevatedButton.styleFrom(
-                                            primary: buttonColor,
-                                            side: BorderSide(color: buttonTextColor, width: 1.0)
+                                              primary: buttonColor,
+                                              side: BorderSide(color: buttonTextColor, width: 1.0)
                                           ),
                                           child: Row(
                                             children: [
@@ -225,7 +232,58 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
                               ),
                             ],
                           ),
-                          // TODO 원래 도감 정보로 연결 필요
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(_post.schoolName!, style: TextStyle(fontSize: _baseSize/3),),
+                              Text("작성일자: $_regTime", style: TextStyle(color: Colors.grey),),
+                            ],
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(vertical: _baseSize / 5, horizontal: _baseSize / 4),
+                            child: Container(
+                              height: 1,
+                              color: Colors.black,
+                            ),
+                          ),
+                          _buildOriginTitle(),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.all(_baseSize/4),
+                                child: _buildImageView(),
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("관련자료명", style: TextStyle(fontSize: _baseSize/4, color: Colors.black),),
+                                  Text(_original.name, style: TextStyle(fontSize: _baseSize/2, color: Colors.black),),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(vertical: _baseSize/4),
+                                    child: Container(
+                                      width: _baseSize*2,
+                                      height: _baseSize/2,
+                                      child: ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) => _original.runtimeType == CreatureDetailResponse ?
+                                                CreatureDetailScreen(
+                                                    _original,
+                                                    user: _user
+                                                ) : PediaDetailScreen(_pedia, user: _user),
+                                              ),
+                                            );
+                                          },
+                                          child: Text("상세보기", style: TextStyle(fontSize: _baseSize/3),)
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              )
+                            ],
+                          ),
                         ],
                       ),
                     ),
@@ -236,6 +294,46 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Row _buildOriginTitle() {
+    return _original.runtimeType == CreatureDetailResponse ?
+    Row(
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: _baseSize / 4),
+          child: Container(
+            decoration: BoxDecoration(
+                color: CustomColors.creatureGreen,
+                borderRadius: BorderRadius.all(Radius.circular(_baseSize/2))
+            ),
+            width: _baseSize * 2,
+            height: _baseSize/2,
+            child: Center(
+              child: Text("어린이생물도감", style: TextStyle(color: Colors.white, fontSize: _baseSize/4),),
+            ),
+          ),
+        ),
+      ],
+    ) :
+    Row(
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: _baseSize / 4),
+          child: Container(
+            decoration: BoxDecoration(
+                color: CustomColors.orange,
+                borderRadius: BorderRadius.all(Radius.circular(_baseSize/2))
+            ),
+            width: _baseSize * 2,
+            height: _baseSize/2,
+            child: Center(
+              child: Text("웅진학습백과", style: TextStyle(color: Colors.white, fontSize: _baseSize/4),),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -284,7 +382,7 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
               builder: (context) =>
                   Center(
                     child: AlertDialog(
-                      content: Text("본인 게시물은 좋아요 클릭이 불가합니다!", style: TextStyle(color: Colors.red, fontSize: _baseSize/3),)
+                        content: Text("본인 게시물은 좋아요 클릭이 불가합니다!", style: TextStyle(color: Colors.red, fontSize: _baseSize/3),)
                     ),
                   )
           )
@@ -296,6 +394,26 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
       });
     }
     return false;
+  }
+
+  Image _buildImageView() {
+    return _original.runtimeType == CreatureDetailResponse ?
+    Image.network(
+      (_original as CreatureDetailResponse).imgUrl1,
+      height: _baseSize * 3,
+      loadingBuilder: (context, child, progress) {
+        if (progress == null) return child;
+        return Container(child: Center(child: Text("로딩중", style: TextStyle(color: CustomColors.creatureGreen, fontSize: _baseSize/2),),),);
+      },
+    ) :
+    Image.network(
+      _dictImgUrl,
+      height: _baseSize * 8,
+      loadingBuilder: (context, child, progress) {
+        if (progress == null) return child;
+        return Container(child: Center(child: Text("로딩중", style: TextStyle(color: CustomColors.orange, fontSize: _baseSize/2),),),);
+      },
+    );
   }
 
 }
