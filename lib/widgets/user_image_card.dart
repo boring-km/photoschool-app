@@ -12,8 +12,7 @@ class UserImageCard {
       final school = item.schoolName == null ? "" : item.schoolName!.replaceFirst("등학교", "");
       final widget = GestureDetector(
         onTap: () {
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
-              FriendsDetailScreen(item.postId, user: user)));
+          _route(context, item, user);
         },
         child: Padding(
           padding: EdgeInsets.all(16),
@@ -85,8 +84,7 @@ class UserImageCard {
                             padding: EdgeInsets.only(right: 10),
                             child: ElevatedButton(
                                 onPressed: () {
-                                  Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
-                                      FriendsDetailScreen(item.postId, user: user)));
+                                  _route(context, item, user);
                                 },
                                 style: ElevatedButton.styleFrom(primary: Colors.white, onSurface: Colors.white70, side: BorderSide(color: Colors.black, width: 2.0), shadowColor: Colors.white10),
                                 child: Text(
@@ -118,8 +116,7 @@ class UserImageCard {
       }
       final widget = GestureDetector(
         onTap: () {
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
-              FriendsDetailScreen(item.postId, user: user)));
+          _route(context, item, user);
         },
         child: Padding(
           padding: EdgeInsets.all(10.0),
@@ -192,9 +189,8 @@ class UserImageCard {
                             ),
                           ),
                           ElevatedButton(
-                              onPressed: () {
-                                Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
-                                    FriendsDetailScreen(item.postId, user: user)));
+                              onPressed: () async {
+                                _route(context, item, user);
                               },
                               style: ElevatedButton.styleFrom(primary: Colors.white, onSurface: Colors.white70, side: BorderSide(color: Colors.black, width: 2.0), shadowColor: Colors.white10),
                               child: Text(
@@ -214,5 +210,17 @@ class UserImageCard {
       resultList.add(widget);
     }
     return resultList;
+  }
+
+  static void _route(BuildContext context, PostResponse item, User user) {
+    var type = context.widget.runtimeType.toString();
+    if (type == "FriendsMainScreen") {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) =>
+          FriendsDetailScreen(item.postId, user: user)));
+    } else {
+      // others
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+          FriendsDetailScreen(item.postId, user: user)));
+    }
   }
 }
