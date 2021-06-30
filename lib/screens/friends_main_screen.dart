@@ -7,6 +7,7 @@ import '../res/colors.dart';
 import '../services/server_api.dart';
 import '../widgets/app_bar_base.dart';
 import '../widgets/box_decoration.dart';
+import '../widgets/hero_dialog_route.dart';
 import '../widgets/user_image_card.dart';
 
 class FriendsMainScreen extends StatefulWidget {
@@ -137,8 +138,8 @@ class _FriendsMainState extends State<FriendsMainScreen> {
                                                 _baseSize / 2)),
                                         primary: CustomColors.lightRed,
                                         onSurface: CustomColors.red),
-                                    onPressed: () {
-                                      // TODO: 학교 랭킹 다이얼로그 띄우기
+                                    onPressed: () async {
+                                      await _buildSchoolRankDialog(context);
                                     },
                                     child: Padding(
                                       padding: EdgeInsets.symmetric(
@@ -147,10 +148,13 @@ class _FriendsMainState extends State<FriendsMainScreen> {
                                         height: _baseSize * (2 / 3),
                                         child: Row(
                                           children: [
-                                            Icon(
-                                              Icons.school,
-                                              color: Colors.white,
-                                              size: _baseSize / 2,
+                                            Hero(
+                                              tag: 'school',
+                                              child: Icon(
+                                                Icons.school,
+                                                color: Colors.white,
+                                                size: _baseSize / 2,
+                                              ),
                                             ),
                                             Padding(
                                               padding: EdgeInsets.only(
@@ -521,5 +525,72 @@ class _FriendsMainState extends State<FriendsMainScreen> {
         _isPostsLoading = false;
       }
     });
+  }
+
+  _buildSchoolRankDialog(BuildContext context) async {
+    var _baseSize = 80.0;
+    final schoolList = await CustomAPIService.getSchoolRank();
+    final widgetList = <Widget>[];
+    for (var i = 0; i < schoolList.length; i++) {
+      widgetList.add(
+          Row(
+            children: [
+              Text("${i+1}등 ", style: TextStyle(fontSize: _baseSize/3),),
+              Text(schoolList[i].schoolName, style: TextStyle(fontSize: _baseSize/3),),
+            ],
+          )
+      );
+    }
+    Navigator.push(context,
+        HeroDialogRoute(
+            builder: (context) =>
+                Center(
+                  child: AlertDialog(
+                    title: Row(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(right: _baseSize/10),
+                          child: Hero(
+                            tag: "school",
+                            child: Icon(
+                              Icons.school_rounded,
+                              color: Colors.red,
+                              size: _baseSize,
+                            ),
+                          ),
+                        ),
+                        Text("학교 랭킹", style: TextStyle(color: CustomColors.red, fontSize: _baseSize/2),),
+                      ],
+                    ),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          height: 250,
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: widgetList,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: _baseSize * 2,
+                          height: _baseSize / 2,
+                          child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              style: ElevatedButton.styleFrom(
+                                primary: CustomColors.red
+                              ),
+                              child: Text("닫기", style: TextStyle(fontSize: _baseSize/3),)
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                )
+        )
+    );
   }
 }

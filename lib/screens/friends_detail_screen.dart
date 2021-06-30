@@ -60,7 +60,7 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
     } else if (_post.apiId[0] == 'P') {
       _original = await WoongJinAPIService.searchDetailWJPedia(_post.apiId.substring(1));
       _pedia = (await WoongJinAPIService.searchWJPedia((_original as DictDetailResponse).name))[0];
-      _dictImgUrl = _pedia.imageURLs[0];
+      _dictImgUrl = (await WoongJinAPIService.searchPhotoLibrary((_original as DictDetailResponse).name))[0].imgURL;
     }
     _isLiked = await CustomAPIService.checkDoLikeBefore(widget._postId);
     _likes = _post.likes;
@@ -408,10 +408,13 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
     ) :
     Image.network(
       _dictImgUrl,
-      height: _baseSize * 8,
+      height: _baseSize * 3,
       loadingBuilder: (context, child, progress) {
         if (progress == null) return child;
         return Container(child: Center(child: Text("로딩중", style: TextStyle(color: CustomColors.orange, fontSize: _baseSize/2),),),);
+      },
+      errorBuilder: (context, child, progress) {
+        return Container(child: Center(child: Text("이미지 없음", style: TextStyle(color: CustomColors.orange, fontSize: _baseSize/2),),),);
       },
     );
   }
