@@ -30,15 +30,6 @@ class _SignInScreenState extends State<SignInScreen> {
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(height: 20),
-                    Text(
-                      '포토스쿨 로고 위치',
-                      style: TextStyle(
-                        color: CustomColors.firebaseYellow,
-                        fontSize: 40,
-                      ),
-                    ),
-                    Padding(padding: EdgeInsets.all(MediaQuery.of(context).size.height / 10)),
                     Text(
                       '포토스쿨',
                       style: TextStyle(
