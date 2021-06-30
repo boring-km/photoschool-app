@@ -6,8 +6,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../dto/school/school_search_response.dart';
 import '../res/colors.dart';
 import '../services/server_api.dart';
+import '../utils/auth.dart';
 import '../widgets/box_decoration.dart';
 import 'select_screen.dart';
+import 'signin_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
 
@@ -67,6 +69,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            Padding(
+                              padding: EdgeInsets.only(left: _baseSize/10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: () async {
+                                      await Authentication.signOut(context: context);
+                                      Navigator.of(context).pushReplacement(
+                                        MaterialPageRoute(
+                                          builder: (context) => SignInScreen(),
+                                        ),
+                                      );
+                                    },
+                                    child: Text("로그인 화면으로 돌아가기"),
+                                  )
+                                ],
+                              ),
+                            ),
                             Padding(
                               padding: EdgeInsets.only(top: _baseSize/4),
                               child: Text("닉네임 입력", style: TextStyle(color: Colors.black, fontSize: _baseSize/2),),
