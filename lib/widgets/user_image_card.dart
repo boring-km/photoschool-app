@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../dto/post/post_response.dart';
 import '../screens/friends_detail_screen.dart';
+import '../screens/friends_main_screen.dart';
 
 class UserImageCard {
   static List<Widget> buildImageCard(List<PostResponse> posts, BuildContext context, User user) {
@@ -11,8 +12,8 @@ class UserImageCard {
     for (var item in posts) {
       final school = item.schoolName == null ? "" : item.schoolName!.replaceFirst("등학교", "");
       final widget = GestureDetector(
-        onTap: () {
-          _route(context, item, user);
+        onTap: () async {
+          await _route(context, item, user);
         },
         child: Padding(
           padding: EdgeInsets.all(16),
@@ -83,8 +84,8 @@ class UserImageCard {
                           Padding(
                             padding: EdgeInsets.only(right: 10),
                             child: ElevatedButton(
-                                onPressed: () {
-                                  _route(context, item, user);
+                                onPressed: () async {
+                                  await _route(context, item, user);
                                 },
                                 style: ElevatedButton.styleFrom(primary: Colors.white, onSurface: Colors.white70, side: BorderSide(color: Colors.black, width: 2.0), shadowColor: Colors.white10),
                                 child: Text(
@@ -115,8 +116,8 @@ class UserImageCard {
         month = month.substring(1);
       }
       final widget = GestureDetector(
-        onTap: () {
-          _route(context, item, user);
+        onTap: () async {
+          await _route(context, item, user);
         },
         child: Padding(
           padding: EdgeInsets.all(10.0),
@@ -190,7 +191,7 @@ class UserImageCard {
                           ),
                           ElevatedButton(
                               onPressed: () async {
-                                _route(context, item, user);
+                                await _route(context, item, user);
                               },
                               style: ElevatedButton.styleFrom(primary: Colors.white, onSurface: Colors.white70, side: BorderSide(color: Colors.black, width: 2.0), shadowColor: Colors.white10),
                               child: Text(
@@ -212,11 +213,14 @@ class UserImageCard {
     return resultList;
   }
 
-  static void _route(BuildContext context, PostResponse item, User user) {
+  static _route(BuildContext context, PostResponse item, User user) async {
     var type = context.widget.runtimeType.toString();
     if (type == "FriendsMainScreen") {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) =>
+      await Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
           FriendsDetailScreen(item.postId, user: user)));
+      Navigator.of(context).pop();
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+          FriendsMainScreen(user: user)));
     } else {
       // others
       Navigator.of(context).push(MaterialPageRoute(builder: (context) =>

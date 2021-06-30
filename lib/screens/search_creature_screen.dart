@@ -42,8 +42,12 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
     super.initState();
   }
 
+
+
   @override
   Widget build(BuildContext context) {
+
+    print("친구들 사진보기");
 
     var w = MediaQuery.of(context).size.width;
     var h = MediaQuery.of(context).size.height;

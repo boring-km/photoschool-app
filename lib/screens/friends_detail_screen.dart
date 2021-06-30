@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:photoschool/screens/friends_main_screen.dart';
 
 import '../dto/creature/creature_detail_response.dart';
 import '../dto/dict/dict_detail_response.dart';
@@ -98,32 +97,9 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
                       child: ListView(
                         scrollDirection: Axis.vertical,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              ElevatedButton(
-                                onPressed: () {
-                                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) =>
-                                      FriendsMainScreen(user: _user)));
-                                },
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.only(right: _baseSize/20),
-                                      child: Icon(CupertinoIcons.back, color: Colors.white,),
-                                    ),
-                                    Text("메인화면 이동"),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
                           InteractiveViewer(
                             panEnabled: true,
                             scaleEnabled: true,
-
                             minScale: 0.5,
                             maxScale: 4,
                             child: Image.network(
