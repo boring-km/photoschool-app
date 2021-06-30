@@ -181,8 +181,15 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                           child: Html(
                             data: _creature.detail,
                             style: {
-                              "html": Style(color: Colors.black),
+                              "html": Style(color: Colors.black, fontSize: FontSize(_baseSize/3)),
                             },
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: _baseSize / 10, left: _baseSize / 2, right: _baseSize / 2),
+                          child: Text(
+                            "출처 | 산림청 국립수목원 국가생물종지식정보시스템 어린이생물도감\n본 콘텐츠의 저작권은 제공처에 있으며, 해당 자료의 무단복제 및 배포를 금합니다.\n외부 콘텐츠는 웅진씽크빅의 입장과 다를 수 있습니다.",
+                            style: TextStyle(color: Colors.grey, fontSize: _baseSize/5),
                           ),
                         ),
                         _othersImageCardList.length == 1 ? Padding(

@@ -135,7 +135,16 @@ class CustomAPIService {
     final json = _getResult(result);
     final post = json['post'];
     final detailResult = SearchedPostResponse(post['title'], post['nickname'], post['apiId'], post['likes'], post['views'], post['imgURL'], post['regTime']);
+    detailResult.region = post['region'];
+    detailResult.schoolName = post['schoolName'];
     return detailResult;
+  }
+
+  static Future checkDoLikeBefore(int postId) async {
+    final domain = dotenv.env["server_domain"]!;
+    final idToken = await FirebaseAuth.instance.currentUser!.getIdToken();
+    final result = await Http.getWithJWT("$domain/check/like/$postId", idToken);
+    return _getResult(result)['result'];
   }
 
   static Future likeOrNotLike(int postId) async {

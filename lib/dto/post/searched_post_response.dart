@@ -6,11 +6,13 @@ class SearchedPostResponse {
   final int views;
   final String imgURL;
   final String regTime;
+  String? schoolName;
+  String? region;
 
   SearchedPostResponse(this.title, this.nickname, this.apiId, this.likes, this.views, this.imgURL, this.regTime);
 
   @override
   String toString() {
-    return 'SearchedPostResponse{title: $title, nickname: $nickname, apiId: $apiId, likes: $likes, views: $views, imgURL: $imgURL, regTime: $regTime}';
+    return 'SearchedPostResponse{title: $title, nickname: $nickname, apiId: $apiId, likes: $likes, views: $views, imgURL: $imgURL, regTime: $regTime, schoolName: $schoolName, region: $region}';
   }
 }

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:photoschool/widgets/loading.dart';
 
 import '../dto/dict/dict_detail_response.dart';
 import '../dto/dict/dict_response.dart';
@@ -35,7 +36,7 @@ class _PediaDetailState extends State<PediaDetailScreen> {
   late DictDetailResponse _pediaDetail;
   late User _user;
   late List<PhotoResponse> _subImageList;
-  double baseSize = 100;
+  double _baseSize = 100;
   bool _isDetailLoaded = false;
   bool _isUploaded = true;
 
@@ -74,13 +75,13 @@ class _PediaDetailState extends State<PediaDetailScreen> {
     var w = MediaQuery.of(context).size.width;
     var h = MediaQuery.of(context).size.height;
 
-    baseSize = w > h ? h / 10 : w / 10;
+    _baseSize = w > h ? h / 10 : w / 10;
     var boxRounded = w > h ? h / 30 : w / 30;
 
     if (!_isDetailLoaded) {
-      return _buildLoadingView("로딩중");
+      return LoadingWidget.buildLoadingView("로딩중", _baseSize);
     } else if (!_isUploaded) {
-      return _buildLoadingView("업로드중");
+      return LoadingWidget.buildLoadingView("업로드중", _baseSize);
     }
 
     return Scaffold(
@@ -93,7 +94,7 @@ class _PediaDetailState extends State<PediaDetailScreen> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(baseSize / 3),
+          padding: EdgeInsets.all(_baseSize / 3),
           child: Center(
             child: Container(
               decoration: CustomBoxDecoration.buildWhiteBoxDecoration(),
@@ -103,7 +104,7 @@ class _PediaDetailState extends State<PediaDetailScreen> {
                   Container(
                     width: w * (9 / 10),
                     child: Padding(
-                      padding: EdgeInsets.only(top: baseSize / 10),
+                      padding: EdgeInsets.only(top: _baseSize / 10),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -111,28 +112,28 @@ class _PediaDetailState extends State<PediaDetailScreen> {
                           Row(
                             children: [
                               Padding(
-                                padding: EdgeInsets.symmetric(horizontal: baseSize / 10),
+                                padding: EdgeInsets.symmetric(horizontal: _baseSize / 10),
                                 child: Icon(Icons.assistant_navigation),
                               ),
                               Text(
                                 _pediaDetail.category1,
-                                style: TextStyle(color: Colors.black, fontSize: baseSize / 3),
+                                style: TextStyle(color: Colors.black, fontSize: _baseSize / 3),
                               ),
                               Padding(
-                                padding: EdgeInsets.symmetric(horizontal: baseSize / 10),
+                                padding: EdgeInsets.symmetric(horizontal: _baseSize / 10),
                                 child: Icon(Icons.arrow_forward_ios_rounded),
                               ),
                               Text(
                                 _pediaDetail.category2,
-                                style: TextStyle(color: Colors.black, fontSize: baseSize / 3),
+                                style: TextStyle(color: Colors.black, fontSize: _baseSize / 3),
                               ),
                               Padding(
-                                padding: EdgeInsets.symmetric(horizontal: baseSize / 10),
+                                padding: EdgeInsets.symmetric(horizontal: _baseSize / 10),
                                 child: Icon(Icons.arrow_forward_ios_rounded),
                               ),
                               Text(
                                 _pediaDetail.category3,
-                                style: TextStyle(color: Colors.black, fontSize: baseSize / 3),
+                                style: TextStyle(color: Colors.black, fontSize: _baseSize / 3),
                               ),
                             ],
                           ),
@@ -149,10 +150,10 @@ class _PediaDetailState extends State<PediaDetailScreen> {
                                       color: Colors.white,
                                     ),
                                     Padding(
-                                      padding: EdgeInsets.only(left: baseSize / 5),
+                                      padding: EdgeInsets.only(left: _baseSize / 5),
                                       child: Text(
                                         "사진 올리기",
-                                        style: TextStyle(fontSize: baseSize / 5, color: Colors.white),
+                                        style: TextStyle(fontSize: _baseSize / 5, color: Colors.white),
                                       ),
                                     )
                                   ],
@@ -175,14 +176,14 @@ class _PediaDetailState extends State<PediaDetailScreen> {
                               child: ListView(
                                 shrinkWrap: true,
                                 scrollDirection: Axis.horizontal,
-                                children: _buildImages(baseSize, boxRounded),
+                                children: _buildImages(_baseSize, boxRounded),
                               ),
                             ),
                           ))
                         ],
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: baseSize / 6, left: baseSize / 2),
+                        padding: EdgeInsets.only(top: _baseSize / 6, left: _baseSize / 2),
                         child: Align(
                           alignment: Alignment.bottomLeft,
                           child: Row(
@@ -190,54 +191,57 @@ class _PediaDetailState extends State<PediaDetailScreen> {
                             children: [
                               Text(
                                 _pedia.name,
-                                style: TextStyle(fontSize: baseSize * (2 / 3), fontWeight: FontWeight.w700, color: Colors.black),
+                                style: TextStyle(fontSize: _baseSize * (2 / 3), fontWeight: FontWeight.w700, color: Colors.black),
                               ),
                               Padding(
-                                padding: EdgeInsets.only(bottom: baseSize / 10),
+                                padding: EdgeInsets.only(bottom: _baseSize / 10),
                                 child: Text(
                                   "(${_pedia.subName})",
-                                  style: TextStyle(fontSize: baseSize * (1 / 3), color: Colors.black),
+                                  style: TextStyle(fontSize: _baseSize * (1 / 3), color: Colors.black),
                                 ),
                               )
                             ],
                           ),
                         ),
                       ),
-                          Padding(
-                            padding: EdgeInsets.only(top: baseSize / 10, left: baseSize / 2, right: baseSize / 2),
-                            child: Html(
-                              data: _pediaDetail.detail,
-                              style: {
-                                "html": Style(color: Colors.black, fontSize: FontSize(baseSize/3)),
-                                "a": Style(color: Colors.black),
-                              },
-                            ),
-                          // child: Text(
-                          //   _pediaDetail.detail,
-                          //   style: TextStyle(color: Colors.black, fontSize: baseSize / 3),
-                          // )
+                      Padding(
+                        padding: EdgeInsets.only(top: _baseSize / 10, left: _baseSize / 2, right: _baseSize / 2),
+                        child: Html(
+                          data: _pediaDetail.detail,
+                          style: {
+                            "html": Style(color: Colors.black, fontSize: FontSize(_baseSize/3)),
+                            "a": Style(color: Colors.black),
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: _baseSize / 10, left: _baseSize / 2, right: _baseSize / 2),
+                        child: Text(
+                          "출처 | 웅진학습백과\n본 콘텐츠는 학교 공부나 숙제, 웅진씽크빅의 다른 콘텐츠에 이용할 수 있습니다.\n단, 영리 목적이 아닌 개인적인 용도로만 이용할 수 있습니다.\n본 콘텐츠의 글 저작권과 편집저작물 저작권은 웅진씽크빅에 있으며, 시청각 자료의 저작권은 웅진씽크빅이나 저작자나 제공처에 있습니다.",
+                          style: TextStyle(color: Colors.grey, fontSize: _baseSize/5),
+                        ),
                       ),
                       _othersImageCardList.length == 1
                           ? Padding(
-                              padding: EdgeInsets.symmetric(vertical: baseSize / 4),
+                              padding: EdgeInsets.symmetric(vertical: _baseSize / 4),
                               child: Text(
                                 "아직 관련 사진을 찍은 친구가 없어요!",
                                 textAlign: TextAlign.center,
-                                style: TextStyle(color: Colors.black, fontSize: baseSize * (1 / 3)),
+                                style: TextStyle(color: Colors.black, fontSize: _baseSize * (1 / 3)),
                               ),
                             )
                           : Padding(
-                              padding: EdgeInsets.symmetric(vertical: baseSize / 3),
+                              padding: EdgeInsets.symmetric(vertical: _baseSize / 3),
                               child: Text(
                                 "친구들이 찍은 사진",
                                 textAlign: TextAlign.center,
-                                style: TextStyle(color: Colors.black, fontSize: baseSize * (2 / 3)),
+                                style: TextStyle(color: Colors.black, fontSize: _baseSize * (2 / 3)),
                               ),
                             ),
                       _othersImageCardList.length == 1
                           ? Container()
                           : Padding(
-                              padding: EdgeInsets.symmetric(horizontal: baseSize / 4),
+                              padding: EdgeInsets.symmetric(horizontal: _baseSize / 4),
                               child: Flex(
                                 direction: Axis.horizontal,
                                 children: [
@@ -275,18 +279,6 @@ class _PediaDetailState extends State<PediaDetailScreen> {
               ),
             ),
           ),
-        ),
-      ),
-    );
-  }
-
-  Scaffold _buildLoadingView(String message) {
-    return Scaffold(
-      backgroundColor: CustomColors.deepblue,
-      body: Center(
-        child: Text(
-          message,
-          style: TextStyle(color: Colors.white, fontSize: baseSize * 3),
         ),
       ),
     );
