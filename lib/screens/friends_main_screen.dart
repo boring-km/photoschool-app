@@ -534,9 +534,33 @@ class _FriendsMainState extends State<FriendsMainScreen> {
     for (var i = 0; i < schoolList.length; i++) {
       widgetList.add(
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("${i+1}등 ", style: TextStyle(fontSize: _baseSize/3),),
-              Text(schoolList[i].schoolName, style: TextStyle(fontSize: _baseSize/3),),
+              Container(width: _baseSize/2, child: Text("${i+1}등 ", style: TextStyle(fontSize: _baseSize/3),)),
+              Container(width: _baseSize*3, child: Text(schoolList[i].schoolName, style: TextStyle(fontSize: _baseSize/3),)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Icon(
+                    CupertinoIcons.eye,
+                    color: Colors.black,
+                  ),
+                  Text('${schoolList[i].sumOfViews}', style: TextStyle(fontSize: _baseSize/3),),
+                ],
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: _baseSize/10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Icon(
+                      CupertinoIcons.doc,
+                      color: Colors.black,
+                    ),
+                    Text('${schoolList[i].sumOfPosts}', style: TextStyle(fontSize: _baseSize/3),),
+                  ],
+                ),
+              )
             ],
           )
       );
@@ -547,6 +571,7 @@ class _FriendsMainState extends State<FriendsMainScreen> {
                 Center(
                   child: AlertDialog(
                     title: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Padding(
                           padding: EdgeInsets.only(right: _baseSize/10),
