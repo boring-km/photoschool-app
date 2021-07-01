@@ -47,8 +47,6 @@ class _PediaDetailState extends State<PediaDetailScreen> {
   File? _imageFileToUpload;
   File? _thumbnailFileToUpload;
 
-  final _dialogTextController = TextEditingController();
-
   int _received = -1;
   int _othersIndex = 0;
   bool _isLoading = false;
@@ -401,7 +399,7 @@ class _PediaDetailState extends State<PediaDetailScreen> {
                     child: ElevatedButton(
                         style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(boxRounded)), primary: Colors.white, onSurface: Colors.white30),
                         onPressed: () async {
-                          final result = await pickImage(ImageSource.camera);
+                          final result = await _pickImage(ImageSource.camera);
                           if (result) {
                             _showTitleDialog(context, rootContext);
                           } else {
@@ -438,7 +436,7 @@ class _PediaDetailState extends State<PediaDetailScreen> {
                     child: ElevatedButton(
                         style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(boxRounded)), primary: Colors.white, onSurface: Colors.white30),
                         onPressed: () async {
-                          final result = await pickImage(ImageSource.gallery);
+                          final result = await _pickImage(ImageSource.gallery);
                           if (result) {
                             _showTitleDialog(context, rootContext);
                           } else {
@@ -494,8 +492,7 @@ class _PediaDetailState extends State<PediaDetailScreen> {
       ),
     )));
   }
-
-  Future<bool> pickImage(ImageSource source) async {
+  Future<bool> _pickImage(ImageSource source) async {
     final pickedFile = await picker.getImage(source: source);
 
     if (pickedFile != null) {
@@ -509,8 +506,8 @@ class _PediaDetailState extends State<PediaDetailScreen> {
       return false;
     }
   }
-
   _showTitleDialog(BuildContext parentContext, BuildContext rootContext) {
+    final dialogTextController = TextEditingController();
     Navigator.of(context).push(HeroDialogRoute(builder: (context) {
       var w = MediaQuery.of(context).size.width / 10;
       var h = MediaQuery.of(context).size.height / 10;
@@ -522,7 +519,7 @@ class _PediaDetailState extends State<PediaDetailScreen> {
             children: [
               TextField(
                 autofocus: true,
-                controller: _dialogTextController,
+                controller: dialogTextController,
                 decoration: InputDecoration(hintText: "사진 이름"),
                 onSubmitted: (text) async {
                   setState(() {
@@ -530,7 +527,7 @@ class _PediaDetailState extends State<PediaDetailScreen> {
                     Navigator.pop(parentContext);
                     _isUploaded = false;
                   });
-                  await _uploadImage(rootContext, _dialogTextController.text);
+                  await _uploadImage(rootContext, dialogTextController.text);
                 },
               ),
               Row(
@@ -565,7 +562,7 @@ class _PediaDetailState extends State<PediaDetailScreen> {
                               FocusScope.of(context).unfocus();
                               _isUploaded = false;
                             });
-                            await _uploadImage(rootContext, _dialogTextController.text);
+                            await _uploadImage(rootContext, dialogTextController.text);
                           },
                           style: ElevatedButton.styleFrom(primary: Colors.white, onSurface: Colors.white70, side: BorderSide(style: BorderStyle.none, width: 2.0, color: Colors.black)),
                           child: Text(
@@ -581,7 +578,6 @@ class _PediaDetailState extends State<PediaDetailScreen> {
         ),
     ); }));
   }
-
   Future<void> _uploadImage(BuildContext rootContext, String title) async {
     if (_imageFileToUpload != null && _thumbnailFileToUpload != null) {
       // 1. 이미지 없이 등록 후 postId 받아서

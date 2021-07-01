@@ -11,6 +11,12 @@ class PostResponse {
   String? month;
   String? schoolName;
   final String regTime;
+  final String upTime;
 
-  PostResponse(this.postId, this.title, this.likes, this.views, this.tbImgURL, this.regTime);
+  PostResponse(this.postId, this.title, this.likes, this.views, this.tbImgURL, this.regTime, this.upTime);
+
+  @override
+  String toString() {
+    return 'PostResponse{postId: $postId, title: $title, likes: $likes, views: $views, tbImgURL: $tbImgURL, nickname: $nickname, apiId: $apiId, imgURL: $imgURL, awardName: $awardName, month: $month, schoolName: $schoolName, regTime: $regTime, upTime: $upTime}';
+  }
 }

@@ -48,7 +48,7 @@ class CustomAPIService {
     final posts = json['posts'];
     var postList = <PostResponse>[];
     for (var item in posts) {
-      postList.add(PostResponse(item['postId'], item['title'], item['likes'], item['views'], item['tbImgURL'], item['regTime']));
+      postList.add(PostResponse(item['postId'], item['title'], item['likes'], item['views'], item['tbImgURL'], item['regTime'], item['upTime']));
     }
     return { "schoolName": schoolName, "posts": postList };
   }
@@ -61,7 +61,7 @@ class CustomAPIService {
     final posts = json['posts'];
     var postList = <PostResponse>[];
     for (var item in posts) {
-      var postResponse = PostResponse(item['postId'], item['title'], item['likes'], item['views'], item['tbImgURL'], item['regTime']);
+      var postResponse = PostResponse(item['postId'], item['title'], item['likes'], item['views'], item['tbImgURL'], item['regTime'], item['upTime']);
       postResponse.nickname = item['nickname'];
       postList.add(postResponse);
     }
@@ -75,7 +75,7 @@ class CustomAPIService {
     final posts = json['posts'];
     var postList = <PostResponse>[];
     for (var item in posts) {
-      var postResponse = PostResponse(item['postId'], item['title'], item['likes'], item['views'], item['tbImgURL'], item['regTime']);
+      var postResponse = PostResponse(item['postId'], item['title'], item['likes'], item['views'], item['tbImgURL'], item['regTime'], item['upTime']);
       postResponse.nickname = item['nickname'];
       postResponse.awardName = item['awardName'];
       postResponse.month = item['month'].toString();
@@ -105,7 +105,7 @@ class CustomAPIService {
     final posts = json['posts'];
     var postList = <PostResponse>[];
     for (var item in posts) {
-      var postResponse = PostResponse(item['postId'], item['title'], item['likes'], item['views'], item['tbImgURL'], item['regTime']);
+      var postResponse = PostResponse(item['postId'], item['title'], item['likes'], item['views'], item['tbImgURL'], item['regTime'], item['upTime']);
       postResponse.nickname = item['nickname'];
       postResponse.schoolName = item['schoolName'];
       postList.add(postResponse);
@@ -121,7 +121,7 @@ class CustomAPIService {
     final posts = json['posts'];
     var postList = <PostResponse>[];
     for (var item in posts) {
-      var postResponse = PostResponse(item['postId'], item['title'], item['likes'], item['views'], item['tbImgURL'], item['regTime']);
+      var postResponse = PostResponse(item['postId'], item['title'], item['likes'], item['views'], item['tbImgURL'], item['regTime'], item['upTime']);
       postResponse.nickname = item['nickname'];
       postResponse.schoolName = item['schoolName'];
       postList.add(postResponse);
@@ -161,19 +161,27 @@ class CustomAPIService {
     return _getResult(result)['result'];
   }
 
-  static Future<bool> updateImage(int postId, String tbImgURL, String imgURL) async {
-    final domain = dotenv.env["server_domain"]!;
-    final idToken = await FirebaseAuth.instance.currentUser!.getIdToken();
-    final result = await Http.patchWithJWT("$domain/update/image",
-        idToken, { "postId": "$postId", "tbImgURL": tbImgURL, "imgURL": imgURL });
-    return _getResult(result)['result'];
-  }
-
   static Future registerUser(String nickname, int schoolId) async {
     final domain = dotenv.env["server_domain"]!;
     final idToken = await FirebaseAuth.instance.currentUser!.getIdToken();
     final result = await Http.postWithJWT("$domain/register/user", idToken,
         { "nickname": nickname, "schoolId": "$schoolId" });
+    return _getResult(result)['result'];
+  }
+
+  static Future changePostTitle(String title, int postId) async {
+    final domain = dotenv.env["server_domain"]!;
+    final idToken = await FirebaseAuth.instance.currentUser!.getIdToken();
+    final result = await Http.patchWithJWT("$domain/update/title", idToken,
+      { "postId": "$postId", "title": title });
+    return _getResult(result)['result'];
+  }
+
+  static Future<bool> updateImage(int postId, String tbImgURL, String imgURL) async {
+    final domain = dotenv.env["server_domain"]!;
+    final idToken = await FirebaseAuth.instance.currentUser!.getIdToken();
+    final result = await Http.patchWithJWT("$domain/update/image",
+        idToken, { "postId": "$postId", "tbImgURL": tbImgURL, "imgURL": imgURL });
     return _getResult(result)['result'];
   }
 

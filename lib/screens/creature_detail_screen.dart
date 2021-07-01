@@ -335,7 +335,7 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                               child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(boxRounded)), primary: Colors.white, onSurface: Colors.white30),
                                   onPressed: () async {
-                                    final result = await pickImage(ImageSource.camera);
+                                    final result = await _pickImage(ImageSource.camera);
                                     if (result) {
                                       _showTitleDialog(context, rootContext);
                                     } else {
@@ -372,7 +372,7 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                               child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(boxRounded)), primary: Colors.white, onSurface: Colors.white30),
                                   onPressed: () async {
-                                    final result = await pickImage(ImageSource.gallery);
+                                    final result = await _pickImage(ImageSource.gallery);
                                     if (result) {
                                       _showTitleDialog(context, rootContext);
                                     } else {
@@ -429,8 +429,7 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
             )
     ));
   }
-
-  Future<bool> pickImage(ImageSource source) async {
+  Future<bool> _pickImage(ImageSource source) async {
     final pickedFile = await picker.getImage(source: source);
 
     if (pickedFile != null) {
@@ -444,7 +443,6 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
       return false;
     }
   }
-
   _showTitleDialog(BuildContext parentContext, BuildContext rootContext) {
     Navigator.of(context).push(HeroDialogRoute(builder: (context) {
       var w = MediaQuery.of(context).size.width / 10;
@@ -517,7 +515,6 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
       );
     }));
   }
-
   Future<void> _uploadImage(BuildContext rootContext, String title) async {
     if (_imageFileToUpload != null && _thumbnailFileToUpload != null) {
       // 1. 이미지 없이 등록 후 postId 받아서
