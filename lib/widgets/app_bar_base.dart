@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:photoschool/screens/my_post_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../res/colors.dart';
@@ -132,6 +134,38 @@ class _AppBarTitleState extends State<AppBarTitle> {
           ),
         ),
       );
+    } else if (_image == "mypost") {
+      image = Container(
+        decoration: BoxDecoration(
+            color: CustomColors.friendsYellow,
+            borderRadius: BorderRadius.horizontal(left: Radius.circular(16.0), right: Radius.circular(16.0))
+        ),
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: baseSize/8, horizontal: baseSize/3),
+          child: Row(
+            children: [
+              SvgPicture.asset(
+                'assets/manager.svg',
+                height: h / 20,
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: w/40),
+                child: Text("활동 관리",
+                  style: TextStyle(
+                    color: Colors.black,
+                    shadows: [
+                      Shadow(
+                          blurRadius: 4.0,
+                          color: Colors.white70,
+                          offset: Offset(2.0, 2.0)
+                      )
+                    ],
+                    fontSize: baseSize/2,),),
+              )
+            ],
+          ),
+        ),
+      );
     }
 
     return Row(
@@ -159,12 +193,14 @@ class _AppBarTitleState extends State<AppBarTitle> {
               borderRadius: BorderRadius.all(Radius.circular(4.0))
             ),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Padding(
                   padding: EdgeInsets.only(left: w/80),
-                  child: Text(
-                    _nickname,
-                    style: TextStyle(color: Colors.black, fontFamily: 'KCCDodam', fontSize: baseSize/2),
+                  child: Icon(
+                    CupertinoIcons.person_alt_circle_fill,
+                    color: Colors.black,
+                    size: baseSize * (2/3),
                   ),
                 ),
                 _isSigningOut
@@ -173,9 +209,9 @@ class _AppBarTitleState extends State<AppBarTitle> {
                 ) : PopupMenuButton(
                     onSelected: (result) async {
                       if (result == 1) {
-                        print("활동관리");
+                        Navigator.of(context)
+                            .push(ScreenAnimation.routeTo(MyPostScreen(user: _user)));
                       } else {
-                        print("로그아웃");
                         setState(() {
                           _isSigningOut = true;
                         });
@@ -187,9 +223,16 @@ class _AppBarTitleState extends State<AppBarTitle> {
                             .pushReplacement(ScreenAnimation.routeTo(SignInScreen()));
                       }
                     },
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: baseSize/4),
+                      child: Text(
+                        _nickname,
+                        style: TextStyle(color: Colors.black, fontFamily: 'KCCDodam', fontSize: baseSize/2),
+                      ),
+                    ),
                     color: CustomColors.lightAmber,
                     offset: Offset(0, 45),
-                    icon: Icon(Icons.menu, color: Colors.black),
+                    // icon: Icon(Icons.menu, color: Colors.black),
                     itemBuilder: (context) => [
                           PopupMenuItem(
                               value: 1,

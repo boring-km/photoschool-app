@@ -436,8 +436,8 @@ class _FriendsMainState extends State<FriendsMainScreen> {
                                       gridDelegate:
                                           SliverGridDelegateWithFixedCrossAxisCount(
                                               crossAxisCount: 3,
-                                              mainAxisSpacing: 2.0,
-                                              childAspectRatio: 2 / 3),
+                                              mainAxisSpacing: 10.0,
+                                              childAspectRatio: 3 / 4),
                                       itemCount: _searchedList.length + 1,
                                       itemBuilder: (context, index) {
                                         if (_searchedList.length == index) {
@@ -461,7 +461,9 @@ class _FriendsMainState extends State<FriendsMainScreen> {
                                       },
                                     ),
                                   ],
-                                )))
+                                )
+                            )
+                        )
                       ],
                     ),
                   ),

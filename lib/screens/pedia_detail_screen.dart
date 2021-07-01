@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:photoschool/widgets/loading.dart';
 
 import '../dto/dict/dict_detail_response.dart';
 import '../dto/dict/dict_response.dart';
@@ -17,6 +16,8 @@ import '../services/server_api.dart';
 import '../services/woongjin_api.dart';
 import '../widgets/app_bar_base.dart';
 import '../widgets/box_decoration.dart';
+import '../widgets/hero_dialog_route.dart';
+import '../widgets/loading.dart';
 import '../widgets/user_image_card.dart';
 
 class PediaDetailScreen extends StatefulWidget {
@@ -378,121 +379,120 @@ class _PediaDetailState extends State<PediaDetailScreen> {
     var baseWidth = w / 10;
     var baseHeight = h / 10;
     var boxRounded = w > h ? h / 30 : w / 30;
-    return showDialog(
-        context: rootContext,
-        builder: (context) {
-          return AlertDialog(
-            title: Text(
-              '사진을 촬영하거나 가져오기',
-              textAlign: TextAlign.center,
-            ),
-            content: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: Column(
+
+    Navigator.of(context).push(HeroDialogRoute(builder: (context) => Center(
+      child: AlertDialog(
+        title: Text(
+          '사진을 촬영하거나 가져오기',
+          textAlign: TextAlign.center,
+        ),
+        content: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.all(baseSize / 4),
-                        child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(boxRounded)), primary: Colors.white, onSurface: Colors.white30),
-                            onPressed: () async {
-                              final result = await pickImage(ImageSource.camera);
-                              if (result) {
-                                _showTitleDialog(context, rootContext);
-                              } else {
-                                print("실패");
-                              }
-                              // TODO 실패 시 알려주기
-                            },
-                            child: Padding(
-                              padding: EdgeInsets.all(baseSize / 4),
-                              child: Container(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(
-                                      CupertinoIcons.camera,
-                                      color: Colors.black,
-                                      size: baseSize,
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(top: baseSize / 10),
-                                      child: Text(
-                                        "카메라",
-                                        style: TextStyle(fontSize: baseSize / 4, color: Colors.black),
-                                      ),
-                                    ),
-                                  ],
+                  Padding(
+                    padding: EdgeInsets.all(baseSize / 4),
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(boxRounded)), primary: Colors.white, onSurface: Colors.white30),
+                        onPressed: () async {
+                          final result = await pickImage(ImageSource.camera);
+                          if (result) {
+                            _showTitleDialog(context, rootContext);
+                          } else {
+                            print("실패");
+                          }
+                          // TODO 실패 시 알려주기
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.all(baseSize / 4),
+                          child: Container(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  CupertinoIcons.camera,
+                                  color: Colors.black,
+                                  size: baseSize,
                                 ),
-                              ),
-                            )),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(baseSize / 4),
-                        child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(boxRounded)), primary: Colors.white, onSurface: Colors.white30),
-                            onPressed: () async {
-                              final result = await pickImage(ImageSource.gallery);
-                              if (result) {
-                                _showTitleDialog(context, rootContext);
-                              } else {
-                                print("실패");
-                              }
-                              // TODO 실패 시 알려주기
-                            },
-                            child: Padding(
-                              padding: EdgeInsets.all(baseSize / 4),
-                              child: Container(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(
-                                      Icons.photo_album,
-                                      color: Colors.black,
-                                      size: baseSize,
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(top: baseSize / 10),
-                                      child: Text(
-                                        "갤러리",
-                                        style: TextStyle(fontSize: baseSize / 4, color: Colors.black),
-                                      ),
-                                    ),
-                                  ],
+                                Padding(
+                                  padding: EdgeInsets.only(top: baseSize / 10),
+                                  child: Text(
+                                    "카메라",
+                                    style: TextStyle(fontSize: baseSize / 4, color: Colors.black),
+                                  ),
                                 ),
-                              ),
-                            )),
-                      ),
-                    ],
+                              ],
+                            ),
+                          ),
+                        )),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: baseWidth / 4),
-                    child: Container(
-                      width: baseWidth * 3,
-                      height: baseHeight,
-                      child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          style: ElevatedButton.styleFrom(primary: Colors.white, onSurface: Colors.white70, side: BorderSide(style: BorderStyle.none, width: 2.0, color: Colors.black)),
-                          child: Text(
-                            "닫기",
-                            style: TextStyle(fontSize: baseWidth / 4, color: Colors.black),
-                          )),
-                    ),
-                  )
+                    padding: EdgeInsets.all(baseSize / 4),
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(boxRounded)), primary: Colors.white, onSurface: Colors.white30),
+                        onPressed: () async {
+                          final result = await pickImage(ImageSource.gallery);
+                          if (result) {
+                            _showTitleDialog(context, rootContext);
+                          } else {
+                            print("실패");
+                          }
+                          // TODO 실패 시 알려주기
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.all(baseSize / 4),
+                          child: Container(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.photo_album,
+                                  color: Colors.black,
+                                  size: baseSize,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(top: baseSize / 10),
+                                  child: Text(
+                                    "갤러리",
+                                    style: TextStyle(fontSize: baseSize / 4, color: Colors.black),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )),
+                  ),
                 ],
               ),
-            ),
-          );
-        });
+              Padding(
+                padding: EdgeInsets.only(top: baseWidth / 4),
+                child: Container(
+                  width: baseWidth * 3,
+                  height: baseHeight,
+                  child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      style: ElevatedButton.styleFrom(primary: Colors.white, onSurface: Colors.white70, side: BorderSide(style: BorderStyle.none, width: 2.0, color: Colors.black)),
+                      child: Text(
+                        "닫기",
+                        style: TextStyle(fontSize: baseWidth / 4, color: Colors.black),
+                      )),
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    )));
   }
 
   Future<bool> pickImage(ImageSource source) async {
@@ -511,77 +511,75 @@ class _PediaDetailState extends State<PediaDetailScreen> {
   }
 
   _showTitleDialog(BuildContext parentContext, BuildContext rootContext) {
-    return showDialog(
-        context: parentContext,
-        builder: (context) {
-          var w = MediaQuery.of(context).size.width / 10;
-          var h = MediaQuery.of(context).size.height / 10;
-
-          return AlertDialog(
-            title: Text('촬영한 사진의 제목을 입력해 주세요!'),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  autofocus: true,
-                  controller: _dialogTextController,
-                  decoration: InputDecoration(hintText: "사진 이름"),
-                  onSubmitted: (text) async {
-                    setState(() {
-                      Navigator.pop(context);
-                      Navigator.pop(parentContext);
-                      _isUploaded = false;
-                    });
-                    await _uploadImage(rootContext, _dialogTextController.text);
-                  },
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.all(h / 8),
-                      child: Container(
-                        height: h * (2 / 3),
-                        child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            style: ElevatedButton.styleFrom(primary: Colors.white, onSurface: Colors.white70, side: BorderSide(style: BorderStyle.none, width: 2.0, color: Colors.black)),
-                            child: Text(
-                              "닫기",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(fontSize: w / 4, color: Colors.black),
-                            )),
-                      ),
+    Navigator.of(context).push(HeroDialogRoute(builder: (context) {
+      var w = MediaQuery.of(context).size.width / 10;
+      var h = MediaQuery.of(context).size.height / 10;
+      return Center(
+        child: AlertDialog(
+          title: Text('촬영한 사진의 제목을 입력해 주세요!'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                autofocus: true,
+                controller: _dialogTextController,
+                decoration: InputDecoration(hintText: "사진 이름"),
+                onSubmitted: (text) async {
+                  setState(() {
+                    Navigator.pop(context);
+                    Navigator.pop(parentContext);
+                    _isUploaded = false;
+                  });
+                  await _uploadImage(rootContext, _dialogTextController.text);
+                },
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(h / 8),
+                    child: Container(
+                      height: h * (2 / 3),
+                      child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          style: ElevatedButton.styleFrom(primary: Colors.white, onSurface: Colors.white70, side: BorderSide(style: BorderStyle.none, width: 2.0, color: Colors.black)),
+                          child: Text(
+                            "닫기",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: w / 4, color: Colors.black),
+                          )),
                     ),
-                    Padding(
-                      padding: EdgeInsets.all(h / 8),
-                      child: Container(
-                        height: h * (2 / 3),
-                        child: ElevatedButton(
-                            onPressed: () async {
-                              setState(() {
-                                Navigator.pop(context);
-                                Navigator.pop(parentContext);
-                                FocusScope.of(context).unfocus();
-                                _isUploaded = false;
-                              });
-                              await _uploadImage(rootContext, _dialogTextController.text);
-                            },
-                            style: ElevatedButton.styleFrom(primary: Colors.white, onSurface: Colors.white70, side: BorderSide(style: BorderStyle.none, width: 2.0, color: Colors.black)),
-                            child: Text(
-                              "업로드",
-                              style: TextStyle(fontSize: w / 4, color: Colors.black),
-                            )),
-                      ),
-                    )
-                  ],
-                )
-              ],
-            ),
-          );
-        });
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(h / 8),
+                    child: Container(
+                      height: h * (2 / 3),
+                      child: ElevatedButton(
+                          onPressed: () async {
+                            setState(() {
+                              Navigator.pop(context);
+                              Navigator.pop(parentContext);
+                              FocusScope.of(context).unfocus();
+                              _isUploaded = false;
+                            });
+                            await _uploadImage(rootContext, _dialogTextController.text);
+                          },
+                          style: ElevatedButton.styleFrom(primary: Colors.white, onSurface: Colors.white70, side: BorderSide(style: BorderStyle.none, width: 2.0, color: Colors.black)),
+                          child: Text(
+                            "업로드",
+                            style: TextStyle(fontSize: w / 4, color: Colors.black),
+                          )),
+                    ),
+                  )
+                ],
+              )
+            ],
+          ),
+        ),
+    ); }));
   }
 
   Future<void> _uploadImage(BuildContext rootContext, String title) async {
@@ -620,45 +618,45 @@ class _PediaDetailState extends State<PediaDetailScreen> {
   }
 
   _showFullImageDialog(BuildContext parentContext, String imageURL) {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          var baseWidth = MediaQuery.of(parentContext).size.width / 10;
-          var baseHeight = MediaQuery.of(parentContext).size.height / 10;
-          return AlertDialog(
-            backgroundColor: Colors.black45,
-            content: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                InteractiveViewer(
-                  panEnabled: true,
-                  minScale: 1,
-                  maxScale: 4,
-                  child: Image.network(
-                    imageURL,
-                    height: baseHeight * 6,
-                  ),
+    Navigator.of(context).push(HeroDialogRoute(builder: (context) {
+      var baseWidth = MediaQuery.of(parentContext).size.width / 10;
+      var baseHeight = MediaQuery.of(parentContext).size.height / 10;
+      return Center(
+        child: AlertDialog(
+          backgroundColor: Colors.black45,
+          content: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              InteractiveViewer(
+                panEnabled: true,
+                minScale: 1,
+                maxScale: 4,
+                child: Image.network(
+                  imageURL,
+                  height: baseHeight * 6,
                 ),
-                Padding(
-                  padding: EdgeInsets.only(top: baseWidth / 8),
-                  child: Container(
-                    width: baseWidth * 2,
-                    height: baseHeight * (2 / 3),
-                    child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        style: ElevatedButton.styleFrom(primary: Colors.white, onSurface: Colors.white70, side: BorderSide(style: BorderStyle.none, width: 2.0, color: Colors.black)),
-                        child: Text(
-                          "닫기",
-                          style: TextStyle(fontSize: baseWidth / 4, color: Colors.black),
-                        )),
-                  ),
-                )
-              ],
-            ),
-          );
-        });
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: baseWidth / 8),
+                child: Container(
+                  width: baseWidth * 2,
+                  height: baseHeight * (2 / 3),
+                  child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      style: ElevatedButton.styleFrom(primary: Colors.white, onSurface: Colors.white70, side: BorderSide(style: BorderStyle.none, width: 2.0, color: Colors.black)),
+                      child: Text(
+                        "닫기",
+                        style: TextStyle(fontSize: baseWidth / 4, color: Colors.black),
+                      )),
+                ),
+              )
+            ],
+          ),
+        ),
+      );
+    }));
   }
 }

@@ -44,7 +44,11 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
     super.initState();
   }
 
-
+  void _initialize() async {
+    _user = widget._user;
+    await Future.delayed(const Duration(milliseconds: 300));
+    await _searchCreature(_creatureSearchController.text, _currentPage); // 처음에 기본 생물만 검색
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -256,12 +260,6 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
         ),
       ),
     );
-  }
-
-  void _initialize() async {
-    _user = widget._user;
-    await Future.delayed(const Duration(milliseconds: 300));
-    await _searchCreature(_creatureSearchController.text, _currentPage); // 처음에 기본 생물만 검색
   }
 
   Future<void> _allSearch(String str) async {
