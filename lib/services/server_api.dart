@@ -27,8 +27,8 @@ class CustomAPIService {
 
   static Future<List<SchoolSearchResponse>> searchSchool(String text) async {
     final domain = dotenv.env["server_domain"]!;
-    final httpResult = await Http.get("$domain/school/$text");
-    final json = _getResult(httpResult);
+    final result = await Http.get("$domain/school/$text");
+    final json = _getResult(result);
     final schools = json['schools'];
     var resultList = <SchoolSearchResponse>[];
     for (var school in schools) {
@@ -42,7 +42,7 @@ class CustomAPIService {
     final domain = dotenv.env["server_domain"]!;
     final idToken = await FirebaseAuth.instance.currentUser!.getIdToken();
     final result = await Http.getWithJWT("$domain/mypost/$index", idToken);
-    final json =  _getResult(result);
+    final json = _getResult(result);
 
     final schoolName = json['schoolName'];
     final posts = json['posts'];
@@ -177,7 +177,7 @@ class CustomAPIService {
     return _getResult(result)['result'];
   }
 
-  static Future<bool> updateImage(int postId, String tbImgURL, String imgURL) async {
+  static Future updateImage(int postId, String tbImgURL, String imgURL) async {
     final domain = dotenv.env["server_domain"]!;
     final idToken = await FirebaseAuth.instance.currentUser!.getIdToken();
     final result = await Http.patchWithJWT("$domain/update/image",

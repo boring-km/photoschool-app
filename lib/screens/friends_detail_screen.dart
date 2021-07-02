@@ -1,12 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:photoschool/dto/dict/dict_response.dart';
-import 'package:photoschool/screens/creature_detail_screen.dart';
-import 'package:photoschool/screens/pedia_detail_screen.dart';
 
 import '../dto/creature/creature_detail_response.dart';
 import '../dto/dict/dict_detail_response.dart';
+import '../dto/dict/dict_response.dart';
 import '../dto/post/searched_post_response.dart';
 import '../res/colors.dart';
 import '../services/public_api.dart';
@@ -16,6 +14,8 @@ import '../widgets/app_bar_base.dart';
 import '../widgets/box_decoration.dart';
 import '../widgets/hero_dialog_route.dart';
 import '../widgets/loading.dart';
+import 'creature_detail_screen.dart';
+import 'pedia_detail_screen.dart';
 
 class FriendsDetailScreen extends StatefulWidget {
 
@@ -62,7 +62,10 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
       _pedia = (await WoongJinAPIService.searchWJPedia((_original as DictDetailResponse).name))[0];
       _dictImgUrl = (await WoongJinAPIService.searchPhotoLibrary((_original as DictDetailResponse).name))[0].imgURL;
     }
-    _isLiked = await CustomAPIService.checkDoLikeBefore(widget._postId);
+    final checkResult = await CustomAPIService.checkDoLikeBefore(widget._postId);
+    if (checkResult == true) {
+      _isLiked = checkResult;
+    }
     _likes = _post.likes;
     _regTime = "${_post.regTime.substring(5,10).replaceFirst('-', '월 ')}일";
     setState(() {
@@ -366,7 +369,7 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
   Future<bool> _doLikeOrNot() async {
     final result = await CustomAPIService.likeOrNotLike(widget._postId);
     print('result: $result');
-    if (result) {
+    if (result == true) {
       setState(() {
         if (_isLiked) {
           _likes -= 1;
