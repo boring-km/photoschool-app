@@ -46,7 +46,6 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
 
   void _initialize() async {
     _user = widget._user;
-    await Future.delayed(const Duration(milliseconds: 300));
     await _searchCreature(_creatureSearchController.text, _currentPage); // 처음에 기본 생물만 검색
   }
 
@@ -195,11 +194,6 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
                             _isLoading = true;
                             _currentPage++;
                             _searchCreature(_creatureSearchController.text, _currentPage);
-                          });
-                        } else {
-                          // TODO 필요없는 로직인지 확인 필요
-                          setState(() {
-                            _isLoading = false;
                           });
                         }
                       }

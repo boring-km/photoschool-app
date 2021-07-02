@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:photoschool/widgets/loading.dart';
 
 import '../dto/post/post_response.dart';
 import '../res/colors.dart';
@@ -15,6 +14,7 @@ import '../services/server_api.dart';
 import '../widgets/app_bar_base.dart';
 import '../widgets/box_decoration.dart';
 import '../widgets/hero_dialog_route.dart';
+import '../widgets/loading.dart';
 import '../widgets/single_message_dialog.dart';
 import '../widgets/user_image_card.dart';
 
@@ -138,11 +138,6 @@ class _MyPostScreenState extends State<MyPostScreen> {
                                     _postIndex++;
                                   });
                                   _buildPosts(context);
-                                } else {
-                                  // TODO 필요없는 로직인지 확인 필요
-                                  setState(() {
-                                    _isPostsLoading = false;
-                                  });
                                 }
                               }
                             }
@@ -155,7 +150,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
                             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 3,
                                 mainAxisSpacing: 2.0,
-                                childAspectRatio: w > h ? 5/6 : 3/5),
+                                childAspectRatio: w > h ? 9/10 : 3/5),
                             itemCount: _postList.length + 1,
                             itemBuilder: (context, index) {
                               if (_postList.length == index) {
@@ -293,9 +288,11 @@ class _MyPostScreenState extends State<MyPostScreen> {
                               onSelected: (result) {
                                 if (result == 1) {
                                   _buildTitleChangeDialog(context, item, user);
-                                } else {
+                                } else if (result == 2) {
                                   _post = item;
                                   _showSelectSource(context);
+                                } else {
+                                  _buildDeletePostDialog(context, item, user);
                                 }
                               },
                               color: CustomColors.friendsYellow,
@@ -317,7 +314,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
                                   child: Row(
                                     children: [
                                       Padding(
-                                        padding: EdgeInsets.only(right: 4.0),
+                                        padding: EdgeInsets.only(right: 8.0),
                                         child: Icon(
                                           Icons.create,
                                           color: Colors.black,
@@ -335,7 +332,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
                                   child: Row(
                                     children: [
                                       Padding(
-                                        padding: EdgeInsets.only(right: 4.0),
+                                        padding: EdgeInsets.only(right: 8.0),
                                         child: Icon(
                                           CupertinoIcons.camera,
                                           color: Colors.black,
@@ -348,7 +345,26 @@ class _MyPostScreenState extends State<MyPostScreen> {
                                       ),
                                     ],
                                   ),
-                                )
+                                ),
+                                PopupMenuItem(
+                                  value: 3,
+                                  child: Row(
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.only(right: 8.0),
+                                        child: Icon(
+                                          CupertinoIcons.trash,
+                                          color: Colors.black,
+                                          size: 24,
+                                        ),
+                                      ),
+                                      Text(
+                                        "이미지 지우기",
+                                        style: TextStyle(color: Colors.black, fontSize: 16),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ],
                             )
                           ],
@@ -471,9 +487,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
                           if (result) {
                             setState(() {
                               Navigator.of(context).pop();
-                              setState(() {
-                                _isUploaded = false;
-                              });
+                              _isUploaded = false;
                             });
                             _uploadImage(rootContext);
                           } else {
@@ -612,5 +626,54 @@ class _MyPostScreenState extends State<MyPostScreen> {
         );
       });
     }
+  }
+
+  _buildDeletePostDialog(BuildContext rootContext, PostResponse item, User user) {
+    Navigator.of(rootContext).push(HeroDialogRoute(builder: (context) => Center(
+        child: AlertDialog(
+          title: Center(child: Text("이미지 지우기")),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 8.0),
+                child: Text("정말로 ${item.title} 이미지를 지울까요?", style: TextStyle(color: Colors.red, fontSize: 20),),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.grey
+                      ),
+                      child: Text("취소")),
+                  ElevatedButton(
+                      onPressed: () async {
+                        final result = await CustomAPIService.deleteImage(item.postId);
+                        if (result == true) {
+                          Navigator.of(context).pop();
+                          Navigator.of(rootContext).pushReplacement(
+                            MaterialPageRoute(
+                                builder: (context) => MyPostScreen(user: _user)
+                            ),
+                          );
+                        } else {
+                          SingleMessageDialog.alert(context, "삭제 실패");
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                          primary: Colors.red
+                      ),
+                      child: Text("삭제")
+                  )
+                ],
+              )
+            ],
+          ),
+        )
+    )));
   }
 }

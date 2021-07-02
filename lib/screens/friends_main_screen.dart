@@ -190,11 +190,6 @@ class _FriendsMainState extends State<FriendsMainScreen> {
                                         } else {
                                           _buildPosts(context);
                                         }
-                                      } else {
-                                        // TODO 필요없는 로직인지 확인 필요
-                                        setState(() {
-                                          _isPostsLoading = false;
-                                        });
                                       }
                                     }
                                   }
@@ -234,11 +229,6 @@ class _FriendsMainState extends State<FriendsMainScreen> {
                                                     });
                                                     _awardIndex++;
                                                     _buildAwardView(context);
-                                                  } else {
-                                                    // TODO 필요없는 로직인지 확인 필요
-                                                    setState(() {
-                                                      _isAwardLoading = false;
-                                                    });
                                                   }
                                                 }
                                               }
@@ -437,7 +427,7 @@ class _FriendsMainState extends State<FriendsMainScreen> {
                                           SliverGridDelegateWithFixedCrossAxisCount(
                                               crossAxisCount: 3,
                                               mainAxisSpacing: 10.0,
-                                              childAspectRatio: 3 / 4),
+                                              childAspectRatio: w > h ? 8/7 : 3/5),
                                       itemCount: _searchedList.length + 1,
                                       itemBuilder: (context, index) {
                                         if (_searchedList.length == index) {

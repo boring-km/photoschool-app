@@ -185,6 +185,13 @@ class CustomAPIService {
     return _getResult(result)['result'];
   }
 
+  static Future deleteImage(int postId) async {
+    final domain = dotenv.env["server_domain"]!;
+    final idToken = await FirebaseAuth.instance.currentUser!.getIdToken();
+    final result = await Http.deleteWithJWT("$domain/delete/$postId}", idToken);
+    return _getResult(result)['result'];
+  }
+
   static dynamic _getResult(Map<String, dynamic> result) {
     if (result['error'] == null) {
       return jsonDecode(result['data']);
