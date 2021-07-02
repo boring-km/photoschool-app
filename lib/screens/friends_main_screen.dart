@@ -120,7 +120,7 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
                 padding: EdgeInsets.all(_baseSize / 3),
                 child: Center(
                   child: Container(
-                    decoration: CustomBoxDecoration.buildWhiteBoxDecoration(true),
+                    decoration: CustomBoxDecoration.buildTransparentDecoration(),
                     child: AnimatedBackground(
                       behaviour: BubblesBehaviour(options: BubbleOptions(bubbleCount: 30, minTargetRadius: 30, maxTargetRadius: 100, growthRate: 5, popRate: 40)),
                       vsync: this,
@@ -130,6 +130,7 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
                           Container(
                             width: w * (9 / 10),
                             height: _baseSize,
+                            color: Colors.transparent,
                             child: Padding(
                               padding: EdgeInsets.only(top: _baseSize / 10),
                               child: Row(
@@ -212,7 +213,7 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
                                             "축하해요!",
                                             style: TextStyle(
                                                 fontSize: buttonFontSize * 3,
-                                                color: Colors.black),
+                                                color: Colors.white),
                                           ),
                                         ),
                                       ),
@@ -272,34 +273,40 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
                                         MainAxisAlignment.center,
                                         children: [
                                           Container(
-                                              width: w / 12,
-                                              child: DropdownButtonHideUnderline(
-                                                child: DropdownButton(
-                                                  value: _selectedSearchType,
-                                                  isExpanded: true,
-                                                  icon: Icon(Icons
-                                                      .arrow_drop_down_circle),
-                                                  iconEnabledColor:
-                                                  CustomColors.creatureGreen,
-                                                  items: _searchTypeList
-                                                      .map((value) {
-                                                    return DropdownMenuItem(
-                                                        value: value,
-                                                        child: Text(
-                                                          value,
-                                                          style: TextStyle(
-                                                              color: Colors.black,
-                                                              fontSize:
-                                                              buttonFontSize *
-                                                                  1.2),
-                                                        ));
-                                                  }).toList(),
-                                                  onChanged: (value) {
-                                                    setState(() {
-                                                      _selectedSearchType =
-                                                      value as String;
-                                                    });
-                                                  },
+                                              width: w / 8,
+                                              color: Color(0x20FFFFFF),
+                                              child: Padding(
+                                                padding: EdgeInsets.symmetric(horizontal: 8.0),
+                                                child: DropdownButtonHideUnderline(
+                                                  child: DropdownButton(
+                                                    value: _selectedSearchType,
+                                                    isExpanded: true,
+                                                    icon: Icon(Icons
+                                                        .arrow_drop_down_circle),
+                                                    iconEnabledColor:
+                                                    CustomColors.creatureGreen,
+                                                    focusColor: CustomColors.creatureGreen,
+                                                    dropdownColor: CustomColors.creatureGreen,
+                                                    items: _searchTypeList
+                                                        .map((value) {
+                                                      return DropdownMenuItem(
+                                                          value: value,
+                                                          child: Text(
+                                                            value,
+                                                            style: TextStyle(
+                                                                color: Colors.white,
+                                                                fontSize:
+                                                                buttonFontSize *
+                                                                    1.2),
+                                                          ));
+                                                    }).toList(),
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        _selectedSearchType =
+                                                        value as String;
+                                                      });
+                                                    },
+                                                  ),
                                                 ),
                                               )),
                                           Padding(
@@ -386,74 +393,82 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
                                             padding: EdgeInsets.only(
                                                 left: _baseSize / 3),
                                             child: Container(
-                                              width: w / 10,
-                                              child: DropdownButtonHideUnderline(
-                                                child: DropdownButton(
-                                                  value: _selectedSortType,
-                                                  isExpanded: true,
-                                                  icon: Icon(
-                                                    Icons.sort_rounded,
-                                                    size: _baseSize / 2,
+                                              width: w / 8,
+                                              color: Color(0x20FFFFFF),
+                                              child: Padding(
+                                                padding: EdgeInsets.symmetric(horizontal: 8.0),
+                                                child: DropdownButtonHideUnderline(
+                                                  child: DropdownButton(
+                                                    value: _selectedSortType,
+                                                    isExpanded: true,
+                                                    icon: Icon(
+                                                      Icons.sort_rounded,
+                                                      size: _baseSize / 2,
+                                                    ),
+                                                    iconEnabledColor: CustomColors.red,
+                                                    dropdownColor: CustomColors.lightRed,
+                                                    items:
+                                                    _sortTypeList.map((value) {
+                                                      return DropdownMenuItem(
+                                                          value: value,
+                                                          child: Text(
+                                                            value,
+                                                            style: TextStyle(
+                                                                color: Colors.white,
+                                                                fontSize:
+                                                                buttonFontSize),
+                                                          ));
+                                                    }).toList(),
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        _selectedSortType = value as String;
+                                                        _postIndex = 0;
+                                                        _searchedList.clear();
+                                                        _searchPosts(_searchTextController.text.isEmpty ? "%" : _searchTextController.text, context);
+                                                      });
+                                                    },
                                                   ),
-                                                  iconEnabledColor:
-                                                  CustomColors.red,
-                                                  items:
-                                                  _sortTypeList.map((value) {
-                                                    return DropdownMenuItem(
-                                                        value: value,
-                                                        child: Text(
-                                                          value,
-                                                          style: TextStyle(
-                                                              color: Colors.black,
-                                                              fontSize:
-                                                              buttonFontSize),
-                                                        ));
-                                                  }).toList(),
-                                                  onChanged: (value) {
-                                                    setState(() {
-                                                      _selectedSortType = value as String;
-                                                      _postIndex = 0;
-                                                      _searchedList.clear();
-                                                      _searchPosts(_searchTextController.text.isEmpty ? "%" : _searchTextController.text, context);
-                                                    });
-                                                  },
                                                 ),
                                               ),
                                             ),
                                           )
                                         ],
                                       ),
-                                      GridView.builder(
-                                        shrinkWrap: true,
-                                        physics: ClampingScrollPhysics(),
-                                        scrollDirection: Axis.vertical,
-                                        primary: true,
-                                        gridDelegate:
-                                        SliverGridDelegateWithFixedCrossAxisCount(
-                                            crossAxisCount: 3,
-                                            mainAxisSpacing: 15.0,
-                                            childAspectRatio: w > h ? 8/7 : 3/5),
-                                        itemCount: _searchedList.length + 1,
-                                        itemBuilder: (context, index) {
-                                          if (_searchedList.length == index) {
-                                            return _isPostsLoading  ? Container(
-                                              child: Center(
-                                                child: Column(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                  children: [
-                                                    CircularProgressIndicator(color: Colors.blue,),
-                                                    Padding(
-                                                      padding: EdgeInsets.all(_baseSize/10),
-                                                      child: Text("로딩중", style: TextStyle(color: Colors.blue, fontSize: _baseSize/2),),
-                                                    )
-                                                  ],
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 8.0),
+                                        child: GridView.builder(
+                                          shrinkWrap: true,
+                                          physics: ClampingScrollPhysics(),
+                                          scrollDirection: Axis.vertical,
+                                          primary: true,
+                                          gridDelegate:
+                                          SliverGridDelegateWithFixedCrossAxisCount(
+                                              crossAxisCount: 3,
+                                              mainAxisSpacing: 8.0,
+                                              crossAxisSpacing: 8.0,
+                                              childAspectRatio: w > h ? 8/7 : 3/5),
+                                          itemCount: _searchedList.length + 1,
+                                          itemBuilder: (context, index) {
+                                            if (_searchedList.length == index) {
+                                              return _isPostsLoading  ? Container(
+                                                child: Center(
+                                                  child: Column(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                    children: [
+                                                      CircularProgressIndicator(color: Colors.blue,),
+                                                      Padding(
+                                                        padding: EdgeInsets.all(_baseSize/10),
+                                                        child: Text("로딩중", style: TextStyle(color: Colors.blue, fontSize: _baseSize/2),),
+                                                      )
+                                                    ],
+                                                  ),
                                                 ),
-                                              ),
-                                            ) : Container();
-                                          }
-                                          return _searchedList[index];
-                                        },
+                                              ) : Container();
+                                            }
+                                            return _searchedList[index];
+                                          },
+                                        ),
                                       ),
                                     ],
                                   )
@@ -532,19 +547,22 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
     for (var i = 0; i < schoolList.length; i++) {
       widgetList.add(
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Container(width: _baseSize/2, child: Text("${i+1}등 ", style: TextStyle(fontSize: _baseSize/3),)),
               Container(width: _baseSize*3, child: Text(schoolList[i].schoolName, style: TextStyle(fontSize: _baseSize/3),)),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Icon(
-                    CupertinoIcons.eye,
-                    color: Colors.black,
-                  ),
-                  Text('${schoolList[i].sumOfViews}', style: TextStyle(fontSize: _baseSize/3),),
-                ],
+              Container(
+                width: _baseSize * 1.5,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Icon(
+                      CupertinoIcons.eye,
+                      color: Colors.black,
+                    ),
+                    Text('${schoolList[i].sumOfViews}', style: TextStyle(fontSize: _baseSize/3),),
+                  ],
+                ),
               ),
               Padding(
                 padding: EdgeInsets.only(left: _baseSize/10),
@@ -572,7 +590,7 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(right: _baseSize/10),
+                          padding: EdgeInsets.only(right: _baseSize/8),
                           child: Hero(
                             tag: "school",
                             child: Icon(

@@ -20,7 +20,22 @@ class UserImageCard {
           padding: EdgeInsets.all(4),
           child: Container(
             width: 350,
-            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(8)), border: Border.all(color: Colors.black, width: 2.0)),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all( Radius.circular(40), ),
+              boxShadow: [
+                BoxShadow(
+                  color: CustomColors.creatureGreen,
+                  offset: Offset(2.0, 2.0),
+                  blurRadius: 10.0,
+                  spreadRadius: 1.0, ),
+                BoxShadow(
+                  color: CustomColors.creatureGreen,
+                  offset: Offset(-2.0, -2.0),
+                  blurRadius: 1.0, spreadRadius: 0,
+                ),
+              ],
+            ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -128,11 +143,26 @@ class UserImageCard {
           padding: EdgeInsets.all(10.0),
           child: Container(
             width: 350,
-            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(10.0)), border: Border.all(color: Colors.black, width: 2.0)),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all( Radius.circular(40), ),
+              boxShadow: [
+                BoxShadow(
+                  color: CustomColors.friendsYellow,
+                  offset: Offset(2.0, 2.0),
+                  blurRadius: 10.0,
+                  spreadRadius: 1.0, ),
+                BoxShadow(
+                  color: CustomColors.friendsYellow,
+                  offset: Offset(-2.0, -2.0),
+                  blurRadius: 1.0, spreadRadius: 0,
+                ),
+              ],
+            ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("$month월의 ${item.awardName}", style: TextStyle(color: Colors.black, fontSize: 24),),
+                Text("$month월의 ${item.awardName}", style: TextStyle(color: Colors.black, fontSize: 30),),
                 Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Image.network(

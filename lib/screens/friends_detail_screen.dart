@@ -100,196 +100,186 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
           padding: EdgeInsets.all(_baseSize/3),
           child: Center(
             child: Container(
-              decoration: CustomBoxDecoration.buildWhiteBoxDecoration(false),
+              decoration: CustomBoxDecoration.buildTransparentDecoration(),
               child: Flex(
                 direction: Axis.vertical,
                 children: [
                   Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.all(_baseSize/10),
-                      child: ListView(
-                        scrollDirection: Axis.vertical,
-                        children: [
-                          InteractiveViewer(
-                            panEnabled: true,
-                            scaleEnabled: true,
-                            minScale: 0.5,
-                            maxScale: 4,
-                            child: Image.network(
-                              _post.imgURL,
-                              width: w * (3/4),
-                              height: 500,
-                              loadingBuilder: (context, child, loadingProgress) {
-                                if (loadingProgress == null) {
-                                  return child;
-                                }
-                                return Container(
-                                  width: w * (3/4),
-                                  height: 500,
-                                  child: Container(
-                                    width: w * (3/4),
+                    child: Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(_baseSize/10),
+                        child: ListView(
+                          scrollDirection: Axis.vertical,
+                          children: [
+                            Row(
+                              children: [
+                                InteractiveViewer(
+                                  panEnabled: true,
+                                  scaleEnabled: true,
+                                  minScale: 0.5,
+                                  maxScale: 4,
+                                  child: Image.network(
+                                    _post.imgURL,
+                                    width: w * (4/7),
                                     height: 500,
-                                    color: CustomColors.creatureGreen,
-                                    child: Center(
-                                      child: Text(
-                                        "이미지 로딩중: ${(loadingProgress.expectedTotalBytes != null ?
-                                        (loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!) * 100
-                                            : 100).round()}%",
-                                        style: TextStyle(color: Colors.white, fontSize: _baseSize),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                              errorBuilder: (context, error, stackTrace) {
-                                return Text("이미지 호출 에러");
-                              },
-                            ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Icon(Icons.search, color: Colors.grey,),
-                              Text("확대해서 보기 가능", style: TextStyle(color: Colors.grey),)
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(_post.title, style: TextStyle(fontSize: _baseSize),),
-                                  Text(_post.nickname, style: TextStyle(fontSize: _baseSize/2),),
-                                ],
-                              ),
-                              _user != null ? Padding(
-                                padding: EdgeInsets.only(right: 8.0),
-                                child: Row(
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.only(right: 8.0),
-                                      child: ElevatedButton(
-                                          onPressed: () async {
-                                            final result = await _doLikeOrNot();
-                                            if (result) {
-                                              _showLikeDialog(w, h, context);
-                                            }
-                                          },
-                                          style: ElevatedButton.styleFrom(
-                                              primary: buttonColor,
-                                              side: BorderSide(color: buttonTextColor, width: 1.0)
+                                    fit: BoxFit.fitHeight,
+                                    loadingBuilder: (context, child, loadingProgress) {
+                                      if (loadingProgress == null) {
+                                        return child;
+                                      }
+                                      return Container(
+                                        width: w * (4/7),
+                                        height: 500,
+                                        color: CustomColors.creatureGreen,
+                                        child: Center(
+                                          child: Text(
+                                            "이미지 로딩중: ${(loadingProgress.expectedTotalBytes != null ?
+                                            (loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!) * 100
+                                                : 100).round()}%",
+                                            style: TextStyle(color: Colors.white, fontSize: _baseSize),
                                           ),
-                                          child: Row(
-                                            children: [
-                                              Padding(
-                                                padding: EdgeInsets.only(right: 8.0),
-                                                child: Hero(
-                                                  tag: "like",
-                                                  child: Icon(
-                                                    Icons.thumb_up_alt_rounded,
-                                                    color: buttonTextColor,
-                                                  ),
-                                                ),
-                                              ),
-                                              Text("좋아요", style: TextStyle(color: buttonTextColor, fontSize: _baseSize/3),)
-                                            ],
-                                          )
-                                      ),
+                                        ),
+                                      );
+                                    },
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Text("이미지 호출 에러");
+                                    },
+                                  ),
+                                ),
+                                Column(
+                                  children: [
+                                    _buildOriginTitle(),
+                                    Padding(
+                                      padding: EdgeInsets.all(_baseSize/4),
+                                      child: _buildImageView(),
                                     ),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          children: [
-                                            Icon(
-                                              Icons.thumb_up,
-                                              color: Colors.red,
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsets.only(left: 8.0),
-                                              child: Text(
-                                                '$_likes',
-                                                style: TextStyle(color: Colors.red, fontSize: 16.0),
-                                              ),
-                                            ),
-                                          ],
+                                    Text("관련자료명", style: TextStyle(fontSize: _baseSize/4, color: Colors.black),),
+                                    Text(_original.name, style: TextStyle(fontSize: _baseSize/2, color: Colors.black),),
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(vertical: _baseSize/4),
+                                      child: Container(
+                                        width: _baseSize*2,
+                                        height: _baseSize/2,
+                                        child: ElevatedButton(
+                                            onPressed: () {
+                                              Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                  builder: (context) => _original.runtimeType == CreatureDetailResponse ?
+                                                  CreatureDetailScreen(
+                                                      _original,
+                                                      user: _user
+                                                  ) : PediaDetailScreen(_pedia, user: _user),
+                                                ),
+                                              );
+                                            },
+                                            child: Text("상세보기", style: TextStyle(fontSize: _baseSize/3),)
                                         ),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          children: [
-                                            Icon(CupertinoIcons.eye, color: Colors.black),
-                                            Padding(
-                                              padding: EdgeInsets.only(left: 8.0),
-                                              child: Text(
-                                                _post.views.toString(),
-                                                style: TextStyle(color: Colors.black, fontSize: 16.0),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
+                                      ),
                                     ),
                                   ],
                                 ),
-                              ) : Container(),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(_post.schoolName!, style: TextStyle(fontSize: _baseSize/3),),
-                              Text("작성일자: $_regTime", style: TextStyle(color: Colors.grey),),
-                            ],
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(vertical: _baseSize / 5, horizontal: _baseSize / 4),
-                            child: Container(
-                              height: 1,
-                              color: Colors.black,
+                              ],
                             ),
-                          ),
-                          _buildOriginTitle(),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.all(_baseSize/4),
-                                child: _buildImageView(),
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("관련자료명", style: TextStyle(fontSize: _baseSize/4, color: Colors.black),),
-                                  Text(_original.name, style: TextStyle(fontSize: _baseSize/2, color: Colors.black),),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(vertical: _baseSize/4),
-                                    child: Container(
-                                      width: _baseSize*2,
-                                      height: _baseSize/2,
-                                      child: ElevatedButton(
-                                          onPressed: () {
-                                            Navigator.of(context).push(
-                                              MaterialPageRoute(
-                                                builder: (context) => _original.runtimeType == CreatureDetailResponse ?
-                                                CreatureDetailScreen(
-                                                    _original,
-                                                    user: _user
-                                                ) : PediaDetailScreen(_pedia, user: _user),
-                                              ),
-                                            );
-                                          },
-                                          child: Text("상세보기", style: TextStyle(fontSize: _baseSize/3),)
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Icon(Icons.search, color: Colors.grey,),
+                                Text("확대해서 보기 가능", style: TextStyle(color: Colors.grey),)
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(_post.title, style: TextStyle(fontSize: _baseSize),),
+                                    Text(_post.nickname, style: TextStyle(fontSize: _baseSize/2),),
+                                  ],
+                                ),
+                                _user != null ? Padding(
+                                  padding: EdgeInsets.only(right: 8.0),
+                                  child: Row(
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.only(right: 8.0),
+                                        child: ElevatedButton(
+                                            onPressed: () async {
+                                              final result = await _doLikeOrNot();
+                                              if (result) {
+                                                _showLikeDialog(w, h, context);
+                                              }
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                                primary: buttonColor,
+                                                side: BorderSide(color: buttonTextColor, width: 1.0)
+                                            ),
+                                            child: Row(
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.only(right: 8.0),
+                                                  child: Hero(
+                                                    tag: "like",
+                                                    child: Icon(
+                                                      Icons.thumb_up_alt_rounded,
+                                                      color: buttonTextColor,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Text("좋아요", style: TextStyle(color: buttonTextColor, fontSize: _baseSize/3),)
+                                              ],
+                                            )
+                                        ),
                                       ),
-                                    ),
-                                  )
-                                ],
-                              )
-                            ],
-                          ),
-                        ],
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            children: [
+                                              Icon(
+                                                Icons.thumb_up,
+                                                color: Colors.red,
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.only(left: 8.0),
+                                                child: Text(
+                                                  '$_likes',
+                                                  style: TextStyle(color: Colors.red, fontSize: 16.0),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            children: [
+                                              Icon(CupertinoIcons.eye, color: Colors.black),
+                                              Padding(
+                                                padding: EdgeInsets.only(left: 8.0),
+                                                child: Text(
+                                                  _post.views.toString(),
+                                                  style: TextStyle(color: Colors.black, fontSize: 16.0),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ) : Container(),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(_post.schoolName!, style: TextStyle(fontSize: _baseSize/3),),
+                                Text("작성일자: $_regTime", style: TextStyle(color: Colors.grey),),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

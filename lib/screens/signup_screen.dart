@@ -60,7 +60,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           padding: EdgeInsets.all(_baseSize/2),
           child: Center(
             child: Container(
-              decoration: CustomBoxDecoration.buildWhiteBoxDecoration(false),
+              decoration: CustomBoxDecoration.buildTransparentDecoration(),
               child: Flex(
                 direction: Axis.vertical,
                 children: [
