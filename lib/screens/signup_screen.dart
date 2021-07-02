@@ -8,6 +8,7 @@ import '../res/colors.dart';
 import '../services/server_api.dart';
 import '../utils/auth.dart';
 import '../widgets/box_decoration.dart';
+import '../widgets/single_message_dialog.dart';
 import 'select_screen.dart';
 import 'signin_screen.dart';
 
@@ -100,7 +101,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   decoration: InputDecoration(
                                     floatingLabelBehavior:FloatingLabelBehavior.never,
                                     border: UnderlineInputBorder(),
-                                    labelText: '닉네임 입력',
+                                    labelText: '닉네임을 6자 이내로 입력',
                                     labelStyle: TextStyle(color: Colors.black45),
                                     fillColor: Colors.black,),
                                   style: TextStyle(color: Colors.black, fontSize: _baseSize/4),
@@ -198,7 +199,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 height: _baseSize,
                                 child: ElevatedButton(
                                     onPressed: () {
-                                      _showConfirmDialog(_nicknameController.text, _schoolList[_selectedIndex] as SchoolSearchResponse, _baseSize);
+                                      if (_nicknameController.text.length > 6) {
+                                        SingleMessageDialog.alert(context, "닉네임을 6자 이내로 입력해주세요");
+                                      } else if (_nicknameController.text.isEmpty) {
+                                        SingleMessageDialog.alert(context, "닉네임을 입력해주세요");
+                                      } else {
+                                        _showConfirmDialog(_nicknameController.text, _schoolList[_selectedIndex] as SchoolSearchResponse, _baseSize);
+                                      }
                                     },
                                     child: Text("등록하기", style: TextStyle(fontSize: _baseSize/2),)
                                 ),

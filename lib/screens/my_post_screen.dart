@@ -413,7 +413,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
                       ),
                     );
                   } else {
-                    SingleMessageDialog.alert(context, "제목을 8자 이내로 입력해주세요");
+                    SingleMessageDialog.alert(context, "제목 변경 실패");
                   }
                 } else {
                   SingleMessageDialog.alert(context, "제목을 8자 이내로 입력해주세요");
@@ -434,7 +434,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
                         ),
                       );
                     } else {
-                      SingleMessageDialog.alert(context, "제목을 8자 이내로 입력해주세요");
+                      SingleMessageDialog.alert(context, "제목 변경 실패");
                     }
                   } else {
                     SingleMessageDialog.alert(context, "제목을 8자 이내로 입력해주세요");
