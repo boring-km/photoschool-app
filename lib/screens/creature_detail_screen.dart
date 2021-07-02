@@ -135,7 +135,7 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                           children: [
                             Expanded(
                                 child: Container(
-                                  height: 200,
+                                  height: _baseSize * 4,
                                   child: Center(
                                     child: ListView(
                                       shrinkWrap: true,
@@ -286,16 +286,16 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
       color: Colors.white,
       child: InkWell(
         onTap: () {
-          ImageDialog.showFullImageDialog(context, imageUrl);
+          ImageDialog.show(context, imageUrl);
         },
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: baseSize / 3),
           child: Container(
-            width: baseSize * 4,
             child: Center(
                 child: Image.network(
                   imageUrl,
-                  height: baseSize * 3,
+                  height: baseSize * 8,
+                  fit: BoxFit.cover,
                   loadingBuilder: (context, child, progress) {
                     if (progress == null) return child;
                     return Container(child: Center(child: Text("로딩중", style: TextStyle(color: CustomColors.creatureGreen, fontSize: _baseSize/2),),),);

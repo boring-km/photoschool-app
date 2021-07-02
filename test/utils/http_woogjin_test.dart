@@ -18,7 +18,7 @@ void main() {
   });
 
   test("웅진 포토라이브러리에서 7064번을 상세 조회하면 검색하면...", () async {
-    var result = await WoongJinAPIService.searchPhotoDetail(7064);
+    var result = await WoongJinAPIService.searchPhotoDetail("7064");
     print(result);
   });
 }

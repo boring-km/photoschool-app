@@ -105,7 +105,7 @@ class WoongJinAPIService {
     return resultList;
   }
 
-  static Future<List<PhotoDetailResponse>> searchPhotoDetail(int pid) async {
+  static Future<List<PhotoDetailResponse>> searchPhotoDetail(String pid) async {
     final domain = dotenv.env["woongjin_domain"]!;
     final apiPath = dotenv.env["woongjin_search_detail_photo"];
     final response = await HttpWJDict.get("$domain$apiPath$pid");

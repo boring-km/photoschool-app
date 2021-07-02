@@ -315,7 +315,7 @@ class _PediaDetailState extends State<PediaDetailScreen> {
         color: Colors.white,
         child: InkWell(
           onTap: () {
-            ImageDialog.showFullImageDialog(context, url);
+            ImageDialog.show(context, url);
           },
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: baseSize / 8),
@@ -323,7 +323,7 @@ class _PediaDetailState extends State<PediaDetailScreen> {
               child: Center(
                   child: Image.network(
                     url,
-                    height: baseSize * 8,
+                    height: baseSize * 5,
                     fit: BoxFit.cover,
                     loadingBuilder: (context, child, progress) {
                       if (progress == null) return child;
@@ -336,29 +336,50 @@ class _PediaDetailState extends State<PediaDetailScreen> {
         ),
       ));
     }
+    resultList.add(
+      Padding(
+        padding: EdgeInsets.symmetric(horizontal: 8.0),
+        child: Container(
+          width: 2,
+          height: baseSize * 4,
+          color: Colors.black,
+        ),
+      )
+    );
+    var isFirst = true;
     for (var subItem in _subImageList) {
       resultList.add(Material(
         color: Colors.white,
         child: InkWell(
-          onTap: () {
-            ImageDialog.showFullImageDialog(context, subItem.imgURL);
+          onTap: () async {
+            await ImageDialog.showWithWJDict(context, subItem.imgURL, subItem.apiId);
           },
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: baseSize / 8),
             child: Center(
-              child: Image.network(
-                subItem.imgURL,
-                height: baseSize * 8,
-                fit: BoxFit.cover,
-                loadingBuilder: (context, child, progress) {
-                  if (progress == null) return child;
-                  return Container(child: Center(child: Text("로딩중", style: TextStyle(color: CustomColors.orange, fontSize: _baseSize/2),),),);
-                },
+              child: Column(
+                children: [
+                  isFirst ?
+                  Container(
+                      height: baseSize / 2,
+                      child: Text("웅진 포토", style: TextStyle(fontSize: baseSize/3))
+                  ) : Container(height: baseSize/2,),
+                  Image.network(
+                    subItem.imgURL,
+                    height: baseSize * (4.5),
+                    fit: BoxFit.cover,
+                    loadingBuilder: (context, child, progress) {
+                      if (progress == null) return child;
+                      return Container(child: Center(child: Text("로딩중", style: TextStyle(color: CustomColors.orange, fontSize: baseSize/2),),),);
+                    },
+                  ),
+                ],
               ),
             ),
           ),
         ),
       ));
+      isFirst = false;
     }
     return resultList;
   }
