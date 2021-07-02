@@ -17,6 +17,7 @@ import '../services/woongjin_api.dart';
 import '../widgets/app_bar_base.dart';
 import '../widgets/box_decoration.dart';
 import '../widgets/hero_dialog_route.dart';
+import '../widgets/image_dialog.dart';
 import '../widgets/loading.dart';
 import '../widgets/user_image_card.dart';
 
@@ -314,15 +315,16 @@ class _PediaDetailState extends State<PediaDetailScreen> {
         color: Colors.white,
         child: InkWell(
           onTap: () {
-            _showFullImageDialog(context, url);
+            ImageDialog.showFullImageDialog(context, url);
           },
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: baseSize / 3),
+            padding: EdgeInsets.symmetric(horizontal: baseSize / 8),
             child: Container(
               child: Center(
                   child: Image.network(
                     url,
                     height: baseSize * 8,
+                    fit: BoxFit.cover,
                     loadingBuilder: (context, child, progress) {
                       if (progress == null) return child;
                       return Container(child: Center(child: Text("로딩중", style: TextStyle(color: CustomColors.orange, fontSize: _baseSize/2),),),);
@@ -339,16 +341,20 @@ class _PediaDetailState extends State<PediaDetailScreen> {
         color: Colors.white,
         child: InkWell(
           onTap: () {
-            _showFullImageDialog(context, subItem.imgURL);
+            ImageDialog.showFullImageDialog(context, subItem.imgURL);
           },
-          child: Center(
-            child: Image.network(
-              subItem.imgURL,
-              width: 400,
-              loadingBuilder: (context, child, progress) {
-                if (progress == null) return child;
-                return Container(child: Center(child: Text("로딩중", style: TextStyle(color: CustomColors.orange, fontSize: _baseSize/2),),),);
-              },
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: baseSize / 8),
+            child: Center(
+              child: Image.network(
+                subItem.imgURL,
+                height: baseSize * 8,
+                fit: BoxFit.cover,
+                loadingBuilder: (context, child, progress) {
+                  if (progress == null) return child;
+                  return Container(child: Center(child: Text("로딩중", style: TextStyle(color: CustomColors.orange, fontSize: _baseSize/2),),),);
+                },
+              ),
             ),
           ),
         ),
@@ -611,48 +617,5 @@ class _PediaDetailState extends State<PediaDetailScreen> {
         ),
       ),
     );
-  }
-
-  _showFullImageDialog(BuildContext parentContext, String imageURL) {
-    Navigator.of(context).push(HeroDialogRoute(builder: (context) {
-      var baseWidth = MediaQuery.of(parentContext).size.width / 10;
-      var baseHeight = MediaQuery.of(parentContext).size.height / 10;
-      return Center(
-        child: AlertDialog(
-          backgroundColor: Colors.black45,
-          content: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              InteractiveViewer(
-                panEnabled: true,
-                minScale: 1,
-                maxScale: 4,
-                child: Image.network(
-                  imageURL,
-                  height: baseHeight * 6,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: baseWidth / 8),
-                child: Container(
-                  width: baseWidth * 2,
-                  height: baseHeight * (2 / 3),
-                  child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      style: ElevatedButton.styleFrom(primary: Colors.white, onSurface: Colors.white70, side: BorderSide(style: BorderStyle.none, width: 2.0, color: Colors.black)),
-                      child: Text(
-                        "닫기",
-                        style: TextStyle(fontSize: baseWidth / 4, color: Colors.black),
-                      )),
-                ),
-              )
-            ],
-          ),
-        ),
-      );
-    }));
   }
 }

@@ -14,6 +14,7 @@ import '../services/server_api.dart';
 import '../widgets/app_bar_base.dart';
 import '../widgets/box_decoration.dart';
 import '../widgets/hero_dialog_route.dart';
+import '../widgets/image_dialog.dart';
 import '../widgets/loading.dart';
 import '../widgets/user_image_card.dart';
 
@@ -120,7 +121,8 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                                     )
                                   ],
                                 ),
-                              )),
+                              )
+                          ),
                         ],
                       ),
                     ),
@@ -284,7 +286,7 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
       color: Colors.white,
       child: InkWell(
         onTap: () {
-          _showFullImageDialog(context, imageUrl);
+          ImageDialog.showFullImageDialog(context, imageUrl);
         },
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: baseSize / 3),
@@ -548,48 +550,6 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
         ),
       ),
     );
-  }
-
-  _showFullImageDialog(BuildContext parentContext, String imageURL) {
-    Navigator.of(context).push(HeroDialogRoute(builder: (context) {
-      var baseWidth = MediaQuery.of(parentContext).size.width / 10;
-      var baseHeight = MediaQuery.of(parentContext).size.height / 10;
-      return Center(
-        child: AlertDialog(
-          content: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              InteractiveViewer(
-                panEnabled: true,
-                minScale: 1,
-                maxScale: 4,
-                child: Image.network(
-                  imageURL,
-                  height: baseHeight * 5,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: baseWidth / 4),
-                child: Container(
-                  width: baseWidth * 3,
-                  height: baseHeight,
-                  child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      style: ElevatedButton.styleFrom(primary: Colors.white, onSurface: Colors.white70, side: BorderSide(style: BorderStyle.none, width: 2.0, color: Colors.black)),
-                      child: Text(
-                        "닫기",
-                        style: TextStyle(fontSize: baseWidth / 4, color: Colors.black),
-                      )),
-                ),
-              )
-            ],
-          ),
-        ),
-      );
-    }));
   }
 
   _buildOthersCardList(String apiId, BuildContext context) async {
