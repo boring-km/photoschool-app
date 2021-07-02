@@ -14,11 +14,11 @@ import '../utils/screen_animation.dart';
 
 class AppBarTitle extends StatefulWidget {
 
-  AppBarTitle({Key? key, required User user, String? image})
+  AppBarTitle({Key? key, User? user, String? image})
       : _user = user, _image = image,
         super(key: key);
 
-  final User _user;
+  final User? _user;
   final String? _image;
 
   @override
@@ -28,7 +28,7 @@ class AppBarTitle extends StatefulWidget {
 class _AppBarTitleState extends State<AppBarTitle> {
   String _nickname = "";
   bool _isSigningOut = false;
-  late User _user;
+  late User? _user;
   late String? _image;
 
   Timer? timer;
@@ -44,7 +44,7 @@ class _AppBarTitleState extends State<AppBarTitle> {
   void setNickName() {
     SharedPreferences.getInstance().then((prefs) {
       setState(() {
-        _nickname = prefs.getString('nickname') ?? _user.displayName!;
+        _nickname = prefs.getString('nickname') ?? '닉네임 없음';
       });
     });
   }
@@ -203,14 +203,13 @@ class _AppBarTitleState extends State<AppBarTitle> {
                     size: baseSize * (2/3),
                   ),
                 ),
-                _isSigningOut
-                    ? CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                _user != null ?
+                _isSigningOut ? CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                 ) : PopupMenuButton(
                     onSelected: (result) async {
                       if (result == 1) {
                         Navigator.of(context)
-                            .push(ScreenAnimation.routeTo(MyPostScreen(user: _user)));
+                            .push(ScreenAnimation.routeTo(MyPostScreen(user: _user!)));
                       } else {
                         setState(() {
                           _isSigningOut = true;
@@ -250,7 +249,8 @@ class _AppBarTitleState extends State<AppBarTitle> {
                                     style: TextStyle(color: Colors.black, fontSize: baseSize/2),
                                   )
                                 ],
-                              )),
+                              )
+                          ),
                           PopupMenuItem(
                               value: 2,
                               child: Row(
@@ -268,7 +268,8 @@ class _AppBarTitleState extends State<AppBarTitle> {
                                   )
                                 ],
                               ))
-                        ])
+                        ]
+                ) : Container()
               ],
             ),
           ),

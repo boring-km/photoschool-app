@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
@@ -23,9 +24,9 @@ import '../widgets/user_image_card.dart';
 
 class PediaDetailScreen extends StatefulWidget {
   final DictResponse _pedia;
-  final User _user;
+  final User? _user;
 
-  PediaDetailScreen(this._pedia, {Key? key, required User user})
+  PediaDetailScreen(this._pedia, {Key? key, User? user})
       : _user = user,
         super(key: key);
 
@@ -36,7 +37,7 @@ class PediaDetailScreen extends StatefulWidget {
 class _PediaDetailState extends State<PediaDetailScreen> {
   final DictResponse _pedia;
   late DictDetailResponse _pediaDetail;
-  late User _user;
+  late User? _user;
   late List<PhotoResponse> _subImageList;
   double _baseSize = 100;
   bool _isDetailLoaded = false;
@@ -51,6 +52,8 @@ class _PediaDetailState extends State<PediaDetailScreen> {
   int _received = -1;
   int _othersIndex = 0;
   bool _isLoading = false;
+
+  final _scrollController = ScrollController();
 
   _PediaDetailState(this._pedia);
 
@@ -138,7 +141,7 @@ class _PediaDetailState extends State<PediaDetailScreen> {
                               ),
                             ],
                           ),
-                          ElevatedButton(
+                          _user != null && !kIsWeb ? ElevatedButton(
                               style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(boxRounded)), primary: Colors.blue, onSurface: Colors.blueAccent),
                               onPressed: () {
                                 _showSelectSource(context);
@@ -159,7 +162,8 @@ class _PediaDetailState extends State<PediaDetailScreen> {
                                     )
                                   ],
                                 ),
-                              ))
+                              )
+                          ) : Container()
                         ],
                       ),
                     ),
@@ -174,10 +178,14 @@ class _PediaDetailState extends State<PediaDetailScreen> {
                               child: Container(
                             height: 400,
                             child: Center(
-                              child: ListView(
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                children: _buildImages(_baseSize, boxRounded),
+                              child: Scrollbar(
+                                isAlwaysShown: true,
+                                controller: _scrollController,
+                                child: ListView(
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.horizontal,
+                                  children: _buildImages(_baseSize, boxRounded),
+                                ),
                               ),
                             ),
                           ))
@@ -346,7 +354,6 @@ class _PediaDetailState extends State<PediaDetailScreen> {
         ),
       )
     );
-    var isFirst = true;
     for (var subItem in _subImageList) {
       resultList.add(Material(
         color: Colors.white,
@@ -356,30 +363,24 @@ class _PediaDetailState extends State<PediaDetailScreen> {
           },
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: baseSize / 8),
-            child: Center(
-              child: Column(
-                children: [
-                  isFirst ?
-                  Container(
-                      height: baseSize / 2,
-                      child: Text("웅진 포토", style: TextStyle(fontSize: baseSize/3))
-                  ) : Container(height: baseSize/2,),
-                  Image.network(
+            child: Container(
+              child: Container(
+                child: Center(
+                  child: Image.network(
                     subItem.imgURL,
                     height: baseSize * (4.5),
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fitHeight,
                     loadingBuilder: (context, child, progress) {
                       if (progress == null) return child;
                       return Container(child: Center(child: Text("로딩중", style: TextStyle(color: CustomColors.orange, fontSize: baseSize/2),),),);
                     },
                   ),
-                ],
+                ),
               ),
             ),
           ),
         ),
       ));
-      isFirst = false;
     }
     return resultList;
   }

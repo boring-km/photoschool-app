@@ -20,9 +20,9 @@ import 'pedia_detail_screen.dart';
 class FriendsDetailScreen extends StatefulWidget {
 
   final int _postId;
-  final User _user;
+  final User? _user;
 
-  FriendsDetailScreen(this._postId, {Key? key, required User user})
+  FriendsDetailScreen(this._postId, {Key? key, User? user})
       : _user = user,
         super(key: key);
 
@@ -33,7 +33,7 @@ class FriendsDetailScreen extends StatefulWidget {
 class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
 
   double _baseSize = 100;
-  late User _user;
+  late User? _user;
   late SearchedPostResponse _post;
   bool _isLoading = true;
   late dynamic _original;
@@ -62,9 +62,11 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
       _pedia = (await WoongJinAPIService.searchWJPedia((_original as DictDetailResponse).name))[0];
       _dictImgUrl = (await WoongJinAPIService.searchPhotoLibrary((_original as DictDetailResponse).name))[0].imgURL;
     }
-    final checkResult = await CustomAPIService.checkDoLikeBefore(widget._postId);
-    if (checkResult == true) {
-      _isLiked = checkResult;
+    if (_user != null) {
+      final checkResult = await CustomAPIService.checkDoLikeBefore(widget._postId);
+      if (checkResult == true) {
+        _isLiked = checkResult;
+      }
     }
     _likes = _post.likes;
     _regTime = "${_post.regTime.substring(5,10).replaceFirst('-', '월 ')}일";
@@ -162,7 +164,7 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
                                   Text(_post.nickname, style: TextStyle(fontSize: _baseSize/2),),
                                 ],
                               ),
-                              Padding(
+                              _user != null ? Padding(
                                 padding: EdgeInsets.only(right: 8.0),
                                 child: Row(
                                   children: [
@@ -232,7 +234,7 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
                                     ),
                                   ],
                                 ),
-                              ),
+                              ) : Container(),
                             ],
                           ),
                           Row(

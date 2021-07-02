@@ -8,7 +8,7 @@ import '../screens/friends_detail_screen.dart';
 import '../screens/friends_main_screen.dart';
 
 class UserImageCard {
-  static List<Widget> buildImageCard(List<PostResponse> posts, BuildContext context, User user) {
+  static List<Widget> buildImageCard(List<PostResponse> posts, BuildContext context, User? user) {
     final resultList = <Widget>[];
     for (var item in posts) {
       final school = item.schoolName == null ? "" : item.schoolName!.replaceFirst("등학교", "");
@@ -113,7 +113,7 @@ class UserImageCard {
     return resultList;
   }
 
-  static List<Widget> buildAwardImageCard(List<PostResponse> posts, BuildContext context, User user) {
+  static List<Widget> buildAwardImageCard(List<PostResponse> posts, BuildContext context, User? user) {
     final resultList = <Widget>[];
     for (var item in posts) {
       var month = item.month!.substring(4);
@@ -223,7 +223,7 @@ class UserImageCard {
   }
 
   // ignore: type_annotate_public_apis
-  static route(BuildContext context, PostResponse item, User user) async {
+  static route(BuildContext context, PostResponse item, User? user) async {
     var type = context.widget.runtimeType.toString();
     if (type == "FriendsMainScreen") {
       await Navigator.of(context).push(MaterialPageRoute(builder: (context) =>

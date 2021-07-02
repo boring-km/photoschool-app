@@ -10,18 +10,18 @@ import 'search_creature_screen.dart';
 
 class SelectScreen extends StatefulWidget {
 
-  const SelectScreen({Key? key, required User user})
+  const SelectScreen({Key? key, User? user})
       : _user = user,
         super(key: key);
 
-  final User _user;
+  final User? _user;
 
   @override
   _SelectScreenState createState() => _SelectScreenState();
 }
 
 class _SelectScreenState extends State<SelectScreen> {
-  late User _user;
+  late User? _user;
   @override
   void initState() {
     _user = widget._user;

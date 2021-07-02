@@ -16,18 +16,18 @@ import 'pedia_detail_screen.dart';
 
 class SearchCreatureScreen extends StatefulWidget {
 
-  SearchCreatureScreen({Key? key, required User user})
+  SearchCreatureScreen({Key? key, User? user})
       : _user = user,
         super(key: key);
 
-  final User _user;
+  final User? _user;
 
   @override
   _FindCreatureState createState() => _FindCreatureState();
 }
 
 class _FindCreatureState extends State<SearchCreatureScreen> {
-  late User _user;
+  late User? _user;
   final _creatureSearchController = TextEditingController();
   final List<CreatureDetailResponse> _creatureDataList = [];
   final List<DictResponse> _wjPediaList = [];

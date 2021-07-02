@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
@@ -20,9 +21,9 @@ import '../widgets/user_image_card.dart';
 
 class CreatureDetailScreen extends StatefulWidget {
   final CreatureDetailResponse _creature;
-  final User _user;
+  final User? _user;
 
-  CreatureDetailScreen(this._creature, {Key? key, required User user})
+  CreatureDetailScreen(this._creature, {Key? key, User? user})
       : _user = user,
         super(key: key);
 
@@ -32,7 +33,7 @@ class CreatureDetailScreen extends StatefulWidget {
 
 class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
   final CreatureDetailResponse _creature;
-  late User _user;
+  late User? _user;
   final _dialogTextController = TextEditingController();
   final picker = ImagePicker();
 
@@ -100,7 +101,7 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          ElevatedButton(
+                          _user != null && !kIsWeb ? ElevatedButton(
                               style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(boxRounded)), primary: Colors.blue, onSurface: Colors.blueAccent),
                               onPressed: () {
                                 _showSelectSource(context);
@@ -122,7 +123,7 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                                   ],
                                 ),
                               )
-                          ),
+                          ) : Container(),
                         ],
                       ),
                     ),

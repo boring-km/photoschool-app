@@ -11,18 +11,19 @@ import '../widgets/hero_dialog_route.dart';
 import '../widgets/user_image_card.dart';
 
 class FriendsMainScreen extends StatefulWidget {
-  FriendsMainScreen({Key? key, required User user})
+
+  final User? _user;
+
+  FriendsMainScreen({Key? key, User? user})
       : _user = user,
         super(key: key);
-
-  final User _user;
 
   @override
   _FriendsMainState createState() => _FriendsMainState();
 }
 
 class _FriendsMainState extends State<FriendsMainScreen> {
-  late User _user;
+  late User? _user;
   double _baseSize = 100;
   bool _isLoaded = false;
   int _awardReceived = -1;
