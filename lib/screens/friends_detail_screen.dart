@@ -100,7 +100,7 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
           padding: EdgeInsets.all(_baseSize/3),
           child: Center(
             child: Container(
-              decoration: CustomBoxDecoration.buildWhiteBoxDecoration(),
+              decoration: CustomBoxDecoration.buildWhiteBoxDecoration(false),
               child: Flex(
                 direction: Axis.vertical,
                 children: [

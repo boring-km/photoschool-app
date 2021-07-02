@@ -1,3 +1,4 @@
+import 'package:animated_background/animated_background.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,7 @@ class FriendsMainScreen extends StatefulWidget {
   _FriendsMainState createState() => _FriendsMainState();
 }
 
-class _FriendsMainState extends State<FriendsMainScreen> {
+class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStateMixin {
   late User? _user;
   double _baseSize = 100;
   bool _isLoaded = false;
@@ -119,343 +120,347 @@ class _FriendsMainState extends State<FriendsMainScreen> {
                 padding: EdgeInsets.all(_baseSize / 3),
                 child: Center(
                   child: Container(
-                    decoration: CustomBoxDecoration.buildWhiteBoxDecoration(),
-                    child: Flex(
-                      direction: Axis.vertical,
-                      children: [
-                        Container(
-                          width: w * (9 / 10),
-                          height: _baseSize,
-                          child: Padding(
-                            padding: EdgeInsets.only(top: _baseSize / 10),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                                _baseSize / 2)),
-                                        primary: CustomColors.lightRed,
-                                        onSurface: CustomColors.red),
-                                    onPressed: () async {
-                                      await _buildSchoolRankDialog(context);
-                                    },
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: _baseSize / 8),
-                                      child: Container(
-                                        height: _baseSize * (2 / 3),
-                                        child: Row(
-                                          children: [
-                                            Hero(
-                                              tag: 'school',
-                                              child: Icon(
-                                                Icons.school,
-                                                color: Colors.white,
-                                                size: _baseSize / 2,
+                    decoration: CustomBoxDecoration.buildWhiteBoxDecoration(true),
+                    child: AnimatedBackground(
+                      behaviour: BubblesBehaviour(options: BubbleOptions(bubbleCount: 30, minTargetRadius: 30, maxTargetRadius: 100, growthRate: 5, popRate: 40)),
+                      vsync: this,
+                      child: Flex(
+                        direction: Axis.vertical,
+                        children: [
+                          Container(
+                            width: w * (9 / 10),
+                            height: _baseSize,
+                            child: Padding(
+                              padding: EdgeInsets.only(top: _baseSize / 10),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(
+                                                  _baseSize / 2)),
+                                          primary: CustomColors.lightRed,
+                                          onSurface: CustomColors.red),
+                                      onPressed: () async {
+                                        await _buildSchoolRankDialog(context);
+                                      },
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: _baseSize / 8),
+                                        child: Container(
+                                          height: _baseSize * (2 / 3),
+                                          child: Row(
+                                            children: [
+                                              Hero(
+                                                tag: 'school',
+                                                child: Icon(
+                                                  Icons.school,
+                                                  color: Colors.white,
+                                                  size: _baseSize / 2,
+                                                ),
                                               ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsets.only(
-                                                  left: _baseSize / 5),
-                                              child: Text(
-                                                "학교 랭킹",
-                                                style: TextStyle(
-                                                    fontSize: _baseSize / 3,
-                                                    color: Colors.white),
-                                              ),
-                                            )
-                                          ],
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: _baseSize / 5),
+                                                child: Text(
+                                                  "학교 랭킹",
+                                                  style: TextStyle(
+                                                      fontSize: _baseSize / 3,
+                                                      color: Colors.white),
+                                                ),
+                                              )
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                    )),
-                              ],
+                                      )),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                        Expanded(
-                            child: NotificationListener<ScrollEndNotification>(
-                                onNotification: (scrollEnd) {
-                                  final metrics = scrollEnd.metrics;
-                                  if (metrics.atEdge) {
-                                    if (metrics.pixels != 0) {
-                                      if (_postReceived == -1 || _postReceived == 9) {
-                                        _postIndex++;
-                                        setState(() {
-                                          _isPostsLoading = true;
-                                        });
-                                        if (_isSearched) {
-                                          _searchPosts(_searchTextController.text.isEmpty ? "%" : _searchTextController.text, context);
-                                        } else {
-                                          _buildPosts(context);
+                          Expanded(
+                              child: NotificationListener<ScrollEndNotification>(
+                                  onNotification: (scrollEnd) {
+                                    final metrics = scrollEnd.metrics;
+                                    if (metrics.atEdge) {
+                                      if (metrics.pixels != 0) {
+                                        if (_postReceived == -1 || _postReceived == 9) {
+                                          _postIndex++;
+                                          setState(() {
+                                            _isPostsLoading = true;
+                                          });
+                                          if (_isSearched) {
+                                            _searchPosts(_searchTextController.text.isEmpty ? "%" : _searchTextController.text, context);
+                                          } else {
+                                            _buildPosts(context);
+                                          }
                                         }
                                       }
                                     }
-                                  }
-                                  return true;
-                                },
-                                child: ListView(
-                                  children: [
-                                    Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Padding(
-                                        padding: EdgeInsets.only(
-                                          left: _baseSize / 4,
-                                        ),
-                                        child: Text(
-                                          "축하해요!",
-                                          style: TextStyle(
-                                              fontSize: buttonFontSize * 3,
-                                              color: Colors.black),
+                                    return true;
+                                  },
+                                  child: ListView(
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Padding(
+                                          padding: EdgeInsets.only(
+                                            left: _baseSize / 4,
+                                          ),
+                                          child: Text(
+                                            "축하해요!",
+                                            style: TextStyle(
+                                                fontSize: buttonFontSize * 3,
+                                                color: Colors.black),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    Flex(
-                                      direction: Axis.horizontal,
-                                      children: [
-                                        Expanded(
-                                            child: Container(
-                                          height: 450,
-                                          child: NotificationListener<
-                                              ScrollEndNotification>(
-                                            onNotification: (scrollEnd) {
-                                              final metrics = scrollEnd.metrics;
-                                              if (metrics.atEdge) {
-                                                if (metrics.pixels != 0) {
-                                                  if (_awardReceived == -1 || _awardReceived == 4) {
+                                      Flex(
+                                        direction: Axis.horizontal,
+                                        children: [
+                                          Expanded(
+                                              child: Container(
+                                                height: 450,
+                                                child: NotificationListener<
+                                                    ScrollEndNotification>(
+                                                  onNotification: (scrollEnd) {
+                                                    final metrics = scrollEnd.metrics;
+                                                    if (metrics.atEdge) {
+                                                      if (metrics.pixels != 0) {
+                                                        if (_awardReceived == -1 || _awardReceived == 4) {
+                                                          setState(() {
+                                                            _isAwardLoading = true;
+                                                          });
+                                                          _awardIndex++;
+                                                          _buildAwardView(context);
+                                                        }
+                                                      }
+                                                    }
+                                                    return true;
+                                                  },
+                                                  child: ListView.builder(
+                                                      shrinkWrap: true,
+                                                      scrollDirection: Axis.horizontal,
+                                                      itemCount: _awardImageCardList.length + 1,
+                                                      itemBuilder: (context, index) {
+                                                        if (index == _awardImageCardList.length) {
+                                                          return _isAwardLoading ? Container(
+                                                            child: Center(
+                                                              child: Column(
+                                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                                children: [
+                                                                  CircularProgressIndicator(color: Colors.red,),
+                                                                  Padding(
+                                                                    padding: EdgeInsets.all(_baseSize/10),
+                                                                    child: Text("로딩중", style: TextStyle(color: Colors.red, fontSize: _baseSize/2),),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ) : Container();
+                                                        }
+                                                        return _awardImageCardList[index];
+                                                      }),
+                                                ),
+                                              ))
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                              width: w / 12,
+                                              child: DropdownButtonHideUnderline(
+                                                child: DropdownButton(
+                                                  value: _selectedSearchType,
+                                                  isExpanded: true,
+                                                  icon: Icon(Icons
+                                                      .arrow_drop_down_circle),
+                                                  iconEnabledColor:
+                                                  CustomColors.creatureGreen,
+                                                  items: _searchTypeList
+                                                      .map((value) {
+                                                    return DropdownMenuItem(
+                                                        value: value,
+                                                        child: Text(
+                                                          value,
+                                                          style: TextStyle(
+                                                              color: Colors.black,
+                                                              fontSize:
+                                                              buttonFontSize *
+                                                                  1.2),
+                                                        ));
+                                                  }).toList(),
+                                                  onChanged: (value) {
                                                     setState(() {
-                                                      _isAwardLoading = true;
+                                                      _selectedSearchType =
+                                                      value as String;
                                                     });
-                                                    _awardIndex++;
-                                                    _buildAwardView(context);
-                                                  }
-                                                }
-                                              }
-                                              return true;
-                                            },
-                                            child: ListView.builder(
-                                                shrinkWrap: true,
-                                                scrollDirection: Axis.horizontal,
-                                                itemCount: _awardImageCardList.length + 1,
-                                                itemBuilder: (context, index) {
-                                                  if (index == _awardImageCardList.length) {
-                                                    return _isAwardLoading ? Container(
-                                                      child: Center(
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.center,
-                                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                                          children: [
-                                                            CircularProgressIndicator(color: Colors.red,),
-                                                            Padding(
-                                                              padding: EdgeInsets.all(_baseSize/10),
-                                                              child: Text("로딩중", style: TextStyle(color: Colors.red, fontSize: _baseSize/2),),
-                                                            )
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ) : Container();
-                                                  }
-                                                  return _awardImageCardList[index];
-                                                }),
-                                          ),
-                                        ))
-                                      ],
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                            width: w / 12,
-                                            child: DropdownButtonHideUnderline(
-                                              child: DropdownButton(
-                                                value: _selectedSearchType,
-                                                isExpanded: true,
-                                                icon: Icon(Icons
-                                                    .arrow_drop_down_circle),
-                                                iconEnabledColor:
-                                                    CustomColors.creatureGreen,
-                                                items: _searchTypeList
-                                                    .map((value) {
-                                                  return DropdownMenuItem(
-                                                      value: value,
-                                                      child: Text(
-                                                        value,
-                                                        style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize:
-                                                                buttonFontSize *
-                                                                    1.2),
-                                                      ));
-                                                }).toList(),
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    _selectedSearchType =
-                                                        value as String;
-                                                  });
-                                                },
-                                              ),
-                                            )),
-                                        Padding(
-                                          padding: EdgeInsets.all(h / 50),
-                                          child: Container(
-                                            width: w * (2 / 5),
-                                            height: buttonHeight,
-                                            decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(h / 40)),
-                                                border: Border.all(
-                                                    width: 2,
-                                                    color: Colors.black)),
-                                            child: Padding(
-                                              padding: EdgeInsets.only(
-                                                  left: h / 80, right: 80),
-                                              child: TextField(
-                                                decoration: InputDecoration(
-                                                  floatingLabelBehavior:
-                                                      FloatingLabelBehavior
-                                                          .never,
-                                                  border: InputBorder.none,
-                                                  icon: Icon(
-                                                    Icons.search,
-                                                    size: _baseSize / 3,
-                                                    color: Colors.black45,
-                                                  ),
-                                                  labelText: '제목, 닉네임, 학교 입력',
-                                                  labelStyle: TextStyle(
-                                                      color: Colors.black45),
-                                                  fillColor: Colors.black,
+                                                  },
                                                 ),
-                                                style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: buttonFontSize),
-                                                controller:
-                                                    _searchTextController,
-                                                onSubmitted: (str) async {
-                                                  _searchedList.clear();
-                                                  _postIndex = 0;
-                                                  _searchPosts(str.isEmpty ? "%" : str, context);
-                                                },
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        ConstrainedBox(
-                                          constraints: BoxConstraints.tightFor(
-                                              width: buttonWidth,
-                                              height: buttonHeight),
-                                          child: ElevatedButton(
-                                            onPressed: () async {
-                                              _searchedList.clear();
-                                              _postIndex = 0;
-                                              _searchPosts(
-                                                  _searchTextController.text.isEmpty ? "%" : _searchTextController.text, context);
-                                            },
-                                            style: ElevatedButton.styleFrom(
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          h / 50),
-                                                ),
-                                                primary: CustomColors.orange,
-                                                onSurface: Colors.orangeAccent),
-                                            child: Text(
-                                              "검색",
-                                              style: TextStyle(
+                                              )),
+                                          Padding(
+                                            padding: EdgeInsets.all(h / 50),
+                                            child: Container(
+                                              width: w * (2 / 5),
+                                              height: buttonHeight,
+                                              decoration: BoxDecoration(
                                                   color: Colors.white,
-                                                  shadows: [
-                                                    Shadow(
-                                                        blurRadius: 4.0,
-                                                        color: Colors.black45,
-                                                        offset:
-                                                            Offset(2.0, 2.0))
-                                                  ],
-                                                  fontSize: buttonFontSize,
-                                                  fontWeight: FontWeight.w700),
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                              left: _baseSize / 3),
-                                          child: Container(
-                                            width: w / 10,
-                                            child: DropdownButtonHideUnderline(
-                                              child: DropdownButton(
-                                                value: _selectedSortType,
-                                                isExpanded: true,
-                                                icon: Icon(
-                                                  Icons.sort_rounded,
-                                                  size: _baseSize / 2,
-                                                ),
-                                                iconEnabledColor:
-                                                    CustomColors.red,
-                                                items:
-                                                    _sortTypeList.map((value) {
-                                                  return DropdownMenuItem(
-                                                      value: value,
-                                                      child: Text(
-                                                        value,
-                                                        style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize:
-                                                                buttonFontSize),
-                                                      ));
-                                                }).toList(),
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    _selectedSortType = value as String;
-                                                    _postIndex = 0;
+                                                  borderRadius: BorderRadius.all(
+                                                      Radius.circular(h / 40)),
+                                                  border: Border.all(
+                                                      width: 2,
+                                                      color: Colors.black)),
+                                              child: Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: h / 80, right: 80),
+                                                child: TextField(
+                                                  decoration: InputDecoration(
+                                                    floatingLabelBehavior:
+                                                    FloatingLabelBehavior
+                                                        .never,
+                                                    border: InputBorder.none,
+                                                    icon: Icon(
+                                                      Icons.search,
+                                                      size: _baseSize / 3,
+                                                      color: Colors.black45,
+                                                    ),
+                                                    labelText: '제목, 닉네임, 학교 입력',
+                                                    labelStyle: TextStyle(
+                                                        color: Colors.black45),
+                                                    fillColor: Colors.black,
+                                                  ),
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: buttonFontSize),
+                                                  controller:
+                                                  _searchTextController,
+                                                  onSubmitted: (str) async {
                                                     _searchedList.clear();
-                                                    _searchPosts(_searchTextController.text.isEmpty ? "%" : _searchTextController.text, context);
-                                                  });
-                                                },
+                                                    _postIndex = 0;
+                                                    _searchPosts(str.isEmpty ? "%" : str, context);
+                                                  },
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        )
-                                      ],
-                                    ),
-                                    GridView.builder(
-                                      shrinkWrap: true,
-                                      physics: ClampingScrollPhysics(),
-                                      scrollDirection: Axis.vertical,
-                                      primary: true,
-                                      gridDelegate:
-                                          SliverGridDelegateWithFixedCrossAxisCount(
-                                              crossAxisCount: 3,
-                                              mainAxisSpacing: 10.0,
-                                              childAspectRatio: w > h ? 8/7 : 3/5),
-                                      itemCount: _searchedList.length + 1,
-                                      itemBuilder: (context, index) {
-                                        if (_searchedList.length == index) {
-                                          return _isPostsLoading  ? Container(
-                                            child: Center(
-                                              child: Column(
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                crossAxisAlignment: CrossAxisAlignment.center,
-                                                children: [
-                                                  CircularProgressIndicator(color: Colors.blue,),
-                                                  Padding(
-                                                    padding: EdgeInsets.all(_baseSize/10),
-                                                    child: Text("로딩중", style: TextStyle(color: Colors.blue, fontSize: _baseSize/2),),
-                                                  )
-                                                ],
+                                          ConstrainedBox(
+                                            constraints: BoxConstraints.tightFor(
+                                                width: buttonWidth,
+                                                height: buttonHeight),
+                                            child: ElevatedButton(
+                                              onPressed: () async {
+                                                _searchedList.clear();
+                                                _postIndex = 0;
+                                                _searchPosts(
+                                                    _searchTextController.text.isEmpty ? "%" : _searchTextController.text, context);
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                    BorderRadius.circular(
+                                                        h / 50),
+                                                  ),
+                                                  primary: CustomColors.orange,
+                                                  onSurface: Colors.orangeAccent),
+                                              child: Text(
+                                                "검색",
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    shadows: [
+                                                      Shadow(
+                                                          blurRadius: 4.0,
+                                                          color: Colors.black45,
+                                                          offset:
+                                                          Offset(2.0, 2.0))
+                                                    ],
+                                                    fontSize: buttonFontSize,
+                                                    fontWeight: FontWeight.w700),
                                               ),
                                             ),
-                                          ) : Container();
-                                        }
-                                        return _searchedList[index];
-                                      },
-                                    ),
-                                  ],
-                                )
-                            )
-                        )
-                      ],
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                left: _baseSize / 3),
+                                            child: Container(
+                                              width: w / 10,
+                                              child: DropdownButtonHideUnderline(
+                                                child: DropdownButton(
+                                                  value: _selectedSortType,
+                                                  isExpanded: true,
+                                                  icon: Icon(
+                                                    Icons.sort_rounded,
+                                                    size: _baseSize / 2,
+                                                  ),
+                                                  iconEnabledColor:
+                                                  CustomColors.red,
+                                                  items:
+                                                  _sortTypeList.map((value) {
+                                                    return DropdownMenuItem(
+                                                        value: value,
+                                                        child: Text(
+                                                          value,
+                                                          style: TextStyle(
+                                                              color: Colors.black,
+                                                              fontSize:
+                                                              buttonFontSize),
+                                                        ));
+                                                  }).toList(),
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      _selectedSortType = value as String;
+                                                      _postIndex = 0;
+                                                      _searchedList.clear();
+                                                      _searchPosts(_searchTextController.text.isEmpty ? "%" : _searchTextController.text, context);
+                                                    });
+                                                  },
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      GridView.builder(
+                                        shrinkWrap: true,
+                                        physics: ClampingScrollPhysics(),
+                                        scrollDirection: Axis.vertical,
+                                        primary: true,
+                                        gridDelegate:
+                                        SliverGridDelegateWithFixedCrossAxisCount(
+                                            crossAxisCount: 3,
+                                            mainAxisSpacing: 15.0,
+                                            childAspectRatio: w > h ? 8/7 : 3/5),
+                                        itemCount: _searchedList.length + 1,
+                                        itemBuilder: (context, index) {
+                                          if (_searchedList.length == index) {
+                                            return _isPostsLoading  ? Container(
+                                              child: Center(
+                                                child: Column(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                  children: [
+                                                    CircularProgressIndicator(color: Colors.blue,),
+                                                    Padding(
+                                                      padding: EdgeInsets.all(_baseSize/10),
+                                                      child: Text("로딩중", style: TextStyle(color: Colors.blue, fontSize: _baseSize/2),),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                            ) : Container();
+                                          }
+                                          return _searchedList[index];
+                                        },
+                                      ),
+                                    ],
+                                  )
+                              )
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),

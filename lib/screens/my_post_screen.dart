@@ -117,7 +117,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
               child: Center(
                 child: Container(
                   padding: EdgeInsets.all(_baseSize/10),
-                  decoration: CustomBoxDecoration.buildWhiteBoxDecoration(),
+                  decoration: CustomBoxDecoration.buildWhiteBoxDecoration(false),
                   child: Flex(
                     direction: Axis.vertical,
                     children: [

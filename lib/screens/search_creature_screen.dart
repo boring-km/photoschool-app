@@ -1,3 +1,4 @@
+import 'package:animated_background/animated_background.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -26,7 +27,7 @@ class SearchCreatureScreen extends StatefulWidget {
   _FindCreatureState createState() => _FindCreatureState();
 }
 
-class _FindCreatureState extends State<SearchCreatureScreen> {
+class _FindCreatureState extends State<SearchCreatureScreen> with TickerProviderStateMixin {
   late User? _user;
   final _creatureSearchController = TextEditingController();
   final List<CreatureDetailResponse> _creatureDataList = [];
@@ -100,157 +101,172 @@ class _FindCreatureState extends State<SearchCreatureScreen> {
         backgroundColor: Colors.transparent,
         title: AppBarTitle(user: _user, image: "creature"),
       ),
-      body: Padding(
-        padding: EdgeInsets.only(top: base / 20, left: base / 4, right: base / 4),
-        child: Column(
-          children: [
-            Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.all(h / 50),
-                    child: Container(
-                      width: w * (2 / 3),
-                      height: buttonHeight,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius:
-                          BorderRadius.all(Radius.circular(h / 40)),
-                          border: Border.all(width: 2, color: Colors.black)),
-                      child: Padding(
-                        padding: EdgeInsets.only(left: h / 80, right: 80),
-                        child: TextField(
-                          decoration: InputDecoration(
-                            floatingLabelBehavior:FloatingLabelBehavior.never,
-                            border: InputBorder.none,
-                            icon: Icon(Icons.search, size: base/3, color: Colors.black45,),
-                            labelText: '백과사전 검색',
-                            labelStyle: TextStyle(color: Colors.black45),
-                            fillColor: Colors.black,),
-                          style: TextStyle(color: Colors.black, fontSize: base/4),
-                          controller: _creatureSearchController,
-                          onSubmitted: (str) async {
+      body: AnimatedBackground(
+        behaviour: RandomParticleBehaviour(options: ParticleOptions(
+          particleCount: 60,
+          spawnOpacity: 0.3,
+          opacityChangeRate: 0.45,
+          minOpacity: 0.1,
+          maxOpacity: 0.35,
+          spawnMinRadius: 10,
+          spawnMaxRadius: 20,
+          spawnMinSpeed: 1,
+          spawnMaxSpeed: 15,
+          baseColor: Colors.white
+        )),
+        vsync: this,
+        child: Padding(
+          padding: EdgeInsets.only(top: base / 20, left: base / 4, right: base / 4),
+          child: Column(
+            children: [
+              Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(h / 50),
+                      child: Container(
+                        width: w * (2 / 3),
+                        height: buttonHeight,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius:
+                            BorderRadius.all(Radius.circular(h / 40)),
+                            border: Border.all(width: 2, color: Colors.black)),
+                        child: Padding(
+                          padding: EdgeInsets.only(left: h / 80, right: 80),
+                          child: TextField(
+                            decoration: InputDecoration(
+                              floatingLabelBehavior:FloatingLabelBehavior.never,
+                              border: InputBorder.none,
+                              icon: Icon(Icons.search, size: base/3, color: Colors.black45,),
+                              labelText: '백과사전 검색',
+                              labelStyle: TextStyle(color: Colors.black45),
+                              fillColor: Colors.black,),
+                            style: TextStyle(color: Colors.black, fontSize: base/4),
+                            controller: _creatureSearchController,
+                            onSubmitted: (str) async {
+                              _currentPage = 1;
+                              _creatureDataList.clear();
+                              _wjPediaList.clear();
+                              setState(() {
+                                _isSearching = true;
+                              });
+                              await _allSearch(str);
+                              setState(() {
+                                _isSearching = false;
+                              });
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+                    ConstrainedBox(
+                      constraints: BoxConstraints.tightFor(
+                          width: buttonWidth, height: buttonHeight),
+                      child: ElevatedButton(
+                          onPressed: () async {
                             _currentPage = 1;
                             _creatureDataList.clear();
-                            _wjPediaList.clear();
                             setState(() {
                               _isSearching = true;
                             });
-                            await _allSearch(str);
+                            await _allSearch(_creatureSearchController.text);
                             setState(() {
                               _isSearching = false;
                             });
                           },
-                        ),
+                          style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(h / 50),),
+                              primary: CustomColors.orange,
+                              onSurface: Colors.orangeAccent),
+                          child: Text("검색",
+                            style: TextStyle(
+                                color: Colors.white,
+                                shadows: [
+                                  Shadow(
+                                      blurRadius: 4.0,
+                                      color: Colors.black45,
+                                      offset: Offset(2.0, 2.0)
+                                  )
+                                ],
+                                fontSize: buttonFontSize,
+                                fontWeight: FontWeight.w700),)),
+                    ),
+                  ],
+                ),
+              ),
+              !_isSearching ? Container(
+                child: Expanded(
+                  child: NotificationListener<ScrollEndNotification>(
+                    onNotification: (scrollEnd) {
+                      final metrics = scrollEnd.metrics;
+                      if (metrics.atEdge) {
+                        if (metrics.pixels != 0) {
+                          if (_creatureReceived == -1 || _creatureReceived == 9) {
+                            setState(() {
+                              _isLoading = true;
+                              _currentPage++;
+                              _searchCreature(_creatureSearchController.text, _currentPage);
+                            });
+                          }
+                        }
+                      }
+                      return true;
+                    },
+                    child: GridView.builder(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        childAspectRatio: 4 / 5,
                       ),
+                      itemCount: _creatureDataList.length + _wjPediaList.length + 1,
+                      itemBuilder: (context, index) {
+                        if (index < _wjPediaList.length) {
+                          return _buildGridViewItem("pedia", _wjPediaList[index], base);
+                        } else if (index < _wjPediaList.length + _creatureDataList.length) {
+                          return _buildGridViewItem("creature", _creatureDataList[index-_wjPediaList.length], base);
+                        } else {
+                          return _isLoading ? Container(
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  CircularProgressIndicator(color: Colors.white,),
+                                  Padding(
+                                    padding: EdgeInsets.all(base/10),
+                                    child: Text("로딩중", style: TextStyle(color: Colors.white, fontSize: base/2),),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ) : Container();
+                        }
+                      },
                     ),
                   ),
-                  ConstrainedBox(
-                    constraints: BoxConstraints.tightFor(
-                        width: buttonWidth, height: buttonHeight),
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        _currentPage = 1;
-                        _creatureDataList.clear();
-                        setState(() {
-                          _isSearching = true;
-                        });
-                        await _allSearch(_creatureSearchController.text);
-                        setState(() {
-                          _isSearching = false;
-                        });
-                      },
-                      style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(h / 50),),
-                          primary: CustomColors.orange,
-                          onSurface: Colors.orangeAccent),
-                      child: Text("검색",
+                ),
+              ) : Container(
+                child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(base/2),
+                      child: Text("로딩중",
                         style: TextStyle(
                             color: Colors.white,
                             shadows: [
                               Shadow(
                                   blurRadius: 4.0,
                                   color: Colors.black45,
-                                  offset: Offset(2.0, 2.0)
+                                  offset: Offset(3.0, 3.0)
                               )
                             ],
-                            fontSize: buttonFontSize,
-                            fontWeight: FontWeight.w700),)),
-                  ),
-                ],
-              ),
-            ),
-            !_isSearching ? Container(
-              child: Expanded(
-                child: NotificationListener<ScrollEndNotification>(
-                  onNotification: (scrollEnd) {
-                    final metrics = scrollEnd.metrics;
-                    if (metrics.atEdge) {
-                      if (metrics.pixels != 0) {
-                        if (_creatureReceived == -1 || _creatureReceived == 9) {
-                          setState(() {
-                            _isLoading = true;
-                            _currentPage++;
-                            _searchCreature(_creatureSearchController.text, _currentPage);
-                          });
-                        }
-                      }
-                    }
-                    return true;
-                  },
-                  child: GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        childAspectRatio: 4 / 5,
-                    ),
-                    itemCount: _creatureDataList.length + _wjPediaList.length + 1,
-                    itemBuilder: (context, index) {
-                      if (index < _wjPediaList.length) {
-                        return _buildGridViewItem("pedia", _wjPediaList[index], base);
-                      } else if (index < _wjPediaList.length + _creatureDataList.length) {
-                        return _buildGridViewItem("creature", _creatureDataList[index-_wjPediaList.length], base);
-                      } else {
-                        return _isLoading ? Container(
-                          child: Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                CircularProgressIndicator(color: Colors.white,),
-                                Padding(
-                                  padding: EdgeInsets.all(base/10),
-                                  child: Text("로딩중", style: TextStyle(color: Colors.white, fontSize: base/2),),
-                                )
-                              ],
-                            ),
-                          ),
-                        ) : Container();
-                      }
-                    },
-                  ),
+                            fontSize: buttonFontSize * 2),),
+                    )
                 ),
-              ),
-            ) : Container(
-              child: Center(
-                child: Padding(
-                  padding: EdgeInsets.all(base/2),
-                  child: Text("로딩중",
-                    style: TextStyle(
-                        color: Colors.white,
-                        shadows: [
-                          Shadow(
-                              blurRadius: 4.0,
-                              color: Colors.black45,
-                              offset: Offset(3.0, 3.0)
-                          )
-                        ],
-                        fontSize: buttonFontSize * 2),),
-                )
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );

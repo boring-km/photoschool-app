@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CustomColors {
-  static final Color deepblue = Color(0xFF004f5e);
+  static final Color deepblue = Color(0xff0e5b6a);
   static final Color orange = Color(0xFFff9e40);
   static final Color orangeAccent = Color(0xfffa8c22);
 

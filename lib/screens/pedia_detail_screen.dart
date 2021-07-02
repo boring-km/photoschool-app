@@ -101,7 +101,7 @@ class _PediaDetailState extends State<PediaDetailScreen> {
           padding: EdgeInsets.all(_baseSize / 3),
           child: Center(
             child: Container(
-              decoration: CustomBoxDecoration.buildWhiteBoxDecoration(),
+              decoration: CustomBoxDecoration.buildWhiteBoxDecoration(false),
               child: Flex(
                 direction: Axis.vertical,
                 children: [
