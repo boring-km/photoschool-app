@@ -177,7 +177,7 @@ class CustomAPIService {
     return _getResult(result)['result'];
   }
 
-  static Future<bool> updateImage(int postId, String tbImgURL, String imgURL) async {
+  static Future updateImage(int postId, String tbImgURL, String imgURL) async {
     final domain = dotenv.env["server_domain"]!;
     final idToken = await FirebaseAuth.instance.currentUser!.getIdToken();
     final result = await Http.patchWithJWT("$domain/update/image",
