@@ -31,14 +31,14 @@ class PublicAPIService {
     return creatureList;
   }
 
-  static Future<CreatureDetailResponse> getChildBookDetail(String apiId, String keyword) async {
+  static Future<dynamic> getChildBookDetail(String apiId, String keyword) async {
     final baseUrl = dotenv.env["public_api_detail_url"]!;
     final serviceKey = dotenv.env["public_api_key"]!;
     final target = CreatureDetailRequest(baseUrl, serviceKey, apiId).toString();
     var result = await Http.get(target);
     if (result['error'] != null) {
       print(result['errorCode']);
-      throw "에러";
+      return false;
     } else {
       final searched = result['data'];
       final item = XMLParser.parseXMLItem(searched);

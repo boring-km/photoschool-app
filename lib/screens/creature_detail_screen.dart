@@ -89,7 +89,7 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
           padding: EdgeInsets.all(_baseSize/3),
           child: Center(
             child: Container(
-              decoration: CustomBoxDecoration.buildTransparentDecoration(),
+              decoration: CustomBoxDecoration.buildWhiteBoxDecoration(),
               child: Flex(
                 direction: Axis.vertical,
                 children: [
@@ -161,7 +161,7 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                               padding: EdgeInsets.only(top: _baseSize / 3, left: _baseSize / 2),
                               child: Text(
                                 "${_creature.name}",
-                                style: TextStyle(fontSize: _baseSize * (2 / 3), fontWeight: FontWeight.w700, color: Colors.white),
+                                style: TextStyle(fontSize: _baseSize * (2 / 3), fontWeight: FontWeight.w700, color: Colors.black),
                               ),
                             ),
                             Padding(
@@ -170,7 +170,7 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                                 children: [
                                   Text(
                                     "종류: ${_creature.type}",
-                                    style: TextStyle(fontSize: _baseSize / 4, fontWeight: FontWeight.w700, color: Colors.white),
+                                    style: TextStyle(fontSize: _baseSize / 4, fontWeight: FontWeight.w700, color: Colors.black),
                                   ),
                                 ],
                               ),
@@ -188,7 +188,7 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                           child: Html(
                             data: _creature.detail,
                             style: {
-                              "html": Style(color: Colors.white, fontSize: FontSize(_baseSize/3)),
+                              "html": Style(color: Colors.black, fontSize: FontSize(_baseSize/3)),
                             },
                           ),
                         ),
@@ -204,14 +204,14 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                           child: Text(
                             "아직 관련 사진을 찍은 친구가 없어요!",
                             textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.white, fontSize: _baseSize * (1 / 3)),
+                            style: TextStyle(color: Colors.black, fontSize: _baseSize * (1 / 3)),
                           ),
                         ) : Padding(
                           padding: EdgeInsets.symmetric(vertical: _baseSize / 3),
                           child: Text(
                             "친구들이 찍은 사진",
                             textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.white, fontSize: _baseSize * (2 / 3)),
+                            style: TextStyle(color: Colors.black, fontSize: _baseSize * (2 / 3)),
                           ),
                         ),
                         _othersImageCardList.length == 1 ? Container() : Padding(
@@ -286,7 +286,6 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
       padding: EdgeInsets.all(baseSize / 4),
       child: Container(child: null),
     ) : Material(
-      color: Colors.transparent,
       child: InkWell(
         onTap: () {
           ImageDialog.show(context, imageUrl);

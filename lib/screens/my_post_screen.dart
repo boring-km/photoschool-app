@@ -117,14 +117,14 @@ class _MyPostScreenState extends State<MyPostScreen> {
               child: Center(
                 child: Container(
                   padding: EdgeInsets.all(_baseSize/10),
-                  decoration: CustomBoxDecoration.buildTransparentDecoration(),
+                  decoration: CustomBoxDecoration.buildWhiteBoxDecoration(),
                   child: Flex(
                     direction: Axis.vertical,
                     children: [
                       Container(
                         width: w * 0.9,
                         height: _baseSize/2,
-                        child: Text("학교: $_schoolName", style: TextStyle(fontSize: _baseSize/3),),
+                        child: Text("학교: $_schoolName", style: TextStyle(color: Colors.white, fontSize: _baseSize/3),),
                       ),
                       Expanded(
                         child: NotificationListener<ScrollEndNotification>(
@@ -150,7 +150,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
                             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 3,
                                 mainAxisSpacing: 2.0,
-                                childAspectRatio: w > h ? 9/10 : 3/5),
+                                childAspectRatio: w > h ? 4/5 : 3/5),
                             itemCount: _postList.length + 1,
                             itemBuilder: (context, index) {
                               if (_postList.length == index) {

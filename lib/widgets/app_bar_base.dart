@@ -66,10 +66,7 @@ class _AppBarTitleState extends State<AppBarTitle> {
 
     if (_image == "creature") {
       image = Container(
-        decoration: BoxDecoration(
-          color: CustomColors.orange,
-          borderRadius: BorderRadius.horizontal(left: Radius.circular(16.0), right: Radius.circular(16.0))
-        ),
+        color: Colors.transparent,
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: baseSize/8, horizontal: baseSize/3),
           child: Row(
@@ -101,10 +98,7 @@ class _AppBarTitleState extends State<AppBarTitle> {
       );
     } else if (_image == "friends") {
       image = Container(
-        decoration: BoxDecoration(
-            color: CustomColors.creatureGreen,
-            borderRadius: BorderRadius.horizontal(left: Radius.circular(16.0), right: Radius.circular(16.0))
-        ),
+        color: Colors.transparent,
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: baseSize/8, horizontal: baseSize/3),
           child: Row(
@@ -168,113 +162,115 @@ class _AppBarTitleState extends State<AppBarTitle> {
       );
     }
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          '포토스쿨',
-          style: TextStyle(
-            color: Colors.white,
-            fontFamily: 'SDSamlip',
-            fontSize: 28,
-          ),
-        ),
-        Row(
-          children: [
-            image,
-
-          ],
-        ),
-        Padding(
-          padding: EdgeInsets.all(h / 50),
-          child: Container(
-            decoration: BoxDecoration(
-              color: CustomColors.friendsYellow,
-              borderRadius: BorderRadius.all(Radius.circular(4.0))
+    return Padding(
+      padding: EdgeInsets.only(top: 4.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            '포토스쿨',
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: 'SDSamlip',
+              fontSize: 28,
             ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(left: w/80),
-                  child: Icon(
-                    CupertinoIcons.person_alt_circle_fill,
-                    color: Colors.black,
-                    size: baseSize * (2/3),
-                  ),
-                ),
-                _user != null ?
-                _isSigningOut ? CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                ) : PopupMenuButton(
-                    onSelected: (result) async {
-                      if (result == 1) {
-                        Navigator.of(context)
-                            .push(ScreenAnimation.routeTo(MyPostScreen(user: _user!)));
-                      } else {
-                        setState(() {
-                          _isSigningOut = true;
-                        });
-                        await Authentication.signOut(context: context);
-                        setState(() {
-                          _isSigningOut = false;
-                        });
-                        Navigator.of(context)
-                            .pushReplacement(ScreenAnimation.routeTo(SignInScreen()));
-                      }
-                    },
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: baseSize/4),
-                      child: Text(
-                        _nickname,
-                        style: TextStyle(color: Colors.black, fontFamily: 'KCCDodam', fontSize: baseSize/2),
-                      ),
+          ),
+          Row(
+            children: [
+              image,
+            ],
+          ),
+          Padding(
+            padding: EdgeInsets.all(h / 50),
+            child: Container(
+              decoration: BoxDecoration(
+                color: CustomColors.friendsYellow,
+                borderRadius: BorderRadius.all(Radius.circular(4.0))
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: w/80),
+                    child: Icon(
+                      CupertinoIcons.person_alt_circle_fill,
+                      color: Colors.black,
+                      size: baseSize * (2/3),
                     ),
-                    color: CustomColors.lightAmber,
-                    offset: Offset(0, 45),
-                    // icon: Icon(Icons.menu, color: Colors.black),
-                    itemBuilder: (context) => [
-                          PopupMenuItem(
-                              value: 1,
-                              child: Row(
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.all(2.0),
-                                    child: Icon(
-                                      Icons.manage_accounts,
-                                      color: Colors.black,
+                  ),
+                  _user != null ?
+                  _isSigningOut ? CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  ) : PopupMenuButton(
+                      onSelected: (result) async {
+                        if (result == 1) {
+                          Navigator.of(context)
+                              .push(ScreenAnimation.routeTo(MyPostScreen(user: _user!)));
+                        } else {
+                          setState(() {
+                            _isSigningOut = true;
+                          });
+                          await Authentication.signOut(context: context);
+                          setState(() {
+                            _isSigningOut = false;
+                          });
+                          Navigator.of(context)
+                              .pushReplacement(ScreenAnimation.routeTo(SignInScreen()));
+                        }
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: baseSize/4),
+                        child: Text(
+                          _nickname,
+                          style: TextStyle(color: Colors.black, fontFamily: 'KCCDodam', fontSize: baseSize/2),
+                        ),
+                      ),
+                      color: CustomColors.lightAmber,
+                      offset: Offset(0, 45),
+                      // icon: Icon(Icons.menu, color: Colors.black),
+                      itemBuilder: (context) => [
+                            PopupMenuItem(
+                                value: 1,
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.all(2.0),
+                                      child: Icon(
+                                        Icons.manage_accounts,
+                                        color: Colors.black,
+                                      ),
                                     ),
-                                  ),
-                                  Text(
-                                    '활동관리',
-                                    style: TextStyle(color: Colors.black, fontSize: baseSize/2),
-                                  )
-                                ],
-                              )
-                          ),
-                          PopupMenuItem(
-                              value: 2,
-                              child: Row(
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.all(2.0),
-                                    child: Icon(
-                                      Icons.logout,
-                                      color: Colors.black,
+                                    Text(
+                                      '활동관리',
+                                      style: TextStyle(color: Colors.black, fontSize: baseSize/2),
+                                    )
+                                  ],
+                                )
+                            ),
+                            PopupMenuItem(
+                                value: 2,
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.all(2.0),
+                                      child: Icon(
+                                        Icons.logout,
+                                        color: Colors.black,
+                                      ),
                                     ),
-                                  ),
-                                  Text(
-                                    '로그아웃',
-                                    style: TextStyle(color: Colors.black, fontSize: baseSize/2),
-                                  )
-                                ],
-                              ))
-                        ]
-                ) : Container()
-              ],
+                                    Text(
+                                      '로그아웃',
+                                      style: TextStyle(color: Colors.black, fontSize: baseSize/2),
+                                    )
+                                  ],
+                                ))
+                          ]
+                  ) : Container()
+                ],
+              ),
             ),
-          ),
-        )
-      ],
+          )
+        ],
+      ),
     );
   }
 }

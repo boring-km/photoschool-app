@@ -120,66 +120,13 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
                 padding: EdgeInsets.all(_baseSize / 3),
                 child: Center(
                   child: Container(
-                    decoration: CustomBoxDecoration.buildTransparentDecoration(),
+                    decoration: CustomBoxDecoration.buildWhiteBoxDecoration(isTransparent: true),
                     child: AnimatedBackground(
                       behaviour: BubblesBehaviour(options: BubbleOptions(bubbleCount: 30, minTargetRadius: 30, maxTargetRadius: 100, growthRate: 5, popRate: 40)),
                       vsync: this,
                       child: Flex(
                         direction: Axis.vertical,
                         children: [
-                          Container(
-                            width: w * (9 / 10),
-                            height: _baseSize,
-                            color: Colors.transparent,
-                            child: Padding(
-                              padding: EdgeInsets.only(top: _baseSize / 10),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(
-                                                  _baseSize / 2)),
-                                          primary: CustomColors.lightRed,
-                                          onSurface: CustomColors.red),
-                                      onPressed: () async {
-                                        await _buildSchoolRankDialog(context);
-                                      },
-                                      child: Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: _baseSize / 8),
-                                        child: Container(
-                                          height: _baseSize * (2 / 3),
-                                          child: Row(
-                                            children: [
-                                              Hero(
-                                                tag: 'school',
-                                                child: Icon(
-                                                  Icons.school,
-                                                  color: Colors.white,
-                                                  size: _baseSize / 2,
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                    left: _baseSize / 5),
-                                                child: Text(
-                                                  "학교 랭킹",
-                                                  style: TextStyle(
-                                                      fontSize: _baseSize / 3,
-                                                      color: Colors.white),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      )),
-                                ],
-                              ),
-                            ),
-                          ),
                           Expanded(
                               child: NotificationListener<ScrollEndNotification>(
                                   onNotification: (scrollEnd) {
@@ -203,6 +150,59 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
                                   },
                                   child: ListView(
                                     children: [
+                                      Container(
+                                        width: w * (9 / 10),
+                                        height: _baseSize,
+                                        color: Colors.transparent,
+                                        child: Padding(
+                                          padding: EdgeInsets.only(top: _baseSize / 10),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            mainAxisAlignment: MainAxisAlignment.end,
+                                            children: [
+                                              ElevatedButton(
+                                                  style: ElevatedButton.styleFrom(
+                                                      shape: RoundedRectangleBorder(
+                                                          borderRadius: BorderRadius.circular(
+                                                              _baseSize / 2)),
+                                                      primary: CustomColors.lightRed,
+                                                      onSurface: CustomColors.red),
+                                                  onPressed: () async {
+                                                    await _buildSchoolRankDialog(context);
+                                                  },
+                                                  child: Padding(
+                                                    padding: EdgeInsets.symmetric(
+                                                        horizontal: _baseSize / 8),
+                                                    child: Container(
+                                                      height: _baseSize * (2 / 3),
+                                                      child: Row(
+                                                        children: [
+                                                          Hero(
+                                                            tag: 'school',
+                                                            child: Icon(
+                                                              Icons.school,
+                                                              color: Colors.white,
+                                                              size: _baseSize / 2,
+                                                            ),
+                                                          ),
+                                                          Padding(
+                                                            padding: EdgeInsets.only(
+                                                                left: _baseSize / 5),
+                                                            child: Text(
+                                                              "학교 랭킹",
+                                                              style: TextStyle(
+                                                                  fontSize: _baseSize / 3,
+                                                                  color: Colors.white),
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  )),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
                                       Align(
                                         alignment: Alignment.centerLeft,
                                         child: Padding(
@@ -446,7 +446,7 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
                                               crossAxisCount: 3,
                                               mainAxisSpacing: 8.0,
                                               crossAxisSpacing: 8.0,
-                                              childAspectRatio: w > h ? 8/7 : 3/5),
+                                              childAspectRatio: w > h ? 8/9 : 3/5),
                                           itemCount: _searchedList.length + 1,
                                           itemBuilder: (context, index) {
                                             if (_searchedList.length == index) {
@@ -456,10 +456,10 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
                                                     mainAxisAlignment: MainAxisAlignment.center,
                                                     crossAxisAlignment: CrossAxisAlignment.center,
                                                     children: [
-                                                      CircularProgressIndicator(color: Colors.blue,),
+                                                      CircularProgressIndicator(color: Colors.white,),
                                                       Padding(
                                                         padding: EdgeInsets.all(_baseSize/10),
-                                                        child: Text("로딩중", style: TextStyle(color: Colors.blue, fontSize: _baseSize/2),),
+                                                        child: Text("로딩중", style: TextStyle(color: Colors.white, fontSize: _baseSize/2),),
                                                       )
                                                     ],
                                                   ),

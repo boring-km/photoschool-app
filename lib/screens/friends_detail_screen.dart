@@ -100,7 +100,7 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
           padding: EdgeInsets.all(_baseSize/3),
           child: Center(
             child: Container(
-              decoration: CustomBoxDecoration.buildTransparentDecoration(),
+              decoration: CustomBoxDecoration.buildWhiteBoxDecoration(),
               child: Flex(
                 direction: Axis.vertical,
                 children: [
@@ -395,7 +395,7 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
     return _original.runtimeType == CreatureDetailResponse ?
     Image.network(
       (_original as CreatureDetailResponse).imgUrl1,
-      height: _baseSize * 3,
+      height: _baseSize * 2.5,
       loadingBuilder: (context, child, progress) {
         if (progress == null) return child;
         return Container(child: Center(child: Text("로딩중", style: TextStyle(color: CustomColors.creatureGreen, fontSize: _baseSize/2),),),);
