@@ -45,7 +45,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   ],
                 ),
               ),
-              !Platform.isWindows ? FutureBuilder(
+              !(Platform.isWindows || Platform.isMacOS) ? FutureBuilder(
                 future: Authentication.initializeFirebase(context: context),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {

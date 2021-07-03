@@ -11,7 +11,7 @@ Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: '.env');
 
-  if (Platform.isWindows) {
+  if (Platform.isWindows || Platform.isMacOS) {
     runApp(MyApp());
   } else {
     await firebase_core.Firebase.initializeApp();
