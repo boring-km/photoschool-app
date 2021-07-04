@@ -10,6 +10,7 @@ import '../widgets/app_bar_base.dart';
 import '../widgets/box_decoration.dart';
 import '../widgets/hero_dialog_route.dart';
 import '../widgets/user_image_card.dart';
+import 'school_map_screen.dart';
 
 class FriendsMainScreen extends StatefulWidget {
 
@@ -540,7 +541,7 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
     });
   }
 
-  _buildSchoolRankDialog(BuildContext context) async {
+  _buildSchoolRankDialog(BuildContext rootContext) async {
     var _baseSize = 80.0;
     final schoolList = await CustomAPIService.getSchoolRank();
     final widgetList = <Widget>[];
@@ -581,7 +582,7 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
           )
       );
     }
-    Navigator.push(context,
+    Navigator.push(rootContext,
         HeroDialogRoute(
             builder: (context) =>
                 Center(
@@ -614,18 +615,41 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
                             ),
                           ),
                         ),
-                        Container(
-                          width: _baseSize * 2,
-                          height: _baseSize / 2,
-                          child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              style: ElevatedButton.styleFrom(
-                                primary: CustomColors.red
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Container(
+                              width: _baseSize * 2,
+                              height: _baseSize / 2,
+                              child: ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    primary: CustomColors.red
+                                  ),
+                                  child: Text("닫기", style: TextStyle(fontSize: _baseSize/3),)
                               ),
-                              child: Text("닫기", style: TextStyle(fontSize: _baseSize/3),)
-                          ),
+                            ),
+                            Container(
+                              width: _baseSize * 2,
+                              height: _baseSize / 2,
+                              child: ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    Navigator.of(rootContext).push(
+                                        MaterialPageRoute(
+                                            builder: (context) => SchoolRankMap(schoolList: schoolList)
+                                        )
+                                    );
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                      primary: CustomColors.red
+                                  ),
+                                  child: Text("지도 보기", style: TextStyle(fontSize: _baseSize/3),)
+                              ),
+                            ),
+                          ],
                         )
                       ],
                     ),
