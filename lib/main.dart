@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:firebase_core/firebase_core.dart' as firebase_core;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,13 +8,8 @@ import 'screens/signin_screen.dart';
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: '.env');
-
-  if (Platform.isWindows || Platform.isMacOS) {
-    runApp(MyApp());
-  } else {
-    await firebase_core.Firebase.initializeApp();
-    runApp(MyApp());
-  }
+  await firebase_core.Firebase.initializeApp();
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {

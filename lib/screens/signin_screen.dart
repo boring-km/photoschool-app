@@ -1,12 +1,10 @@
-import 'dart:io' show Platform;
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:photoschool/screens/select_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../res/colors.dart';
 import '../utils/auth.dart';
+import 'select_screen.dart';
 
 class SignInScreen extends StatefulWidget {
   @override
@@ -45,7 +43,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   ],
                 ),
               ),
-              !(Platform.isWindows || Platform.isMacOS) ? FutureBuilder(
+              FutureBuilder(
                 future: Authentication.initializeFirebase(context: context),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
@@ -59,17 +57,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                   );
                 },
-              ) : ElevatedButton(
-                  onPressed: () async {
-                    final prefs = await SharedPreferences.getInstance();
-                    prefs.setString('nickname', "테스트 계정");
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) => SelectScreen(),
-                      ),
-                    );
-                  },
-                  child: Text("로그인 없이 이용")),
+              )
             ],
           ),
         ),
