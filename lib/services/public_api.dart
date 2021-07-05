@@ -15,11 +15,11 @@ class PublicAPIService {
   static Future<List<CreatureResponse>> getChildBookSearch(String keyword, int page) async {
     String? baseUrl = dotenv.env["public_api_list_url"]!;
     if (kIsWeb) {
-      baseUrl = dotenv.env["server_domain"];
+      baseUrl = "${dotenv.env["server_domain"]}/creature";
     }
     final serviceKey = dotenv.env["public_api_key"]!;
     final numOfRows = 9;
-    final target = CreatureRequest("$baseUrl/creature", serviceKey, 1, keyword, numOfRows, page).toString();
+    final target = CreatureRequest("$baseUrl", serviceKey, 1, keyword, numOfRows, page).toString();
     var creatureList = <CreatureResponse>[];
     var result = await Http.get(target);
     if (result['error'] != null) {
@@ -27,6 +27,7 @@ class PublicAPIService {
     } else {
       final searched = result['data'];
       if (kIsWeb) {
+        print("kIsWeb");
         final list = (jsonDecode(searched)['response'])['body']['items']['item'];
         for (var item in list) {
           final apiId = item['childLvbngPilbkNo'];
@@ -35,9 +36,7 @@ class PublicAPIService {
           creatureList.add(CreatureResponse(name, type, "$apiId"));
         }
       } else {
-        print("other");
         final list = XMLParser.parseXMLItems(searched);
-        var creatureList = <CreatureResponse>[];
         for (var item in list) {
           final apiId = int.parse(item.getChild('childLvbngPilbkNo')!.text!);
           final name = item.getChild('lvbngKrlngNm')!.text!;
@@ -50,12 +49,12 @@ class PublicAPIService {
   }
 
   static Future<dynamic> getChildBookDetail(String apiId, String keyword) async {
-    String? baseUrl = dotenv.env["public_api_list_url"]!;
+    String? baseUrl = dotenv.env["public_api_detail_url"]!;
     if (kIsWeb) {
-      baseUrl = dotenv.env["server_domain"];
+      baseUrl = "${dotenv.env["server_domain"]}/creature/detail";
     }
     final serviceKey = dotenv.env["public_api_key"]!;
-    final target = CreatureDetailRequest("$baseUrl/creature/detail", serviceKey, apiId).toString();
+    final target = CreatureDetailRequest(baseUrl, serviceKey, apiId).toString();
     var result = await Http.get(target);
     if (result['error'] != null) {
       print(result['errorCode']);
@@ -68,6 +67,9 @@ class PublicAPIService {
             item['hbttNm'], item['lvbngDscrt'], item['imgUrl1'], item['imgUrl2']);
       } else {
         final item = XMLParser.parseXMLItem(searched);
+        if (item == null) {
+          throw "에러";
+        }
         return CreatureDetailResponse(
             apiId,
             item.getChild('lvbngKrlngNm')!.text != null ? item.getChild('lvbngKrlngNm')!.text! : "",

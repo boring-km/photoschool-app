@@ -17,11 +17,11 @@ class XMLParser {
     }
   }
   
-  static XmlElement parseXMLItem(String searched) {
+  static XmlElement? parseXMLItem(String searched) {
     var item = XmlDocument.from(searched)!
         .getChild("response")!
         .getChild("body")!
-        .getChild("item")!;
+        .getChild("item");
     return item;
   }
 }
