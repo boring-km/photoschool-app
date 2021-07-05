@@ -83,7 +83,7 @@ class _SchoolRankMapState extends State<SchoolRankMap> {
                   mapType: MapType.normal,
                   markers: Set.from(_markers),
                   myLocationButtonEnabled: false,
-                  initialCameraPosition: CameraPosition(target: _school!.latLng, zoom:11),
+                  initialCameraPosition: CameraPosition(target: _school!.latLng, zoom:13),
                   onMapCreated: _controller.complete,
                 )
             ),

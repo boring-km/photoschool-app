@@ -13,7 +13,7 @@ void main() {
   });
 
   test("웅진 포토라이브러리에서 곰을 검색하면...", () async {
-    var result = await WoongJinAPIService.searchPhotoLibrary("곰");
+    var result = await WoongJinAPIService.searchPhotoLibrary("곰", "110303");
     print(result);
   });
 

@@ -590,7 +590,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
       _imageFileToUpload = File(pickedFile.path);
       _thumbnailFileToUpload = await FlutterNativeImage.compressImage(
         pickedFile.path,
-        quality: 5,
+        quality: 20,
       );
       return true;
     } else {

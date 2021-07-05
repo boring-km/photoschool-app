@@ -53,10 +53,13 @@ class WoongJinAPIService {
       var category1 = "";
       var category2 = "";
       var category3 = "";
+      var categoryNo = "";
+
       if (categories.isNotEmpty) {
         category1 = categories[0]['ctgr1'];
         category2 = categories[0]['ctgr2'];
         category3 = categories[0]['ctgr3'];
+        // categoryNo = categories[0]['ctgr_no'];
       }
       var refs = item['eduRefHead'];
       var refList = <DictReference>[];
@@ -83,12 +86,12 @@ class WoongJinAPIService {
       }
       var detail = item['headwd_cntt'] as String;
       detail = detail.replaceAll("\n", "<br/><br/>").replaceAll("<style type='italic'>", "").replaceAll("</style>", "");
-      return DictDetailResponse(category1, category2, category3, refList, apiId, name, subName, description, mainImages, detail);
+      return DictDetailResponse(category1, category2, category3, categoryNo, refList, apiId, name, subName, description, mainImages, detail);
     }
     throw "에러";
   }
 
-  static Future<List<PhotoResponse>> searchPhotoLibrary(String keyword) async {
+  static Future<List<PhotoResponse>> searchPhotoLibrary(String keyword, String category) async {
     final domain = dotenv.env["woongjin_domain"]!;
     final apiPath = dotenv.env["woongjin_search_photo"];
     final response = await HttpWJDict.get("$domain$apiPath$keyword");

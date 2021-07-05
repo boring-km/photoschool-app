@@ -17,7 +17,7 @@ class UserImageCard {
           await route(context, item, user);
         },
         child: Padding(
-          padding: EdgeInsets.all(4),
+          padding: EdgeInsets.all(8),
           child: Container(
             width: 350,
             decoration: BoxDecoration(

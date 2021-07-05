@@ -60,7 +60,7 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
     } else if (_post.apiId[0] == 'P') {
       _original = await WoongJinAPIService.searchDetailWJPedia(_post.apiId.substring(1));
       _pedia = (await WoongJinAPIService.searchWJPedia((_original as DictDetailResponse).name))[0];
-      _dictImgUrl = (await WoongJinAPIService.searchPhotoLibrary((_original as DictDetailResponse).name))[0].imgURL;
+      _dictImgUrl = (await WoongJinAPIService.searchPhotoLibrary((_original as DictDetailResponse).name, (_original as DictDetailResponse).categoryNo))[0].imgURL;
     }
     if (_user != null) {
       final checkResult = await CustomAPIService.checkDoLikeBefore(widget._postId);
@@ -112,6 +112,7 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
                           scrollDirection: Axis.vertical,
                           children: [
                             Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
                                 InteractiveViewer(
                                   panEnabled: true,
@@ -146,37 +147,46 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
                                     },
                                   ),
                                 ),
-                                Column(
-                                  children: [
-                                    _buildOriginTitle(),
-                                    Padding(
-                                      padding: EdgeInsets.all(_baseSize/4),
-                                      child: _buildImageView(),
-                                    ),
-                                    Text("관련자료명", style: TextStyle(fontSize: _baseSize/4, color: Colors.black),),
-                                    Text(_original.name, style: TextStyle(fontSize: _baseSize/2, color: Colors.black),),
-                                    Padding(
-                                      padding: EdgeInsets.symmetric(vertical: _baseSize/4),
-                                      child: Container(
-                                        width: _baseSize*2,
-                                        height: _baseSize/2,
-                                        child: ElevatedButton(
-                                            onPressed: () {
-                                              Navigator.of(context).push(
-                                                MaterialPageRoute(
-                                                  builder: (context) => _original.runtimeType == CreatureDetailResponse ?
-                                                  CreatureDetailScreen(
-                                                      _original,
-                                                      user: _user
-                                                  ) : PediaDetailScreen(_pedia, user: _user),
-                                                ),
-                                              );
-                                            },
-                                            child: Text("상세보기", style: TextStyle(fontSize: _baseSize/3),)
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: Color(0xFFFFF4A6),
+                                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                                  ),
+                                  width: 200,
+                                  height: 500,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      _buildOriginTitle(),
+                                      Padding(
+                                        padding: EdgeInsets.all(_baseSize/4),
+                                        child: _buildImageView(),
+                                      ),
+                                      Text("관련자료명", style: TextStyle(fontSize: _baseSize/4, color: Colors.black),),
+                                      Text(_original.name, style: TextStyle(fontSize: _baseSize/2, color: Colors.black),),
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(vertical: _baseSize/4),
+                                        child: Container(
+                                          width: _baseSize*2,
+                                          height: _baseSize/2,
+                                          child: ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                    builder: (context) => _original.runtimeType == CreatureDetailResponse ?
+                                                    CreatureDetailScreen(
+                                                        _original,
+                                                        user: _user
+                                                    ) : PediaDetailScreen(_pedia, user: _user),
+                                                  ),
+                                                );
+                                              },
+                                              child: Text("상세보기", style: TextStyle(fontSize: _baseSize/3),)
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
@@ -295,6 +305,7 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
   Row _buildOriginTitle() {
     return _original.runtimeType == CreatureDetailResponse ?
     Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: _baseSize / 4),
@@ -313,6 +324,7 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
       ],
     ) :
     Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: _baseSize / 4),

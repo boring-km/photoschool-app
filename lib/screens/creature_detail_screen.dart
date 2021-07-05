@@ -199,76 +199,89 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                             style: TextStyle(color: Colors.grey, fontSize: _baseSize/5),
                           ),
                         ),
-                        _othersImageCardList.length == 1 ? Padding(
-                          padding: EdgeInsets.symmetric(vertical: _baseSize / 4),
-                          child: Text(
-                            "아직 관련 사진을 찍은 친구가 없어요!",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.black, fontSize: _baseSize * (1 / 3)),
-                          ),
-                        ) : Padding(
-                          padding: EdgeInsets.symmetric(vertical: _baseSize / 3),
-                          child: Text(
-                            "친구들이 찍은 사진",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.black, fontSize: _baseSize * (2 / 3)),
+                        Padding(
+                          padding: EdgeInsets.only(top: 12.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Color(0xF3FFEE98),
+                              borderRadius: BorderRadius.all(Radius.circular(28))
+                            ),
+                            child: Column(
+                              children: [
+                                _othersImageCardList.length == 1 ? Padding(
+                                  padding: EdgeInsets.symmetric(vertical: _baseSize / 4),
+                                  child: Text(
+                                    "아직 관련 사진을 찍은 친구가 없어요!",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(color: Colors.black, fontSize: _baseSize * (1 / 3)),
+                                  ),
+                                ) : Padding(
+                                  padding: EdgeInsets.symmetric(vertical: _baseSize / 4),
+                                  child: Text(
+                                    "친구들이 찍은 사진",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(color: Colors.black, fontSize: _baseSize * (2 / 3)),
+                                  ),
+                                ),
+                                _othersImageCardList.length == 1 ? Container() : Padding(
+                                  padding: EdgeInsets.all(_baseSize / 4),
+                                  child: Flex(
+                                    direction: Axis.horizontal,
+                                    children: [
+                                      Expanded(
+                                          child: Container(
+                                              height: 400,
+                                              child: NotificationListener<ScrollEndNotification>(
+                                                onNotification: (scrollEnd) {
+                                                  final metrics = scrollEnd.metrics;
+                                                  if (metrics.atEdge) {
+                                                    if (metrics.pixels != 0) {
+                                                      if (_received == -1 || _received == 5) {
+                                                        setState(() {
+                                                          _isLoading = true;
+                                                        });
+                                                        _othersIndex++;
+                                                        _buildOthersCardList(_creature.apiId, context);
+                                                      }
+                                                    }
+                                                  }
+                                                  return true;
+                                                },
+                                                child: ListView.builder(
+                                                  shrinkWrap: true,
+                                                  scrollDirection: Axis.horizontal,
+                                                  itemCount: _othersImageCardList.length + 1,
+                                                  itemBuilder: (context, index) {
+                                                    if (index == _othersImageCardList.length) {
+                                                      return _isLoading ? Container(
+                                                        child: Center(
+                                                          child: Column(
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                                            children: [
+                                                              CircularProgressIndicator(color: Colors.red,),
+                                                              Padding(
+                                                                padding: EdgeInsets.all(_baseSize/10),
+                                                                child: Text("로딩중", style: TextStyle(color: Colors.red, fontSize: _baseSize/2),),
+                                                              )
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ) : Container();
+                                                    }
+                                                    return _othersImageCardList[index];
+                                                  },
+                                                ),
+                                              )
+                                          )
+                                      )
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                         ),
-                        _othersImageCardList.length == 1 ? Container() : Padding(
-                          padding: EdgeInsets.symmetric(horizontal: _baseSize / 4),
-                          child: Flex(
-                            direction: Axis.horizontal,
-                            children: [
-                              Expanded(
-                                  child: Container(
-                                      height: 400,
-                                      child: NotificationListener<ScrollEndNotification>(
-                                        onNotification: (scrollEnd) {
-                                          final metrics = scrollEnd.metrics;
-                                          if (metrics.atEdge) {
-                                            if (metrics.pixels != 0) {
-                                              if (_received == -1 || _received == 5) {
-                                                setState(() {
-                                                  _isLoading = true;
-                                                });
-                                                _othersIndex++;
-                                                _buildOthersCardList(_creature.apiId, context);
-                                              }
-                                            }
-                                          }
-                                          return true;
-                                        },
-                                        child: ListView.builder(
-                                          shrinkWrap: true,
-                                          scrollDirection: Axis.horizontal,
-                                          itemCount: _othersImageCardList.length + 1,
-                                          itemBuilder: (context, index) {
-                                            if (index == _othersImageCardList.length) {
-                                              return _isLoading ? Container(
-                                                child: Center(
-                                                  child: Column(
-                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                                    children: [
-                                                      CircularProgressIndicator(color: Colors.red,),
-                                                      Padding(
-                                                        padding: EdgeInsets.all(_baseSize/10),
-                                                        child: Text("로딩중", style: TextStyle(color: Colors.red, fontSize: _baseSize/2),),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                              ) : Container();
-                                            }
-                                            return _othersImageCardList[index];
-                                          },
-                                        ),
-                                      )
-                                  )
-                              )
-                            ],
-                          ),
-                        )
                       ],
                     ),
                   ),
@@ -440,7 +453,7 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
       _imageFileToUpload = File(pickedFile.path);
       _thumbnailFileToUpload = await FlutterNativeImage.compressImage(
         pickedFile.path,
-        quality: 5,
+        quality: 20,
       );
       return true;
     } else {
