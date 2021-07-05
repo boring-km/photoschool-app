@@ -46,11 +46,18 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
   bool _isSearched = false;
   bool _isPostsLoading = false;
   bool _isAwardLoading = false;
+  final _focus = FocusNode();
 
   @override
   void initState() {
     _initialize();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _focus.dispose();
+    super.dispose();
   }
 
   void _initialize() async {
@@ -345,8 +352,8 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
                                                   style: TextStyle(
                                                       color: Colors.black,
                                                       fontSize: buttonFontSize),
-                                                  controller:
-                                                  _searchTextController,
+                                                  focusNode: _focus,
+                                                  controller: _searchTextController,
                                                   onSubmitted: (str) async {
                                                     _searchedList.clear();
                                                     _postIndex = 0;
@@ -364,8 +371,7 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
                                               onPressed: () async {
                                                 _searchedList.clear();
                                                 _postIndex = 0;
-                                                _searchPosts(
-                                                    _searchTextController.text.isEmpty ? "%" : _searchTextController.text, context);
+                                                _searchPosts(_searchTextController.text.isEmpty ? "%" : _searchTextController.text, context);
                                               },
                                               style: ElevatedButton.styleFrom(
                                                   shape: RoundedRectangleBorder(
@@ -646,7 +652,7 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
                               height: _baseSize / 2,
                               child: ElevatedButton(
                                   onPressed: () {
-                                    _showSchoolRankMap(rootContext, _baseSize, schoolList);
+                                    _showSchoolRankMap(rootContext, context, _baseSize, schoolList);
                                   },
                                   style: ElevatedButton.styleFrom(
                                       primary: CustomColors.red
@@ -664,8 +670,8 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
     );
   }
 
-  void _showSchoolRankMap(BuildContext rootContext, double _baseSize, List<SchoolRank> schoolList) {
-    Navigator.push(rootContext,
+  void _showSchoolRankMap(BuildContext rootContext, BuildContext parentContext, double _baseSize, List<SchoolRank> schoolList) async {
+    final result = await Navigator.push(rootContext,
         HeroDialogRoute(
             builder: (context) =>
                 Center(
@@ -698,5 +704,20 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
                 )
         )
     );
+    if (result != null) {
+      Navigator.of(parentContext).pop();
+      setState(() {
+        _searchTextController.text = result;
+        _selectedSearchType = '학교';
+        _searchedList.clear();
+        _postIndex = 0;
+        FocusScope.of(context).requestFocus(_focus);
+      });
+      await Future.delayed(Duration(milliseconds: 1000), (){
+        FocusScope.of(context).unfocus();
+      });
+
+      _searchPosts(result, rootContext);
+    }
   }
 }

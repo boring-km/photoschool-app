@@ -32,8 +32,7 @@ class _SchoolRankMapState extends State<SchoolRankMap> {
   var _selectedIndex = 0;
   School? _school;
   bool _isLoaded = false;
-
-  var _isHidden = false;
+  bool _isHidden = false;
 
   @override
   void initState() {
@@ -87,48 +86,53 @@ class _SchoolRankMapState extends State<SchoolRankMap> {
                   onMapCreated: _controller.complete,
                 )
             ),
-            _selectedSchool != null ? Center(
-              child: Padding(
-                padding: EdgeInsets.only(top: 90.0),
-                child: Container(
-                  width: 200,
-                  height: 80,
-                  decoration: BoxDecoration(
-                    color: Color(0xC9FFFFFF),
-                  ),
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("$_selectedRank등 ${_selectedSchool!.schoolName}", style: TextStyle(fontSize: 20),),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(right: 4.0),
-                              child: Icon(
-                                CupertinoIcons.eye,
-                                color: Colors.black,
+            _selectedSchool != null ? GestureDetector(
+              onTap: () {
+                Navigator.of(context).pop(_selectedSchool!.schoolName);
+              },
+              child: Center(
+                child: Padding(
+                  padding: EdgeInsets.only(top: 90.0),
+                  child: Container(
+                    width: 200,
+                    height: 80,
+                    decoration: BoxDecoration(
+                      color: Color(0xC9FFFFFF),
+                    ),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("$_selectedRank등 ${_selectedSchool!.schoolName}", style: TextStyle(fontSize: 20),),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(right: 4.0),
+                                child: Icon(
+                                  CupertinoIcons.eye,
+                                  color: Colors.black,
+                                ),
                               ),
-                            ),
-                            Text("조회수: ${_selectedSchool!.sumOfViews}", style: TextStyle(fontSize: 18),),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(right: 4.0),
-                              child: Icon(
-                                CupertinoIcons.doc,
-                                color: Colors.black,
+                              Text("조회수: ${_selectedSchool!.sumOfViews}", style: TextStyle(fontSize: 18),),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(right: 4.0),
+                                child: Icon(
+                                  CupertinoIcons.doc,
+                                  color: Colors.black,
+                                ),
                               ),
-                            ),
-                            Text("게시물 수: ${_selectedSchool!.sumOfPosts}", style: TextStyle(fontSize: 18),),
-                          ],
-                        ),
-                      ],
+                              Text("게시물 수: ${_selectedSchool!.sumOfPosts}", style: TextStyle(fontSize: 18),),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
