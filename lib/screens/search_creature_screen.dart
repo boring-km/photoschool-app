@@ -296,6 +296,7 @@ class _FindCreatureState extends State<SearchCreatureScreen> with TickerProvider
       });
     } else {
       setState(() {
+        _isFirstLoading = false;
         _isLoading = false;
       });
     }

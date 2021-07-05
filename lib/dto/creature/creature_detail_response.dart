@@ -7,7 +7,6 @@ class CreatureDetailResponse {
   String detail;
   String imgUrl1;
   String imgUrl2;
-  final bool isExactly;
 
   CreatureDetailResponse(
       this.apiId,
@@ -17,12 +16,10 @@ class CreatureDetailResponse {
       this.habitat,
       this.detail,
       this.imgUrl1,
-      this.imgUrl2,
-      // ignore: avoid_positional_boolean_parameters
-      this.isExactly);
+      this.imgUrl2,);
 
   @override
   String toString() {
-    return 'CreatureDetailResponse{apiId: $apiId, name: $name, type: $type, familyType: $familyType, habitat: $habitat, detail: $detail, imgUrl1: $imgUrl1, imgUrl2: $imgUrl2, isExactly: $isExactly}';
+    return 'CreatureDetailResponse{apiId: $apiId, name: $name, type: $type, familyType: $familyType, habitat: $habitat, detail: $detail, imgUrl1: $imgUrl1, imgUrl2: $imgUrl2, }';
   }
 }
