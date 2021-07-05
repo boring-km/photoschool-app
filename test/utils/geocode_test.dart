@@ -10,7 +10,9 @@ void main() {
     var url = 'https://maps.googleapis.com/maps/api/geocode/json?address=$address&key=$apiKey';
     final result = await Http.get(url);
     print(result);
-    final json = jsonDecode(result['data']);
-    print(json);
+    final latlng = jsonDecode(result['data'])['results'][0]['geometry']['location'];
+    print(latlng);
+    // final viewport = jsonDecode(result['data'])['results'][0]['geometry']['viewport'];
+    // print(viewport);
   });
 }

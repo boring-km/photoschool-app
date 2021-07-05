@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../dto/school/school_rank.dart';
 import '../res/colors.dart';
 import '../services/server_api.dart';
 import '../widgets/app_bar_base.dart';
@@ -582,6 +583,15 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
           )
       );
     }
+    widgetList.add(Padding(
+      padding: EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Text("조회수와 사진 갯수가 많으면 등수가 올라가요!", style: TextStyle(color: Colors.black45, fontSize: 12),),
+        ],
+      ),
+    ));
     Navigator.push(rootContext,
         HeroDialogRoute(
             builder: (context) =>
@@ -608,7 +618,7 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Container(
-                          height: 250,
+                          height: 230,
                           child: SingleChildScrollView(
                             child: Column(
                               children: widgetList,
@@ -636,12 +646,7 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
                               height: _baseSize / 2,
                               child: ElevatedButton(
                                   onPressed: () {
-                                    Navigator.of(context).pop();
-                                    Navigator.of(rootContext).push(
-                                        MaterialPageRoute(
-                                            builder: (context) => SchoolRankMap(schoolList: schoolList)
-                                        )
-                                    );
+                                    _showSchoolRankMap(rootContext, _baseSize, schoolList);
                                   },
                                   style: ElevatedButton.styleFrom(
                                       primary: CustomColors.red
@@ -650,6 +655,42 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
                               ),
                             ),
                           ],
+                        )
+                      ],
+                    ),
+                  ),
+                )
+        )
+    );
+  }
+
+  void _showSchoolRankMap(BuildContext rootContext, double _baseSize, List<SchoolRank> schoolList) {
+    Navigator.push(rootContext,
+        HeroDialogRoute(
+            builder: (context) =>
+                Center(
+                  child: AlertDialog(
+                    content: Column(
+                      children: [
+                        Container(
+                            width: _baseSize * 10,
+                            height: _baseSize * 7.5,
+                            child: SchoolRankMap(schoolList: schoolList,)
+                        ),
+                        Container(
+                          width: _baseSize * 10,
+                          height: _baseSize / 2,
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 8.0),
+                            child: ElevatedButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.red
+                                ),
+                                child: Text("닫기")),
+                          ),
                         )
                       ],
                     ),

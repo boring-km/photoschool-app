@@ -4,10 +4,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:photoschool/screens/my_post_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../res/colors.dart';
+import '../screens/my_post_screen.dart';
 import '../screens/signin_screen.dart';
 import '../utils/auth.dart';
 import '../utils/screen_animation.dart';
@@ -195,7 +195,7 @@ class _AppBarTitleState extends State<AppBarTitle> {
                     child: Icon(
                       CupertinoIcons.person_alt_circle_fill,
                       color: Colors.black,
-                      size: baseSize * (2/3),
+                      size: baseSize * (4/7),
                     ),
                   ),
                   _user != null ?

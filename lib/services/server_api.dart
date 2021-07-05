@@ -5,8 +5,10 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../dto/post/post_response.dart';
 import '../dto/post/searched_post_response.dart';
+import '../dto/school/school.dart';
 import '../dto/school/school_rank.dart';
 import '../dto/school/school_search_response.dart';
+import '../utils/geocode.dart';
 import '../utils/http_custom.dart';
 
 class CustomAPIService {
@@ -36,6 +38,15 @@ class CustomAPIService {
       resultList.add(SchoolSearchResponse(school['schoolId'], school['region'], school['schoolName']));
     }
     return resultList;
+  }
+
+  static Future<School> getMySchool() async {
+    final domain = dotenv.env["server_domain"]!;
+    final idToken = await FirebaseAuth.instance.currentUser!.getIdToken();
+    final result = await Http.getWithJWT("$domain/mySchool", idToken);
+    final json = _getResult(result)['result'];
+    var latLng = await GoogleGeoCoding.getLatLng(json['address']);
+    return School(json['region'], json['schoolName'], latLng);
   }
 
   static Future<Map<String, dynamic>> getMyPosts(int index) async {
@@ -92,7 +103,7 @@ class CustomAPIService {
     final schools = json['topSchools'];
     var schoolList = <SchoolRank>[];
     for (var item in schools) {
-      schoolList.add(SchoolRank(item['region'], item['schoolName'], item['sumOfViews'], item['sumOfPosts']));
+      schoolList.add(SchoolRank(item['region'], item['schoolName'], item['sumOfViews'], item['sumOfPosts'], item['address']));
     }
     return schoolList;
   }
@@ -196,7 +207,7 @@ class CustomAPIService {
     if (result['error'] == null) {
       return jsonDecode(result['data']);
     } else {
-      return '${result['errorCode']}';
+      throw '${result['errorCode']}';
     }
   }
 }
