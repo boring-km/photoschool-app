@@ -88,7 +88,8 @@ class _ManagementScreenState extends State<ManagementScreen> {
                           }
                           return true;
                         },
-                        child: ListView.builder(
+                        child: RefreshIndicator(
+                          child: ListView.builder(
                             itemCount: _postList.length + 1,
                             itemBuilder: (context, index) {
                               if (index == _postList.length) {
@@ -130,7 +131,9 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                   )
                               );
                             },
-                        ),
+                          ),
+                          onRefresh: _refresh,
+                        )
                       )
                   )
                 ],
@@ -284,6 +287,12 @@ class _ManagementScreenState extends State<ManagementScreen> {
         ),
       );
     }
+  }
+
+  Future<void> _refresh() async {
+    _postIndex = 0;
+    _postList.clear();
+    _buildPosts(context);
   }
 
 }
