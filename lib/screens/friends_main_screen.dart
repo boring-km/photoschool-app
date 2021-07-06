@@ -2,7 +2,7 @@ import 'package:animated_background/animated_background.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lottie/lottie.dart';
 
 import '../dto/school/school_rank.dart';
 import '../res/colors.dart';
@@ -62,7 +62,7 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
 
   void _initialize() async {
     _user = widget._user;
-    await Future.delayed(const Duration(milliseconds: 500), () async {
+    Future.delayed(const Duration(milliseconds: 2000), () async {
       await _buildPosts(context);
       await _buildAwardView(context);
     });
@@ -87,12 +87,14 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Hero(
-                      tag: "Friends",
-                      child: SvgPicture.asset(
-                        'assets/friends.svg',
-                        height: h / 2,
+                    Container(
+                      width: 600,
+                      height: 600,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle
                       ),
+                      child: Lottie.asset('assets/17431-package-delivery.json', height: 500),
                     ),
                     Padding(
                       padding: EdgeInsets.all(_baseSize / 2),

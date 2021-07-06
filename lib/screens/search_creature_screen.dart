@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lottie/lottie.dart';
 
 import '../dto/creature/creature_detail_response.dart';
 import '../dto/dict/dict_response.dart';
@@ -69,11 +69,8 @@ class _FindCreatureState extends State<SearchCreatureScreen> with TickerProvider
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Hero(
-                tag: "SelectWiki",
-                child: SvgPicture.asset(
-                  'assets/book_reading.svg',
-                  height: h / 2,
-                ),
+                  tag: "SelectWiki",
+                  child: Lottie.asset('assets/3151-books.json', height: 500)
               ),
               Padding(
                 padding: EdgeInsets.all(base/2),

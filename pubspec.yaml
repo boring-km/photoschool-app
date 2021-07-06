@@ -47,6 +47,9 @@ dependencies:
   # scroll_refresh
   pull_to_refresh: ^2.0.0
 
+  # loading
+  lottie: ^1.0.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

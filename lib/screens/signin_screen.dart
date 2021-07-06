@@ -39,7 +39,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         fontFamily: 'SDSamlip',
                         fontSize: MediaQuery.of(context).size.width / 15,
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
