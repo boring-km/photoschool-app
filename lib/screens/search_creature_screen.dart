@@ -336,6 +336,7 @@ class _FindCreatureState extends State<SearchCreatureScreen> with TickerProvider
                       offset: Offset(4.0, 4.0)
                   )
                 ],
+                border: Border.all(color: CustomColors.orange, width: 2),
                 borderRadius: BorderRadius.all(Radius.circular(base/2))
             ),
             child: Column(
@@ -414,6 +415,7 @@ class _FindCreatureState extends State<SearchCreatureScreen> with TickerProvider
                     offset: Offset(4.0, 4.0)
                   )
                 ],
+                border: Border.all(color: CustomColors.creatureGreen, width: 2),
                 borderRadius: BorderRadius.all(Radius.circular(base/2))
             ),
             child: Column(

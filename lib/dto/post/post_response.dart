@@ -12,6 +12,8 @@ class PostResponse {
   String? schoolName;
   final String regTime;
   final String upTime;
+  int? isApproved;
+  int? isRejected;
 
   PostResponse(this.postId, this.title, this.likes, this.views, this.tbImgURL, this.regTime, this.upTime);
 

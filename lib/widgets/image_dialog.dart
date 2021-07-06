@@ -1,6 +1,6 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:photoschool/res/colors.dart';
 import '../services/woongjin_api.dart';
 
 import 'hero_dialog_route.dart';
@@ -30,6 +30,22 @@ class ImageDialog {
                     imageURL,
                     width: w > h ? w * (2/3) : w * (3/4),
                     height: w > h ? h * (2/3) : h * (1/3),
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Container(
+                        width: w / 3,
+                        height: h / 3,
+                        color: CustomColors.creatureGreen,
+                        child: Center(
+                          child: Text(
+                            "이미지 로딩중: ${(loadingProgress.expectedTotalBytes != null ?
+                            (loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!) * 100
+                                : 100).round()}%",
+                            style: TextStyle(color: Colors.white, fontSize: 28),
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ),
               ),

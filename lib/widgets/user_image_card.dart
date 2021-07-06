@@ -267,4 +267,66 @@ class UserImageCard {
           FriendsDetailScreen(item.postId, user: user)));
     }
   }
+
+  static Widget slideRightBackground(double baseSize) {
+    return Container(
+      color: Colors.green,
+      child: Align(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            SizedBox(
+              width: 20,
+            ),
+            Icon(
+              Icons.verified_user_outlined,
+              color: Colors.white,
+              size: baseSize,
+            ),
+            Text(
+              " 승인",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+                fontSize: baseSize/2
+              ),
+              textAlign: TextAlign.left,
+            ),
+          ],
+        ),
+        alignment: Alignment.centerLeft,
+      ),
+    );
+  }
+
+  static Widget slideLeftBackground(double baseSize) {
+    return Container(
+      color: Colors.red,
+      child: Align(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            Icon(
+              Icons.cancel_outlined,
+              color: Colors.white,
+              size: baseSize
+            ),
+            Text(
+              " 거부",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+                fontSize: baseSize/2
+              ),
+              textAlign: TextAlign.right,
+            ),
+            SizedBox(
+              width: 20,
+            ),
+          ],
+        ),
+        alignment: Alignment.centerRight,
+      ),
+    );
+  }
 }

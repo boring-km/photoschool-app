@@ -41,6 +41,12 @@ dependencies:
   # google maps
   google_maps_flutter: ^2.0.6
 
+  # datetime format
+  intl: ^0.17.0
+
+  # scroll_refresh
+  pull_to_refresh: ^2.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

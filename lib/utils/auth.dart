@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:photoschool/widgets/snackbar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../screens/select_screen.dart';
@@ -55,14 +56,14 @@ class Authentication {
         } on FirebaseAuthException catch (e) {
           if (e.code == 'account-exists-with-different-credential') {
             ScaffoldMessenger.of(context).showSnackBar(
-              customSnackBar(
+              CustomSnackBar.show(
                 content:
                 'The account already exists with a different credential.',
               ),
             );
           } else if (e.code == 'invalid-credential') {
             ScaffoldMessenger.of(context).showSnackBar(
-              customSnackBar(
+              CustomSnackBar.show(
                 content:
                 'Error occurred while accessing credentials. Try again.',
               ),
@@ -70,7 +71,7 @@ class Authentication {
           }
         } on Exception {
           ScaffoldMessenger.of(context).showSnackBar(
-            customSnackBar(
+            CustomSnackBar.show(
               content: 'Error occurred using Google Sign-In. Try again.',
             ),
           );
@@ -87,8 +88,13 @@ class Authentication {
       final result = await CustomAPIService.checkUserRegistered();
       if (result) {
         final prefs = await SharedPreferences.getInstance();
-        final nickname = await CustomAPIService.getNickName(user);
-        prefs.setString('nickname', nickname);
+        final result = await CustomAPIService.getNickName(user);
+        prefs.setString('nickname', result['nickname']);
+        if (result['isAdmin'] == 1) {
+          prefs.setBool('isAdmin', true);
+        } else {
+          prefs.setBool('isAdmin', false);
+        }
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (context) => SelectScreen(
@@ -115,20 +121,10 @@ class Authentication {
       await FirebaseAuth.instance.signOut();
     } on Exception {
       ScaffoldMessenger.of(context).showSnackBar(
-        customSnackBar(
+        CustomSnackBar.show(
           content: 'Error signing out. Try again.',
         ),
       );
     }
-  }
-
-  static SnackBar customSnackBar({required String content}) {
-    return SnackBar(
-      backgroundColor: Colors.black,
-      content: Text(
-        content,
-        style: TextStyle(color: Colors.redAccent, letterSpacing: 0.5),
-      ),
-    );
   }
 }

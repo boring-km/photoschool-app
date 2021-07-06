@@ -19,12 +19,13 @@ class CustomAPIService {
     return _getResult(result)['isRegistered'];
   }
 
-  static Future<String> getNickName(User user) async {
+  static Future<Map<String, dynamic>> getNickName(User user) async {
     final idToken = await user.getIdToken();
     final domain = dotenv.env["server_domain"]!;
     final result = await Http.getWithJWT("$domain/nickname", idToken);
     final json = _getResult(result);
-    return json['nickname'];
+    print(json);
+    return { "nickname": json['nickname'], "isAdmin": json['isAdmin'] };
   }
 
   static Future<List<SchoolSearchResponse>> searchSchool(String text) async {
@@ -199,7 +200,40 @@ class CustomAPIService {
   static Future deleteImage(int postId) async {
     final domain = dotenv.env["server_domain"]!;
     final idToken = await FirebaseAuth.instance.currentUser!.getIdToken();
-    final result = await Http.deleteWithJWT("$domain/delete/$postId}", idToken);
+    final result = await Http.deleteWithJWT("$domain/delete/$postId", idToken);
+    return _getResult(result)['result'];
+  }
+
+  static Future<List<PostResponse>> getNotApprovedPosts(int index) async {
+    final domain = dotenv.env["server_domain"]!;
+    final result = await Http.get("$domain/admin/posts/$index");
+    final posts = _getResult(result)['posts'];
+    final resultList = <PostResponse>[];
+    for (var item in posts) {
+      var post = PostResponse(item['postId'], item['title'], item['likes'], item['views'], item['tbImgURL'], item['regTime'], item['upTime']);
+      post.isApproved = item['isApproved'];
+      post.isRejected = item['isRejected'];
+      post.imgURL = item['imgURL'];
+      resultList.add(post);
+    }
+    return resultList;
+  }
+
+  static Future approvePost(int postId) async {
+    final domain = dotenv.env["server_domain"]!;
+    final idToken = await FirebaseAuth.instance.currentUser!.getIdToken();
+    final result = await Http.postWithJWT("$domain/admin/approve", idToken, {
+      "postId": "$postId"
+    });
+    return _getResult(result)['result'];
+  }
+
+  static Future rejectPost(int postId) async {
+    final domain = dotenv.env["server_domain"]!;
+    final idToken = await FirebaseAuth.instance.currentUser!.getIdToken();
+    final result = await Http.postWithJWT("$domain/admin/reject", idToken, {
+      "postId": "$postId"
+    });
     return _getResult(result)['result'];
   }
 

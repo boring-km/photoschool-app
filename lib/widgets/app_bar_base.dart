@@ -7,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../res/colors.dart';
+import '../screens/manage_screen.dart';
 import '../screens/my_post_screen.dart';
 import '../screens/signin_screen.dart';
 import '../utils/auth.dart';
@@ -30,23 +31,20 @@ class _AppBarTitleState extends State<AppBarTitle> {
   bool _isSigningOut = false;
   late User? _user;
   late String? _image;
-
   Timer? timer;
+  bool _isAdmin = false;
 
   @override
   void initState() {
     _user = widget._user;
     _image = widget._image;
-    setNickName();
-    super.initState();
-  }
-
-  void setNickName() {
-    SharedPreferences.getInstance().then((prefs) {
-      setState(() {
-        _nickname = prefs.getString('nickname') ?? '닉네임 없음';
-      });
+    Future.delayed(Duration.zero, () async {
+      final prefs = await SharedPreferences.getInstance();
+      _nickname = prefs.getString('nickname') ?? '닉네임 없음';
+      _isAdmin = prefs.getBool('isAdmin') ?? false;
+      setState(() { });
     });
+    super.initState();
   }
 
   @override
@@ -160,6 +158,29 @@ class _AppBarTitleState extends State<AppBarTitle> {
           ),
         ),
       );
+    } else if (_image == "manage") {
+      image = Container(
+        decoration: BoxDecoration(
+            color: Colors.black,
+            borderRadius: BorderRadius.horizontal(left: Radius.circular(16.0), right: Radius.circular(16.0))
+        ),
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: baseSize/8, horizontal: baseSize/3),
+          child: Text("관리하기",
+            style: TextStyle(
+              color: Colors.white,
+              shadows: [
+                Shadow(
+                    blurRadius: 4.0,
+                    color: Colors.white70,
+                    offset: Offset(2.0, 2.0)
+                )
+              ],
+              fontSize: baseSize/2,
+            ),
+          ),
+        ),
+      );
     }
 
     return Padding(
@@ -205,7 +226,7 @@ class _AppBarTitleState extends State<AppBarTitle> {
                         if (result == 1) {
                           Navigator.of(context)
                               .push(ScreenAnimation.routeTo(MyPostScreen(user: _user!)));
-                        } else {
+                        } else if (result == 2) {
                           setState(() {
                             _isSigningOut = true;
                           });
@@ -215,6 +236,12 @@ class _AppBarTitleState extends State<AppBarTitle> {
                           });
                           Navigator.of(context)
                               .pushReplacement(ScreenAnimation.routeTo(SignInScreen()));
+                        } else if (result == 3) {
+                          Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) => ManagementScreen(user: _user!,)
+                              )
+                          );
                         }
                       },
                       child: Padding(
@@ -227,8 +254,9 @@ class _AppBarTitleState extends State<AppBarTitle> {
                       color: CustomColors.lightAmber,
                       offset: Offset(0, 45),
                       // icon: Icon(Icons.menu, color: Colors.black),
-                      itemBuilder: (context) => [
-                            PopupMenuItem(
+                      itemBuilder: (context) {
+                        var itemList = [
+                          PopupMenuItem(
                                 value: 1,
                                 child: Row(
                                   children: [
@@ -246,25 +274,62 @@ class _AppBarTitleState extends State<AppBarTitle> {
                                   ],
                                 )
                             ),
+                          PopupMenuItem(
+                             value: 2,
+                             child: Row(
+                               children: [
+                                 Padding(
+                                   padding: EdgeInsets.all(2.0),
+                                   child: Icon(
+                                     Icons.logout,
+                                     color: Colors.black,
+                                   ),
+                                 ),
+                                 Text(
+                                   '로그아웃',
+                                   style: TextStyle(color: Colors.black, fontSize: baseSize/2),
+                                 )
+                               ],
+                             )
+                          ),
+                        ];
+                        if (_isAdmin) {
+                          itemList.add(
                             PopupMenuItem(
-                                value: 2,
+                                value: 3,
                                 child: Row(
                                   children: [
                                     Padding(
                                       padding: EdgeInsets.all(2.0),
                                       child: Icon(
-                                        Icons.logout,
+                                        Icons.verified_user_sharp,
                                         color: Colors.black,
                                       ),
                                     ),
                                     Text(
-                                      '로그아웃',
+                                      '관리하기',
                                       style: TextStyle(color: Colors.black, fontSize: baseSize/2),
                                     )
                                   ],
-                                ))
-                          ]
-                  ) : Container()
+                                )
+                            ),
+                          );
+                        }
+                        return itemList;
+                      }
+                  ) : ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context)
+                            .pushReplacement(ScreenAnimation.routeTo(SignInScreen()));
+                      },
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.transparent,
+                        onPrimary: Colors.transparent,
+                        onSurface: Colors.transparent,
+                        shadowColor: Colors.transparent,
+                      ),
+                      child: Text("로그인 하기", style: TextStyle(color: Colors.black, fontSize: baseSize/2)),
+                  )
                 ],
               ),
             ),
