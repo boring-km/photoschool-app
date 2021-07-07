@@ -62,18 +62,30 @@ class _FindCreatureState extends State<SearchCreatureScreen> with TickerProvider
     var buttonFontSize = w > h ? h / 35 : w / 35;
 
     return _isFirstLoading ? Scaffold(
-      backgroundColor: CustomColors.orange,
+      backgroundColor: CustomColors.deepOrange,
       body: Center(
         child: Container(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Hero(
-                  tag: "SelectWiki",
-                  child: Lottie.asset('assets/3151-books.json', height: 500)
+              Stack(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 75, top: 75),
+                    child: Container(
+                      width: 350,
+                      height: 350,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle
+                      ),
+                    ),
+                  ),
+                  Lottie.asset('assets/bookclub_loading.json', height: 500),
+                ],
               ),
               Padding(
-                padding: EdgeInsets.all(base/2),
+                padding: EdgeInsets.all((w > h ? w / 10 : h / 15)/2),
                 child: Text("로딩중",
                   style: TextStyle(
                       color: Colors.white,

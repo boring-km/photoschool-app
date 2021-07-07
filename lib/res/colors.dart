@@ -4,6 +4,7 @@ class CustomColors {
   static final Color deepblue = Color(0xff0e5b6a);
   static final Color orange = Color(0xFFff9e40);
   static final Color orangeAccent = Color(0xfffa8c22);
+  static final Color deepOrange = Color(0xFFFF7826);
 
   static final Color firebaseYellow = Color(0xFFFFCA28);
   static final Color firebaseGrey = Color(0xFFECEFF1);

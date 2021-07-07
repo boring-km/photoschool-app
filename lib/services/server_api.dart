@@ -60,7 +60,10 @@ class CustomAPIService {
     final posts = json['posts'];
     var postList = <PostResponse>[];
     for (var item in posts) {
-      postList.add(PostResponse(item['postId'], item['title'], item['likes'], item['views'], item['tbImgURL'], item['regTime'], item['upTime']));
+      var response = PostResponse(item['postId'], item['title'], item['likes'], item['views'], item['tbImgURL'], item['regTime'], item['upTime']);
+      response.isApproved = item['isApproved'];
+      response.isRejected = item['isRejected'];
+      postList.add(response);
     }
     return { "schoolName": schoolName, "posts": postList };
   }

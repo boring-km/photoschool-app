@@ -200,7 +200,6 @@ class _MyPostScreenState extends State<MyPostScreen> {
   }
 
   List<Widget> _buildMyImageCard(List<PostResponse> posts, BuildContext context, User user) {
-
     final resultList = <Widget>[];
     for (var item in posts) {
       final widget = GestureDetector(
@@ -216,6 +215,14 @@ class _MyPostScreenState extends State<MyPostScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
+                Row(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: 8.0, bottom: 16.0),
+                      child: _buildApproval(item.isApproved!, item.isRejected!)
+                    ),
+                  ],
+                ),
                 Padding(
                   padding: EdgeInsets.only(bottom: 16, left: 16, right: 16),
                   child: Image.network(
@@ -675,5 +682,34 @@ class _MyPostScreenState extends State<MyPostScreen> {
           ),
         )
     )));
+  }
+
+  _buildApproval(int isApproved, int isRejected) {
+    var resultText = "";
+    var resultBackGroundColor = Colors.yellow;
+    var resultTextColor = Colors.black;
+    if (isApproved == 1 && isRejected == 0) {
+      resultText = "승인됨";
+      resultTextColor = Colors.white;
+      resultBackGroundColor = Colors.green;
+    } else if (isApproved == 0 && isRejected == 1) {
+      resultText = "거부됨";
+      resultTextColor = Colors.white;
+      resultBackGroundColor = Colors.red;
+    } else {
+      resultText = "승인 대기중";
+    }
+
+    return Container(
+      width: 90,
+      height: 30,
+      decoration: BoxDecoration(
+        color: resultBackGroundColor,
+        borderRadius: BorderRadius.all(Radius.circular(4))
+      ),
+      child: Center(
+        child: Text(resultText, style: TextStyle(color: resultTextColor, fontSize: 20)),
+      ),
+    );
   }
 }

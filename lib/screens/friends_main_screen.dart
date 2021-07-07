@@ -77,7 +77,7 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
     _baseSize = w > h ? h / 10 : w / 18;
     var buttonWidth = w > h ? w / 15 : h / 15;
     var buttonHeight = w > h ? h / 15 : w / 15;
-    var buttonFontSize = w > h ? h / 40 : w / 40;
+    var buttonFontSize = w > h ? h / 35 : w / 35;
 
     return !_isLoaded
         ? Scaffold(
@@ -88,13 +88,13 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                      width: 600,
-                      height: 600,
+                      width: 500,
+                      height: 500,
                       decoration: BoxDecoration(
                         color: Colors.white,
                         shape: BoxShape.circle
                       ),
-                      child: Lottie.asset('assets/17431-package-delivery.json', height: 500),
+                      child: Lottie.asset('assets/27230-friendships.json', height: 450),
                     ),
                     Padding(
                       padding: EdgeInsets.all(_baseSize / 2),
