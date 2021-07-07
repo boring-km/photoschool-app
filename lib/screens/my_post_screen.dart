@@ -150,7 +150,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
                             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 3,
                                 mainAxisSpacing: 2.0,
-                                childAspectRatio: w > h ? 4/5 : 3/5),
+                                childAspectRatio: w > h ? 3/4 : 3/5),
                             itemCount: _postList.length + 1,
                             itemBuilder: (context, index) {
                               if (_postList.length == index) {
@@ -200,6 +200,9 @@ class _MyPostScreenState extends State<MyPostScreen> {
   }
 
   List<Widget> _buildMyImageCard(List<PostResponse> posts, BuildContext context, User user) {
+    var w = context.size!.width;
+    var h = context.size!.height;
+
     final resultList = <Widget>[];
     for (var item in posts) {
       final widget = GestureDetector(
@@ -209,7 +212,6 @@ class _MyPostScreenState extends State<MyPostScreen> {
         child: Padding(
           padding: EdgeInsets.all(4),
           child: Container(
-            height: 300,
             decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(8)), border: Border.all(color: Colors.black, width: 2.0)),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -227,8 +229,8 @@ class _MyPostScreenState extends State<MyPostScreen> {
                   padding: EdgeInsets.only(bottom: 16, left: 16, right: 16),
                   child: Image.network(
                     item.tbImgURL,
-                    width: 300,
-                    height: 200,
+                    width: w/4,
+                    height: h/3,
                     fit: BoxFit.fitWidth,
                     loadingBuilder: (context, child, progress) {
                       if (progress == null) return child;
@@ -253,7 +255,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
                         style: TextStyle(color: Colors.black, fontSize: 20),
                       ),
                       Padding(
-                        padding: EdgeInsets.symmetric(vertical: 10),
+                        padding: EdgeInsets.only(top: 10),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
