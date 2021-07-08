@@ -139,7 +139,13 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
                             ),
                           );
                         },
-                        child: Text("로그인 없이 이용"))
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                          ),
+                        ),
+                        child: Text("로그인 없이 이용", style: TextStyle(color: Colors.black),))
                 ],
               ),
         ),

@@ -118,6 +118,8 @@ class Authentication {
       if (!kIsWeb) {
         await googleSignIn.signOut();
       }
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setBool('isAdmin', false);
       await FirebaseAuth.instance.signOut();
     } on Exception {
       ScaffoldMessenger.of(context).showSnackBar(
