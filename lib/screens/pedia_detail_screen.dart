@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:image_picker/image_picker.dart';
@@ -20,6 +21,7 @@ import '../widgets/box_decoration.dart';
 import '../widgets/hero_dialog_route.dart';
 import '../widgets/image_dialog.dart';
 import '../widgets/loading.dart';
+import '../widgets/single_message_dialog.dart';
 import '../widgets/user_image_card.dart';
 
 class PediaDetailScreen extends StatefulWidget {
@@ -141,29 +143,57 @@ class _PediaDetailState extends State<PediaDetailScreen> {
                               ),
                             ],
                           ),
-                          _user != null && !kIsWeb ? ElevatedButton(
-                              style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(boxRounded)), primary: Colors.blue, onSurface: Colors.blueAccent),
-                              onPressed: () {
-                                _showSelectSource(context);
-                              },
-                              child: Container(
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      CupertinoIcons.camera,
-                                      color: Colors.white,
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(left: _baseSize / 5),
-                                      child: Text(
-                                        "사진 올리기",
-                                        style: TextStyle(fontSize: _baseSize / 5, color: Colors.white),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              _user != null && !kIsWeb ? Padding(
+                                padding: EdgeInsets.only(right: 8.0),
+                                child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(boxRounded)), primary: Colors.orange, onSurface: Colors.orangeAccent),
+                                    onPressed: () {
+                                      _sendEmail(_pediaDetail, _user!);
+                                    },
+                                    child: Container(
+                                      child: Row(
+                                        children: [
+                                          Icon(Icons.email_outlined, color: Colors.white,),
+                                          Padding(
+                                            padding: EdgeInsets.only(left: _baseSize / 5),
+                                            child: Text(
+                                              "이메일 보내기",
+                                              style: TextStyle(fontSize: _baseSize / 5, color: Colors.white),
+                                            ),
+                                          )
+                                        ],
                                       ),
                                     )
-                                  ],
                                 ),
-                              )
-                          ) : Container()
+                              ) : Container(),
+                              _user != null && !kIsWeb ? ElevatedButton(
+                                  style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(boxRounded)), primary: Colors.blue, onSurface: Colors.blueAccent),
+                                  onPressed: () {
+                                    _showSelectSource(context);
+                                  },
+                                  child: Container(
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          CupertinoIcons.camera,
+                                          color: Colors.white,
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(left: _baseSize / 5),
+                                          child: Text(
+                                            "사진 올리기",
+                                            style: TextStyle(fontSize: _baseSize / 5, color: Colors.white),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  )
+                              ) : Container()
+                            ],
+                          ),
                         ],
                       ),
                     ),
@@ -652,5 +682,14 @@ class _PediaDetailState extends State<PediaDetailScreen> {
         ),
       ),
     );
+  }
+
+  _sendEmail(DictDetailResponse pediaDetail, User user) async {
+    final result = await WoongJinAPIService.sendDictEmail(pediaDetail.apiId, pediaDetail.name, user);
+    if (result) {
+      SingleMessageDialog.alert(context, "메일이 성공적으로 보내졌습니다.\n(${user.email})");
+    } else {
+      SingleMessageDialog.alert(context, "메일이 성공적으로 보내졌습니다.\n(${user.email})");
+    }
   }
 }

@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import '../utils/http_custom.dart';
 
 import '../dto/dict/dict_detail_response.dart';
 import '../dto/dict/dict_main_image_response.dart';
@@ -130,5 +132,23 @@ class WoongJinAPIService {
     }
 
     return resultList;
+  }
+
+  static Future<bool> sendDictEmail(String apiId, String name, User user) async {
+    final email = await user.email;
+    if (email != null) {
+      final encodedEmail = base64.encode(utf8.encode(email));
+      final emailUrl = dotenv.env["woongjin_email_url"];
+      final url = '$emailUrl/$apiId/searchWord/$name/email/$encodedEmail';
+      final response = await Http.get(url);
+      final result = jsonDecode(response['data'])['RESP_RESULT']['MAIL_RESULT'];
+      if (result == 201) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
   }
 }
