@@ -320,7 +320,7 @@ class _AppBarTitleState extends State<AppBarTitle> {
                   ) : ElevatedButton(
                       onPressed: () {
                         Navigator.of(context)
-                            .pushReplacement(ScreenAnimation.routeTo(SignInScreen()));
+                            .pushAndRemoveUntil(ScreenAnimation.routeTo(SignInScreen()), (route) => false);
                       },
                       style: ElevatedButton.styleFrom(
                         primary: Colors.transparent,

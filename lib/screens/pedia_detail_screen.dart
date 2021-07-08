@@ -687,9 +687,9 @@ class _PediaDetailState extends State<PediaDetailScreen> {
   _sendEmail(DictDetailResponse pediaDetail, User user) async {
     final result = await WoongJinAPIService.sendDictEmail(pediaDetail.apiId, pediaDetail.name, user);
     if (result) {
-      SingleMessageDialog.alert(context, "메일이 성공적으로 보내졌습니다.\n(${user.email})");
+      SingleMessageDialog.alert(context, "메일이 성공적으로 보내졌습니다.\n(${user.email})", delayTime: Duration(seconds: 2));
     } else {
-      SingleMessageDialog.alert(context, "메일이 성공적으로 보내졌습니다.\n(${user.email})");
+      SingleMessageDialog.alert(context, "메일 전송 실패\n(${user.email})", delayTime: Duration(seconds: 2));
     }
   }
 }

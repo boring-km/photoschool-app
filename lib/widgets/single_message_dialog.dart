@@ -5,7 +5,7 @@ import 'hero_dialog_route.dart';
 
 class SingleMessageDialog {
   // ignore: type_annotate_public_apis
-  static alert(BuildContext context, String message) {
+  static alert(BuildContext context, String message, {Duration? delayTime}) {
     Navigator.push(context,
         HeroDialogRoute(
             builder: (context) =>
@@ -16,7 +16,7 @@ class SingleMessageDialog {
                 )
         )
     );
-    Future.delayed(const Duration(seconds: 1), () {
+    Future.delayed(delayTime != null ? delayTime : const Duration(seconds: 1), () {
       Navigator.of(context).pop();
     });
   }
