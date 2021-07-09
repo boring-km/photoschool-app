@@ -13,10 +13,7 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.3
-  firebase_core: ^1.3.0
-  firebase_storage: ^9.0.0
   image_picker: ^0.8.1+3
-  firebase_auth: ^2.0.0
   google_sign_in: ^5.0.4
   http: 0.13.3
   flutter_dotenv: ^5.0.0
@@ -25,6 +22,12 @@ dependencies:
   flutter_native_image: ^0.0.6
   flutter_launcher_icons: ^0.9.0
   shared_preferences: ^2.0.6
+
+  # firebase
+  firebase_core: ^1.3.0
+  firebase_storage: ^9.0.0
+  firebase_auth: ^2.0.0
+  firebase_messaging: ^10.0.3
 
   flutter_svg: ^0.22.0
   cached_network_image: ^3.0.0
@@ -49,7 +52,13 @@ dependencies:
   pull_to_refresh: ^2.0.0
 
   # loading
-  lottie: ^1.0.1
+  lottie: ^1.1.0
+
+  # get
+  get: ^4.1.4
+
+  # notification
+  flutter_local_notifications: ^6.0.0
 
 dev_dependencies:
   flutter_test:
