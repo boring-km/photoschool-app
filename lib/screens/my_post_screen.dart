@@ -231,8 +231,8 @@ class _MyPostScreenState extends State<MyPostScreen> {
                   child: Image.network(
                     item.tbImgURL,
                     width: w/4,
-                    height: h/3,
-                    fit: BoxFit.fitWidth,
+                    height: h/4,
+                    fit: BoxFit.fitHeight,
                     loadingBuilder: (context, child, progress) {
                       if (progress == null) return child;
                       return Container(child: Center(child: Text("로딩중", style: TextStyle(color: CustomColors.orange, fontSize: 24),),),);
