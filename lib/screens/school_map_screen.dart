@@ -82,7 +82,7 @@ class _SchoolRankMapState extends State<SchoolRankMap> {
                   mapType: MapType.normal,
                   markers: Set.from(_markers),
                   myLocationButtonEnabled: false,
-                  initialCameraPosition: CameraPosition(target: _school!.latLng, zoom:13),
+                  initialCameraPosition: CameraPosition(target: _school!.latLng != null ? _school!.latLng! : LatLng(128, 37.6) , zoom:13),
                   onMapCreated: _controller.complete,
                 )
             ),
@@ -151,7 +151,7 @@ class _SchoolRankMapState extends State<SchoolRankMap> {
               left: 50,
               child: Container(
                 width: 200,
-                height: _isHidden ? 80 : 250,
+                height: _isHidden ? 80 : 280,
                 decoration: BoxDecoration(
                   color: Color(0xFFFFFFFF),
                   borderRadius: BorderRadius.all(Radius.circular(4.0)),
@@ -183,47 +183,50 @@ class _SchoolRankMapState extends State<SchoolRankMap> {
                       ),
                     ),
                     _isHidden ? Container() :
-                    Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: MediaQuery.removePadding(
-                          context: context,
-                          removeTop: true,
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            scrollDirection: Axis.vertical,
-                            itemCount: schoolList.length,
-                            itemBuilder: (context, index) {
-                              return GestureDetector(
-                                  onTap: () async {
-                                    setState(() {
-                                      _selectedIndex = index;
-                                      _selectedRank = index+1;
-                                      _selectedSchool = schoolList[index];
-                                    });
-                                    final controller = await _controller.future;
-                                    setState(() {
-                                      controller.animateCamera(CameraUpdate.newCameraPosition(
-                                          CameraPosition(target: _latLngList[index], zoom: 11)
-                                      ));
-                                    });
-                                  },
-                                  child: _selectedIndex != index ? Container(
-                                    color: Color(0xFFF1F1F1),
-                                    child: Padding(
-                                      padding: EdgeInsets.all(4.0),
-                                      child: Text("${index+1}등: ${schoolList[index].schoolName}", style: TextStyle(color: Colors.black, fontSize: 16),),
-                                    ),
-                                  ) : Container(
-                                    color: Color(0xFFFF3A3A),
-                                    child: Padding(
-                                      padding: EdgeInsets.all(4.0),
-                                      child: Text("${index+1}등: ${schoolList[index].schoolName}", style: TextStyle(color: Colors.white, fontSize: 16),),
-                                    ),
-                                  )
-                              );
-                            },
-                          )
-                      )
+                    Container(
+                      height: _isHidden ? 50 : 200,
+                      child: Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: MediaQuery.removePadding(
+                            context: context,
+                            removeTop: true,
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              scrollDirection: Axis.vertical,
+                              itemCount: schoolList.length,
+                              itemBuilder: (context, index) {
+                                return GestureDetector(
+                                    onTap: () async {
+                                      setState(() {
+                                        _selectedIndex = index;
+                                        _selectedRank = index+1;
+                                        _selectedSchool = schoolList[index];
+                                      });
+                                      final controller = await _controller.future;
+                                      setState(() {
+                                        controller.animateCamera(CameraUpdate.newCameraPosition(
+                                            CameraPosition(target: _latLngList[index], zoom: 11)
+                                        ));
+                                      });
+                                    },
+                                    child: _selectedIndex != index ? Container(
+                                      color: Color(0xFFF1F1F1),
+                                      child: Padding(
+                                        padding: EdgeInsets.all(4.0),
+                                        child: Text("${index+1}등: ${schoolList[index].schoolName}", style: TextStyle(color: Colors.black, fontSize: 16),),
+                                      ),
+                                    ) : Container(
+                                      color: Color(0xFFFF3A3A),
+                                      child: Padding(
+                                        padding: EdgeInsets.all(4.0),
+                                        child: Text("${index+1}등: ${schoolList[index].schoolName}", style: TextStyle(color: Colors.white, fontSize: 16),),
+                                      ),
+                                    )
+                                );
+                              },
+                            )
+                        )
+                      ),
                     ),
                     Container(
                       height: 25,
@@ -249,20 +252,21 @@ class _SchoolRankMapState extends State<SchoolRankMap> {
     _latLngList.clear();
     for (var i = 0; i < schoolList.length; i++) {
       var latLng = await GoogleGeoCoding.getLatLng(schoolList[i].address);
-      _latLngList.add(latLng);
-      _markers.add(
-        Marker(
-          markerId: MarkerId("$i"),
-          draggable: true,
-          onTap: () => _showInfo(i+1, schoolList[i]),
-          position: latLng
-        )
-      );
-
-      if (schoolList[i].schoolName == _school!.schoolName) {
-        _selectedRank = i+1;
-        _selectedSchool = schoolList[i];
-        _selectedIndex = i;
+      if (latLng != null) {
+        _latLngList.add(latLng);
+        _markers.add(
+            Marker(
+                markerId: MarkerId("$i"),
+                draggable: true,
+                onTap: () => _showInfo(i+1, schoolList[i]),
+                position: latLng
+            )
+        );
+        if (schoolList[i].schoolName == _school!.schoolName) {
+          _selectedRank = i+1;
+          _selectedSchool = schoolList[i];
+          _selectedIndex = i;
+        }
       }
     }
     setState(() {

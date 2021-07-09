@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -221,7 +222,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
                   children: [
                     Padding(
                       padding: EdgeInsets.only(left: 8.0, bottom: 16.0),
-                      child: _buildApproval(item.isApproved!, item.isRejected!)
+                      child: _buildApproval(item.postId, item.isApproved!, item.isRejected!)
                     ),
                   ],
                 ),
@@ -410,44 +411,12 @@ class _MyPostScreenState extends State<MyPostScreen> {
               style: TextStyle(color: Colors.black, fontSize: 20),
               controller: _updateTextController,
               onSubmitted: (text) async {
-                final text = _updateTextController.text;
-                if (text.length <= 8) {
-                  final result = await CustomAPIService.changePostTitle(text, item.postId);
-                  print(result);
-                  if (result == true) {
-                    Navigator.of(context).pop();
-                    Navigator.of(rootContext).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) => MyPostScreen(user: user),
-                      ),
-                    );
-                  } else {
-                    SingleMessageDialog.alert(context, "제목 변경 실패");
-                  }
-                } else {
-                  SingleMessageDialog.alert(context, "제목을 8자 이내로 입력해주세요");
-                }
+                await _onUpdateTitle(_updateTextController.text, item, context, rootContext, user);
               },
             ),
             ElevatedButton(
                 onPressed: () async {
-                  final text = _updateTextController.text;
-                  if (text.length <= 8) {
-                    final result = await CustomAPIService.changePostTitle(text, item.postId);
-                    print(result);
-                    if (result == true) {
-                      Navigator.of(context).pop();
-                      Navigator.of(rootContext).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (context) => MyPostScreen(user: user),
-                        ),
-                      );
-                    } else {
-                      SingleMessageDialog.alert(context, "제목 변경 실패");
-                    }
-                  } else {
-                    SingleMessageDialog.alert(context, "제목을 8자 이내로 입력해주세요");
-                  }
+                  await _onUpdateTitle(_updateTextController.text, item, context, rootContext, user);
                 },
                 style: ElevatedButton.styleFrom(
                     primary: CustomColors.friendsYellow
@@ -460,6 +429,26 @@ class _MyPostScreenState extends State<MyPostScreen> {
         ),
       ),
     )));
+  }
+
+  static Future<void> _onUpdateTitle(String text, PostResponse item, BuildContext context, BuildContext rootContext, User user) async {
+    if (text.length <= 8) {
+      final result = await CustomAPIService.changePostTitle(text, item.postId);
+      if (result == true) {
+        FirebaseMessaging.instance.subscribeToTopic("${item.postId}");
+
+        Navigator.of(context).pop();
+        Navigator.of(rootContext).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => MyPostScreen(user: user),
+          ),
+        );
+      } else {
+        SingleMessageDialog.alert(context, "제목 변경 실패");
+      }
+    } else {
+      SingleMessageDialog.alert(context, "제목을 8자 이내로 입력해주세요");
+    }
   }
 
   _showSelectSource(BuildContext rootContext) {
@@ -626,6 +615,9 @@ class _MyPostScreenState extends State<MyPostScreen> {
       final result = await CustomAPIService.updateImage(_post.postId, _thumbImgURL, _realImgURL);
       print(result);
 
+      // 4. 푸시 알림 등록
+      FirebaseMessaging.instance.subscribeToTopic("${_post.postId}");
+
       setState(() {
         _isUploaded = true;
         Navigator.of(rootContext).pushReplacement(
@@ -686,11 +678,12 @@ class _MyPostScreenState extends State<MyPostScreen> {
     )));
   }
 
-  _buildApproval(int isApproved, int isRejected) {
+  _buildApproval(int postId, int isApproved, int isRejected) {
     var resultText = "";
     var resultBackGroundColor = Colors.yellow;
     var resultTextColor = Colors.black;
     if (isApproved == 1 && isRejected == 0) {
+      FirebaseMessaging.instance.unsubscribeFromTopic("$postId");
       resultText = "승인됨";
       resultTextColor = Colors.white;
       resultBackGroundColor = Colors.green;

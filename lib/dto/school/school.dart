@@ -3,7 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 class School {
   final String region;
   final String schoolName;
-  final LatLng latLng;
+  final LatLng? latLng;
 
   School(this.region, this.schoolName, this.latLng);
 
