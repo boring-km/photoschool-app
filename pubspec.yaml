@@ -60,10 +60,14 @@ dependencies:
   # notification
   flutter_local_notifications: ^6.0.0
 
+  # webview
+  flutter_inappwebview: ^5.3.2
+  url_launcher: ^6.0.0-nullsafety.4
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  test: ^1.17.5
+  test: ^1.16.3
 
 flutter:
   uses-material-design: true
