@@ -12,6 +12,8 @@ import '../res/colors.dart';
 import '../services/public_api.dart';
 import '../services/woongjin_api.dart';
 import '../widgets/app_bar_base.dart';
+import '../widgets/flutter_inappwebview.dart';
+import '../widgets/hero_dialog_route.dart';
 import 'creature_detail_screen.dart';
 import 'pedia_detail_screen.dart';
 
@@ -47,7 +49,12 @@ class _FindCreatureState extends State<SearchCreatureScreen> with TickerProvider
 
   void _initialize() async {
     _user = widget._user;
-    await _searchCreature(_creatureSearchController.text, _currentPage); // 처음에 기본 생물만 검색
+    try {
+      await _searchCreature(_creatureSearchController.text, _currentPage); // 처음에 기본 생물만 검색
+    } on Exception catch (e) {
+      await _searchCreature(_creatureSearchController.text, _currentPage); // 한번 더 시도
+      print(e);
+    }
   }
 
   @override
@@ -61,6 +68,37 @@ class _FindCreatureState extends State<SearchCreatureScreen> with TickerProvider
     var buttonHeight = w > h ? h / 15 : w / 15;
     var buttonFontSize = w > h ? h / 35 : w / 35;
 
+    var searchButton = ElevatedButton(
+        onPressed: () async {
+          _currentPage = 1;
+          _creatureDataList.clear();
+          setState(() {
+            _isSearching = true;
+          });
+          await _allSearch(_creatureSearchController.text);
+          setState(() {
+            _isSearching = false;
+          });
+          },
+        style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(h / 50),),
+            primary: CustomColors.orange,
+            onSurface: Colors.orangeAccent),
+        child: Text("검색",
+          style: TextStyle(
+              color: Colors.white,
+              shadows: [
+                Shadow(
+                    blurRadius: 4.0,
+                    color: Colors.black45,
+                    offset: Offset(2.0, 2.0)
+                )
+              ],
+              fontSize: buttonFontSize,
+              fontWeight: FontWeight.w700),
+        )
+    );
     return _isFirstLoading ? Scaffold(
       backgroundColor: CustomColors.deepOrange,
       body: Center(
@@ -133,7 +171,7 @@ class _FindCreatureState extends State<SearchCreatureScreen> with TickerProvider
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Padding(
-                      padding: EdgeInsets.all(h / 50),
+                      padding: EdgeInsets.symmetric(vertical: h / 50),
                       child: Container(
                         width: w * (2 / 3),
                         height: buttonHeight,
@@ -170,38 +208,55 @@ class _FindCreatureState extends State<SearchCreatureScreen> with TickerProvider
                         ),
                       ),
                     ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: h/100),
+                      child: Container(
+                        height: buttonHeight,
+                        child: ElevatedButton(
+                            onPressed: () async {
+                              final result = await Navigator.of(context).push(HeroDialogRoute(builder: (context) => Center(
+                                  child: AlertDialog(
+                                    title: Center(child: Text("구글 이미지 검색")),
+                                    content: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        InAppWebViewExampleScreen(),
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(vertical: 8.0),
+                                          child: Text("파일 선택을 클릭해 주세요", style: TextStyle(color: Colors.black),),
+                                        ),
+                                        ElevatedButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              primary: Colors.grey
+                                            ),
+                                            child: Text("닫기")
+                                        )
+                                      ],
+                                    ),
+                                  )))
+                              );
+                              setState(() {
+                                final text = result.toString();
+                                if (text != "null") {
+                                  _creatureSearchController.text = text;
+                                  searchButton.onPressed!();
+                                }
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.blue,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20)))
+                            ),
+                            child: Icon(Icons.camera_alt_outlined, color: Colors.white,)),
+                      ),
+                    ),
                     ConstrainedBox(
                       constraints: BoxConstraints.tightFor(
                           width: buttonWidth, height: buttonHeight),
-                      child: ElevatedButton(
-                          onPressed: () async {
-                            _currentPage = 1;
-                            _creatureDataList.clear();
-                            setState(() {
-                              _isSearching = true;
-                            });
-                            await _allSearch(_creatureSearchController.text);
-                            setState(() {
-                              _isSearching = false;
-                            });
-                          },
-                          style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(h / 50),),
-                              primary: CustomColors.orange,
-                              onSurface: Colors.orangeAccent),
-                          child: Text("검색",
-                            style: TextStyle(
-                                color: Colors.white,
-                                shadows: [
-                                  Shadow(
-                                      blurRadius: 4.0,
-                                      color: Colors.black45,
-                                      offset: Offset(2.0, 2.0)
-                                  )
-                                ],
-                                fontSize: buttonFontSize,
-                                fontWeight: FontWeight.w700),)),
+                      child: searchButton,
                     ),
                   ],
                 ),

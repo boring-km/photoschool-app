@@ -21,6 +21,11 @@ class PublicAPIService {
     final numOfRows = 9;
     final target = CreatureRequest("$baseUrl", serviceKey, 1, keyword, numOfRows, page).toString();
     var creatureList = <CreatureResponse>[];
+
+    if (keyword.split(' ').length > 1) {
+      return creatureList;
+    }
+
     var result = await Http.get(target);
     if (result['error'] != null) {
       print(result['errorCode']);
@@ -36,12 +41,16 @@ class PublicAPIService {
           creatureList.add(CreatureResponse(name, type, "$apiId"));
         }
       } else {
-        final list = XMLParser.parseXMLItems(searched);
-        for (var item in list) {
-          final apiId = int.parse(item.getChild('childLvbngPilbkNo')!.text!);
-          final name = item.getChild('lvbngKrlngNm')!.text!;
-          final type = item.getChild('lvbngTpcdNm')!.text!;
-          creatureList.add(CreatureResponse(name, type, "$apiId"));
+        try {
+          final list = XMLParser.parseXMLItems(searched);
+          for (var item in list) {
+            final apiId = int.parse(item.getChild('childLvbngPilbkNo')!.text!);
+            final name = item.getChild('lvbngKrlngNm')!.text!;
+            final type = item.getChild('lvbngTpcdNm')!.text!;
+            creatureList.add(CreatureResponse(name, type, "$apiId"));
+          }
+        } on Exception catch (e) {
+          print(e);
         }
       }
     }

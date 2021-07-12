@@ -39,6 +39,7 @@ class _InAppWebViewExampleScreenState extends State<InAppWebViewExampleScreen> {
   double progress = 0;
   final urlController = TextEditingController();
   late InAppWebView webView;
+  bool isLoaded = false;
 
   @override
   void initState() {
@@ -133,8 +134,14 @@ class _InAppWebViewExampleScreenState extends State<InAppWebViewExampleScreen> {
         pullToRefreshController.endRefreshing();
         final urlString = url.toString();
         if (urlString.startsWith("https://www.google.co.kr/search?")) {
-          final result = await webViewController?.evaluateJavascript(source: "document.getElementsByClassName('gLFyf gsfi')[1].value.split(' ')[0];");
-          print("result: $result");
+          setState(() {
+            isLoaded = true;
+          });
+          final result = await webViewController?.evaluateJavascript(source: "document.getElementsByClassName('gLFyf gsfi')[1].value;");
+          if (result != null) {
+            print("결과: $result");
+            Navigator.of(context).pop(result);
+          }
         }
 
         setState(() {
@@ -166,12 +173,13 @@ class _InAppWebViewExampleScreenState extends State<InAppWebViewExampleScreen> {
     );
 
     try {
-      Timer(Duration(seconds: 4), () {
+      Timer(Duration(seconds: 3), () {
         webViewController?.evaluateJavascript(source: "document.getElementsByClassName('ZaFQO')[0].click();");
       });
-      Timer(Duration(seconds: 5), () {
+      Timer(Duration(seconds: 4), () {
         webViewController?.evaluateJavascript(source: "document.getElementsByClassName('iOGqzf H4qWMc aXIg1b')[0].click();");
-        webViewController?.zoomBy(zoomFactor: 3.0);
+        webViewController?.zoomBy(zoomFactor: 2.5);
+        webViewController?.scrollBy(x: -100, y: 0);
       });
     } on Exception catch (e) {
       print(e);
@@ -186,66 +194,50 @@ class _InAppWebViewExampleScreenState extends State<InAppWebViewExampleScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(title: Text("InAppWebView")),
-        body: SafeArea(
-            child: Column(children: <Widget>[
-              TextField(
-                decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.search)
-                ),
-                controller: urlController,
-                keyboardType: TextInputType.url,
-                onSubmitted: (value) {
-                  var url = Uri.parse(value);
-                  if (url.scheme.isEmpty) {
-                    url = Uri.parse("https://www.google.com/search?q=$value");
-                  }
-                  webViewController?.loadUrl(
-                      urlRequest: URLRequest(url: url));
-                },
-              ),
-              Expanded(
-                child: Stack(
-                  children: [
-                    Container(
-                        width: 400,
-                        height: 300,
-                        child: webView),
-                    progress < 1.0
-                        ? LinearProgressIndicator(value: progress)
-                        : Container(),
-                  ],
-                ),
-              ),
-              ButtonBar(
-                alignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  ElevatedButton(
-                    child: Icon(Icons.arrow_back),
-                    onPressed: () {
-                      webViewController?.goBack();
-                    },
+    TextField(
+      decoration: InputDecoration(
+          prefixIcon: Icon(Icons.search)
+      ),
+      controller: urlController,
+      keyboardType: TextInputType.url,
+      onSubmitted: (value) {
+        var url = Uri.parse(value);
+        if (url.scheme.isEmpty) {
+          url = Uri.parse("https://www.google.com/search?q=$value");
+        }
+        webViewController?.loadUrl(
+            urlRequest: URLRequest(url: url));
+      },
+    );
+    return Center(
+      child: isLoaded ? Column(
+        children: [
+          Container(
+            height: 400,
+            color: Colors.green,
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: CircularProgressIndicator(color: Colors.white,),
                   ),
-                  ElevatedButton(
-                    child: Icon(Icons.arrow_forward),
-                    onPressed: () {
-                      webViewController?.goForward();
-                    },
-                  ),
-                  ElevatedButton(
-                    child: Icon(Icons.refresh),
-                    onPressed: () {
-                      webViewController?.reload();
-                    },
-                  ),
-                  ElevatedButton(onPressed: () async {
-                    await webViewController?.evaluateJavascript(source: "document.getElementById('awyMjb').click();");
-                    final result = await webViewController?.isLoading();
-                    print(result);
-                  }, child: Icon(Icons.cancel))
+                  Text("로딩중", style: TextStyle(color: Colors.white, fontSize: 28))
                 ],
               ),
-            ])));
+            ),
+          ),
+          Container(
+              width: 500,
+              height: 0,
+              child: webView)
+        ],
+      ) :
+      Container(
+          width: 500,
+          height: 400,
+          child: webView),
+    );
   }
 }
