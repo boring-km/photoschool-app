@@ -19,6 +19,7 @@ import '../widgets/hero_dialog_route.dart';
 import '../widgets/image_dialog.dart';
 import '../widgets/loading.dart';
 import '../widgets/user_image_card.dart';
+import 'painter_image.dart';
 
 class CreatureDetailScreen extends StatefulWidget {
   final CreatureDetailResponse _creature;
@@ -29,7 +30,8 @@ class CreatureDetailScreen extends StatefulWidget {
         super(key: key);
 
   @override
-  _CreatureDetailScreenState createState() => _CreatureDetailScreenState(_creature);
+  _CreatureDetailScreenState createState() =>
+      _CreatureDetailScreenState(_creature);
 }
 
 class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
@@ -55,14 +57,13 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
   void initState() {
     super.initState();
     _user = widget._user;
-    Future.delayed(Duration.zero,() {
+    Future.delayed(Duration.zero, () {
       _buildOthersCardList(_creature.apiId, context);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-
     var w = MediaQuery.of(context).size.width;
     var h = MediaQuery.of(context).size.height;
 
@@ -87,7 +88,7 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(_baseSize/3),
+          padding: EdgeInsets.all(_baseSize / 3),
           child: Center(
             child: Container(
               decoration: CustomBoxDecoration.buildWhiteBoxDecoration(),
@@ -102,11 +103,15 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          _user != null && !kIsWeb ? ElevatedButton(
-                              style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(boxRounded)), primary: Colors.blue, onSurface: Colors.blueAccent),
-                              onPressed: () {
-                                _showSelectSource(context);
-                              },
+                          _user != null && !kIsWeb
+                              ? ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(boxRounded)
+                                  ),
+                                  primary: Colors.blue,
+                                  onSurface: Colors.blueAccent),
+                              onPressed: () {_showSelectSource(context);},
                               child: Container(
                                 child: Row(
                                   children: [
@@ -115,16 +120,19 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                                       color: Colors.white,
                                     ),
                                     Padding(
-                                      padding: EdgeInsets.only(left: _baseSize / 5),
+                                      padding: EdgeInsets.only(
+                                          left: _baseSize / 5),
                                       child: Text(
                                         "사진 올리기",
-                                        style: TextStyle(fontSize: _baseSize / 5, color: Colors.white),
+                                        style: TextStyle(
+                                            fontSize: _baseSize / 5,
+                                            color: Colors.white),
                                       ),
                                     )
                                   ],
                                 ),
-                              )
-                          ) : Container(),
+                              ))
+                              : Container(),
                         ],
                       ),
                     ),
@@ -145,8 +153,10 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                                         shrinkWrap: true,
                                         scrollDirection: Axis.horizontal,
                                         children: [
-                                          _drawImage(_creature.imgUrl1, _baseSize, boxRounded),
-                                          _drawImage(_creature.imgUrl2, _baseSize, boxRounded),
+                                          _drawImage(_creature.imgUrl1, _baseSize,
+                                              boxRounded),
+                                          _drawImage(_creature.imgUrl2, _baseSize,
+                                              boxRounded),
                                         ],
                                       ),
                                     ),
@@ -158,20 +168,38 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
+                            ElevatedButton(
+                                onPressed: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                        builder: (context) => PainterImageTest()
+                                    ),
+                                  );
+                                },
+                                child: Text("테스트")
+                            ),
                             Padding(
-                              padding: EdgeInsets.only(top: _baseSize / 3, left: _baseSize / 2),
+                              padding: EdgeInsets.only(
+                                  top: _baseSize / 3, left: _baseSize / 2),
                               child: Text(
                                 "${_creature.name}",
-                                style: TextStyle(fontSize: _baseSize * (2 / 3), fontWeight: FontWeight.w700, color: Colors.black),
+                                style: TextStyle(
+                                    fontSize: _baseSize * (2 / 3),
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.black),
                               ),
                             ),
                             Padding(
-                              padding: EdgeInsets.only(top: _baseSize / 2, right: _baseSize / 2),
+                              padding: EdgeInsets.only(
+                                  top: _baseSize / 2, right: _baseSize / 2),
                               child: Column(
                                 children: [
                                   Text(
                                     "종류: ${_creature.type}",
-                                    style: TextStyle(fontSize: _baseSize / 4, fontWeight: FontWeight.w700, color: Colors.black),
+                                    style: TextStyle(
+                                        fontSize: _baseSize / 4,
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.black),
                                   ),
                                 ],
                               ),
@@ -179,106 +207,158 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                           ],
                         ),
                         Padding(
-                          padding: EdgeInsets.symmetric(vertical: _baseSize / 3, horizontal: _baseSize / 2),
+                          padding: EdgeInsets.symmetric(
+                              vertical: _baseSize / 3,
+                              horizontal: _baseSize / 2),
                           child: Container(
                             height: 2,
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(bottom: _baseSize / 3, left: _baseSize / 2, right: _baseSize / 2),
+                          padding: EdgeInsets.only(
+                              bottom: _baseSize / 3,
+                              left: _baseSize / 2,
+                              right: _baseSize / 2),
                           child: Html(
                             data: _creature.detail,
                             style: {
-                              "html": Style(color: Colors.black, fontSize: FontSize(_baseSize/3)),
+                              "html": Style(
+                                  color: Colors.black,
+                                  fontSize: FontSize(_baseSize / 3)),
                             },
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(top: _baseSize / 10, left: _baseSize / 2, right: _baseSize / 2),
+                          padding: EdgeInsets.only(
+                              top: _baseSize / 10,
+                              left: _baseSize / 2,
+                              right: _baseSize / 2),
                           child: Text(
                             "출처 | 산림청 국립수목원 국가생물종지식정보시스템 어린이생물도감\n본 콘텐츠의 저작권은 제공처에 있으며, 해당 자료의 무단복제 및 배포를 금합니다.\n외부 콘텐츠는 웅진씽크빅의 입장과 다를 수 있습니다.",
-                            style: TextStyle(color: Colors.grey, fontSize: _baseSize/5),
+                            style: TextStyle(
+                                color: Colors.grey, fontSize: _baseSize / 5),
                           ),
                         ),
                         Padding(
                           padding: EdgeInsets.only(top: 12.0),
                           child: Container(
                             decoration: BoxDecoration(
-                              color: Color(0xF3FFEE98),
-                              borderRadius: BorderRadius.all(Radius.circular(28))
-                            ),
+                                color: Color(0xF3FFEE98),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(28))),
                             child: Column(
                               children: [
-                                _othersImageCardList.length == 1 ? Padding(
-                                  padding: EdgeInsets.symmetric(vertical: _baseSize / 4),
-                                  child: Text(
-                                    "아직 관련 사진을 찍은 친구가 없어요!",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(color: Colors.black, fontSize: _baseSize * (1 / 3)),
-                                  ),
-                                ) : Padding(
-                                  padding: EdgeInsets.symmetric(vertical: _baseSize / 4),
-                                  child: Text(
-                                    "친구들이 찍은 사진",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(color: Colors.black, fontSize: _baseSize * (2 / 3)),
-                                  ),
-                                ),
-                                _othersImageCardList.length == 1 ? Container() : Padding(
-                                  padding: EdgeInsets.all(_baseSize / 4),
-                                  child: Flex(
-                                    direction: Axis.horizontal,
-                                    children: [
-                                      Expanded(
-                                          child: Container(
-                                              height: 400,
-                                              child: NotificationListener<ScrollEndNotification>(
-                                                onNotification: (scrollEnd) {
-                                                  final metrics = scrollEnd.metrics;
-                                                  if (metrics.atEdge) {
-                                                    if (metrics.pixels != 0) {
-                                                      if (_received == -1 || _received == 5) {
-                                                        setState(() {
-                                                          _isLoading = true;
-                                                        });
-                                                        _othersIndex++;
-                                                        _buildOthersCardList(_creature.apiId, context);
-                                                      }
-                                                    }
-                                                  }
-                                                  return true;
-                                                },
-                                                child: ListView.builder(
-                                                  shrinkWrap: true,
-                                                  scrollDirection: Axis.horizontal,
-                                                  itemCount: _othersImageCardList.length + 1,
-                                                  itemBuilder: (context, index) {
-                                                    if (index == _othersImageCardList.length) {
-                                                      return _isLoading ? Container(
-                                                        child: Center(
-                                                          child: Column(
-                                                            mainAxisAlignment: MainAxisAlignment.center,
-                                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                                            children: [
-                                                              CircularProgressIndicator(color: Colors.red,),
-                                                              Padding(
-                                                                padding: EdgeInsets.all(_baseSize/10),
-                                                                child: Text("로딩중", style: TextStyle(color: Colors.red, fontSize: _baseSize/2),),
-                                                              )
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ) : Container();
-                                                    }
-                                                    return _othersImageCardList[index];
-                                                  },
-                                                ),
-                                              )
-                                          )
+                                _othersImageCardList.length == 1
+                                    ? Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: _baseSize / 4),
+                                        child: Text(
+                                          "아직 관련 사진을 찍은 친구가 없어요!",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: _baseSize * (1 / 3)),
+                                        ),
                                       )
-                                    ],
-                                  ),
-                                )
+                                    : Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: _baseSize / 4),
+                                        child: Text(
+                                          "친구들이 찍은 사진",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: _baseSize * (2 / 3)),
+                                        ),
+                                      ),
+                                _othersImageCardList.length == 1
+                                    ? Container()
+                                    : Padding(
+                                        padding: EdgeInsets.all(_baseSize / 4),
+                                        child: Flex(
+                                          direction: Axis.horizontal,
+                                          children: [
+                                            Expanded(
+                                                child: Container(
+                                                    height: 400,
+                                                    child: NotificationListener<
+                                                        ScrollEndNotification>(
+                                                      onNotification:
+                                                          (scrollEnd) {
+                                                        final metrics =
+                                                            scrollEnd.metrics;
+                                                        if (metrics.atEdge) {
+                                                          if (metrics.pixels !=
+                                                              0) {
+                                                            if (_received ==
+                                                                    -1 ||
+                                                                _received ==
+                                                                    5) {
+                                                              setState(() {
+                                                                _isLoading =
+                                                                    true;
+                                                              });
+                                                              _othersIndex++;
+                                                              _buildOthersCardList(
+                                                                  _creature
+                                                                      .apiId,
+                                                                  context);
+                                                            }
+                                                          }
+                                                        }
+                                                        return true;
+                                                      },
+                                                      child: ListView.builder(
+                                                        shrinkWrap: true,
+                                                        scrollDirection:
+                                                            Axis.horizontal,
+                                                        itemCount:
+                                                            _othersImageCardList
+                                                                    .length +
+                                                                1,
+                                                        itemBuilder:
+                                                            (context, index) {
+                                                          if (index ==
+                                                              _othersImageCardList
+                                                                  .length) {
+                                                            return _isLoading
+                                                                ? Container(
+                                                                    child:
+                                                                        Center(
+                                                                      child:
+                                                                          Column(
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.center,
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.center,
+                                                                        children: [
+                                                                          CircularProgressIndicator(
+                                                                            color:
+                                                                                Colors.red,
+                                                                          ),
+                                                                          Padding(
+                                                                            padding:
+                                                                                EdgeInsets.all(_baseSize / 10),
+                                                                            child:
+                                                                                Text(
+                                                                              "로딩중",
+                                                                              style: TextStyle(color: Colors.red, fontSize: _baseSize / 2),
+                                                                            ),
+                                                                          )
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  )
+                                                                : Container();
+                                                          }
+                                                          return _othersImageCardList[
+                                                              index];
+                                                        },
+                                                      ),
+                                                    )))
+                                          ],
+                                        ),
+                                      )
                               ],
                             ),
                           ),
@@ -296,32 +376,42 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
   }
 
   Widget _drawImage(String imageUrl, double baseSize, double boxRounded) {
-    return imageUrl == 'NONE' ? Padding(
-      padding: EdgeInsets.all(baseSize / 4),
-      child: Container(child: null),
-    ) : Material(
-      child: InkWell(
-        onTap: () {
-          ImageDialog.show(context, imageUrl);
-        },
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: baseSize / 3),
-          child: Container(
-            child: Center(
-                child: Image.network(
-                  imageUrl,
-                  height: baseSize * 8,
-                  fit: BoxFit.cover,
-                  loadingBuilder: (context, child, progress) {
-                    if (progress == null) return child;
-                    return Container(child: Center(child: Text("로딩중", style: TextStyle(color: CustomColors.creatureGreen, fontSize: _baseSize/2),),),);
-                  },
-                )
+    return imageUrl == 'NONE'
+        ? Padding(
+            padding: EdgeInsets.all(baseSize / 4),
+            child: Container(child: null),
+          )
+        : Material(
+            child: InkWell(
+              onTap: () {
+                ImageDialog.show(context, imageUrl);
+              },
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: baseSize / 3),
+                child: Container(
+                  child: Center(
+                      child: Image.network(
+                    imageUrl,
+                    height: baseSize * 8,
+                    fit: BoxFit.cover,
+                    loadingBuilder: (context, child, progress) {
+                      if (progress == null) return child;
+                      return Container(
+                        child: Center(
+                          child: Text(
+                            "로딩중",
+                            style: TextStyle(
+                                color: CustomColors.creatureGreen,
+                                fontSize: _baseSize / 2),
+                          ),
+                        ),
+                      );
+                    },
+                  )),
+                ),
+              ),
             ),
-          ),
-        ),
-      ),
-    );
+          );
   }
 
   _showSelectSource(BuildContext rootContext) {
@@ -332,121 +422,150 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
     var baseWidth = w / 10;
     var baseHeight = h / 10;
     var boxRounded = w > h ? h / 30 : w / 30;
-    Navigator.of(context).push(HeroDialogRoute(builder: (context) => Center(
+    Navigator.of(context).push(HeroDialogRoute(
+        builder: (context) => Center(
               child: AlertDialog(
-                  title: Text(
-                    '사진을 촬영하거나 가져오기',
-                    textAlign: TextAlign.center,
-                  ),
-                  content: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.all(baseSize / 4),
-                              child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(boxRounded)), primary: Colors.white, onSurface: Colors.white30),
-                                  onPressed: () async {
-                                    final result = await _pickImage(ImageSource.camera);
-                                    if (result) {
-                                      _showTitleDialog(context, rootContext);
-                                    } else {
-                                      print("실패");
-                                    }
-                                    // TODO 실패 시 알려주기
-                                  },
-                                  child: Padding(
-                                    padding: EdgeInsets.all(baseSize / 4),
-                                    child: Container(
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Icon(
-                                            CupertinoIcons.camera,
-                                            color: Colors.black,
-                                            size: baseSize,
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.only(top: baseSize / 10),
-                                            child: Text(
-                                              "카메라",
-                                              style: TextStyle(fontSize: baseSize / 4, color: Colors.black),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  )),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.all(baseSize / 4),
-                              child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(boxRounded)), primary: Colors.white, onSurface: Colors.white30),
-                                  onPressed: () async {
-                                    final result = await _pickImage(ImageSource.gallery);
-                                    if (result) {
-                                      _showTitleDialog(context, rootContext);
-                                    } else {
-                                      print("실패");
-                                    }
-                                    // TODO 실패 시 알려주기
-                                  },
-                                  child: Padding(
-                                    padding: EdgeInsets.all(baseSize / 4),
-                                    child: Container(
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Icon(
-                                            Icons.photo_album,
-                                            color: Colors.black,
-                                            size: baseSize,
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.only(top: baseSize / 10),
-                                            child: Text(
-                                              "갤러리",
-                                              style: TextStyle(fontSize: baseSize / 4, color: Colors.black),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  )),
-                            ),
-                          ],
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: baseWidth / 4),
-                          child: Container(
-                            width: baseWidth * 3,
-                            height: baseHeight,
+                title: Text(
+                  '사진을 촬영하거나 가져오기',
+                  textAlign: TextAlign.center,
+                ),
+                content: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(baseSize / 4),
                             child: ElevatedButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
+                                style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(boxRounded)),
+                                    primary: Colors.white,
+                                    onSurface: Colors.white30),
+                                onPressed: () async {
+                                  final result =
+                                      await _pickImage(ImageSource.camera);
+                                  if (result) {
+                                    _showTitleDialog(context, rootContext);
+                                  } else {
+                                    print("실패");
+                                  }
+                                  // TODO 실패 시 알려주기
                                 },
-                                style: ElevatedButton.styleFrom(primary: Colors.white, onSurface: Colors.white70, side: BorderSide(style: BorderStyle.none, width: 2.0, color: Colors.black)),
-                                child: Text(
-                                  "닫기",
-                                  style: TextStyle(fontSize: baseWidth / 4, color: Colors.black),
+                                child: Padding(
+                                  padding: EdgeInsets.all(baseSize / 4),
+                                  child: Container(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(
+                                          CupertinoIcons.camera,
+                                          color: Colors.black,
+                                          size: baseSize,
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              top: baseSize / 10),
+                                          child: Text(
+                                            "카메라",
+                                            style: TextStyle(
+                                                fontSize: baseSize / 4,
+                                                color: Colors.black),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 )),
                           ),
-                        )
-                      ],
-                    ),
+                          Padding(
+                            padding: EdgeInsets.all(baseSize / 4),
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(boxRounded)),
+                                    primary: Colors.white,
+                                    onSurface: Colors.white30),
+                                onPressed: () async {
+                                  final result =
+                                      await _pickImage(ImageSource.gallery);
+                                  if (result) {
+                                    _showTitleDialog(context, rootContext);
+                                  } else {
+                                    print("실패");
+                                  }
+                                  // TODO 실패 시 알려주기
+                                },
+                                child: Padding(
+                                  padding: EdgeInsets.all(baseSize / 4),
+                                  child: Container(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(
+                                          Icons.photo_album,
+                                          color: Colors.black,
+                                          size: baseSize,
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              top: baseSize / 10),
+                                          child: Text(
+                                            "갤러리",
+                                            style: TextStyle(
+                                                fontSize: baseSize / 4,
+                                                color: Colors.black),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                )),
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: baseWidth / 4),
+                        child: Container(
+                          width: baseWidth * 3,
+                          height: baseHeight,
+                          child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  primary: Colors.white,
+                                  onSurface: Colors.white70,
+                                  side: BorderSide(
+                                      style: BorderStyle.none,
+                                      width: 2.0,
+                                      color: Colors.black)),
+                              child: Text(
+                                "닫기",
+                                style: TextStyle(
+                                    fontSize: baseWidth / 4,
+                                    color: Colors.black),
+                              )),
+                        ),
+                      )
+                    ],
                   ),
                 ),
-            )
-    ));
+              ),
+            )));
   }
+
   Future<bool> _pickImage(ImageSource source) async {
     final pickedFile = await picker.getImage(source: source);
 
@@ -461,6 +580,7 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
       return false;
     }
   }
+
   _showTitleDialog(BuildContext parentContext, BuildContext rootContext) {
     Navigator.of(context).push(HeroDialogRoute(builder: (context) {
       var w = MediaQuery.of(context).size.width / 10;
@@ -496,11 +616,18 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                           onPressed: () {
                             Navigator.pop(context);
                           },
-                          style: ElevatedButton.styleFrom(primary: Colors.white, onSurface: Colors.white70, side: BorderSide(style: BorderStyle.none, width: 2.0, color: Colors.black)),
+                          style: ElevatedButton.styleFrom(
+                              primary: Colors.white,
+                              onSurface: Colors.white70,
+                              side: BorderSide(
+                                  style: BorderStyle.none,
+                                  width: 2.0,
+                                  color: Colors.black)),
                           child: Text(
                             "닫기",
                             textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: w / 4, color: Colors.black),
+                            style:
+                                TextStyle(fontSize: w / 4, color: Colors.black),
                           )),
                     ),
                   ),
@@ -516,12 +643,20 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                               FocusScope.of(context).unfocus();
                               _isUploaded = false;
                             });
-                            await _uploadImage(rootContext, _dialogTextController.text);
+                            await _uploadImage(
+                                rootContext, _dialogTextController.text);
                           },
-                          style: ElevatedButton.styleFrom(primary: Colors.white, onSurface: Colors.white70, side: BorderSide(style: BorderStyle.none, width: 2.0, color: Colors.black)),
+                          style: ElevatedButton.styleFrom(
+                              primary: Colors.white,
+                              onSurface: Colors.white70,
+                              side: BorderSide(
+                                  style: BorderStyle.none,
+                                  width: 2.0,
+                                  color: Colors.black)),
                           child: Text(
                             "업로드",
-                            style: TextStyle(fontSize: w / 4, color: Colors.black),
+                            style:
+                                TextStyle(fontSize: w / 4, color: Colors.black),
                           )),
                     ),
                   )
@@ -533,25 +668,32 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
       );
     }));
   }
+
   Future<void> _uploadImage(BuildContext rootContext, String title) async {
     if (_imageFileToUpload != null && _thumbnailFileToUpload != null) {
       // 1. 이미지 없이 등록 후 postId 받아서
-      var postId = await CustomAPIService.registerPost("C${_creature.apiId}", title);
+      var postId =
+          await CustomAPIService.registerPost("C${_creature.apiId}", title);
 
       // 2. storage에 썸네일 및 원본 이미지 저장 후 url 추출
-      var realImageRef = FirebaseStorage.instance.ref().child('real/$postId.png');
-      var thumbImageRef = FirebaseStorage.instance.ref().child('thumbnail/$postId.png');
+      var realImageRef =
+          FirebaseStorage.instance.ref().child('real/$postId.png');
+      var thumbImageRef =
+          FirebaseStorage.instance.ref().child('thumbnail/$postId.png');
 
       final uploadTask1 = realImageRef.putFile(_imageFileToUpload!);
-      final snapshot1 = await uploadTask1.whenComplete(() => print("원본 이미지 업로드 완료"));
+      final snapshot1 =
+          await uploadTask1.whenComplete(() => print("원본 이미지 업로드 완료"));
       final _realImgURL = await snapshot1.ref.getDownloadURL();
 
       final uploadTask2 = thumbImageRef.putFile(_thumbnailFileToUpload!);
-      final snapshot2 = await uploadTask2.whenComplete(() => print("썸네일 이미지 업로드 완료"));
+      final snapshot2 =
+          await uploadTask2.whenComplete(() => print("썸네일 이미지 업로드 완료"));
       final _thumbImgURL = await snapshot2.ref.getDownloadURL();
 
       // 3. 다시 이미지 등록
-      final result = await CustomAPIService.updateImage(postId, _thumbImgURL, _realImgURL);
+      final result =
+          await CustomAPIService.updateImage(postId, _thumbImgURL, _realImgURL);
       print(result);
 
       // 4. 푸시 알림 등록
@@ -572,7 +714,8 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
   }
 
   _buildOthersCardList(String apiId, BuildContext context) async {
-    final posts = await CustomAPIService.getOthersPostBy("C$apiId", _othersIndex);
+    final posts =
+        await CustomAPIService.getOthersPostBy("C$apiId", _othersIndex);
     _received = posts.length;
     var resultList = UserImageCard.buildImageCard(posts, context, _user);
     setState(() {

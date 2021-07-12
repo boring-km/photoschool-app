@@ -6,13 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class InAppWebViewExampleScreen extends StatefulWidget {
+class GoogleImageSearchWidget extends StatefulWidget {
   @override
-  _InAppWebViewExampleScreenState createState() =>
-      _InAppWebViewExampleScreenState();
+  _GoogleImageSearchWidgetState createState() =>
+      _GoogleImageSearchWidgetState();
 }
 
-class _InAppWebViewExampleScreenState extends State<InAppWebViewExampleScreen> {
+class _GoogleImageSearchWidgetState extends State<GoogleImageSearchWidget> {
 
   final GlobalKey webViewKey = GlobalKey();
 
