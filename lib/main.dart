@@ -63,51 +63,51 @@ _initializeAndroidWebView() async {
 }
 
 _initializeFirebaseMessaging() async {
-  var androidSettings = AndroidInitializationSettings(
-    '@mipmap/app_icon',
-  );
-  var settings = InitializationSettings(
-    android: androidSettings,
-  );
-  await flutterLocalNotificationsPlugin.initialize(settings);
-  print("token: ${await FirebaseMessaging.instance.getToken()}");
+  if (Platform.isAndroid) {
+    var androidSettings = AndroidInitializationSettings(
+      '@mipmap/app_icon',
+    );
+    var settings = InitializationSettings(
+      android: androidSettings,
+    );
+    await flutterLocalNotificationsPlugin.initialize(settings);
+    print("token: ${await FirebaseMessaging.instance.getToken()}");
 
-  var onMessage = FirebaseMessaging.onMessage;
+    var onMessage = FirebaseMessaging.onMessage;
 
+    onMessage.listen((message) {
+      var notification = message.notification!;
+      var android = message.notification!.android!;
+      final data = message.data;
+      final postId = data['postId'];
+      final title = data['title'];
+      final nickname = data['nickname'];
+      FirebaseMessaging.instance.unsubscribeFromTopic("$postId");
+      print("front: $postId $title $nickname");
 
+      if (notification != null && android != null && !kIsWeb) {
+        flutterLocalNotificationsPlugin.show(
+            notification.hashCode,
+            notification.title,
+            notification.body,
+            NotificationDetails(
+              android: AndroidNotificationDetails(
+                channel.id,
+                channel.name,
+                channel.description,
+                icon: android.smallIcon,
+              ),
+            )
+        );
+      }
+    });
 
-  onMessage.listen((message) {
-    var notification = message.notification!;
-    var android = message.notification!.android!;
-    final data = message.data;
-    final postId = data['postId'];
-    final title = data['title'];
-    final nickname = data['nickname'];
-    FirebaseMessaging.instance.unsubscribeFromTopic("$postId");
-    print("front: $postId $title $nickname");
-
-    if (notification != null && android != null && !kIsWeb) {
-      flutterLocalNotificationsPlugin.show(
-          notification.hashCode,
-          notification.title,
-          notification.body,
-          NotificationDetails(
-            android: AndroidNotificationDetails(
-              channel.id,
-              channel.name,
-              channel.description,
-              icon: android.smallIcon,
-            ),
-          )
-      );
-    }
-  });
-
-  FirebaseMessaging.onMessageOpenedApp.listen((event) {
-    print("check");
-    print("확인: ${event.data}");
-    MyApp.navigatorKey.currentState!.pushNamed("/myPage");
-  });
+    FirebaseMessaging.onMessageOpenedApp.listen((event) {
+      print("check");
+      print("확인: ${event.data}");
+      MyApp.navigatorKey.currentState!.pushNamed("/myPage");
+    });
+  }
 }
 
 class MyApp extends StatelessWidget {

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:animated_background/animated_background.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -208,7 +210,7 @@ class _FindCreatureState extends State<SearchCreatureScreen> with TickerProvider
                         ),
                       ),
                     ),
-                    Padding(
+                    Platform.isAndroid ? Padding(
                       padding: EdgeInsets.symmetric(horizontal: h/100),
                       child: Container(
                         height: buttonHeight,
@@ -252,7 +254,7 @@ class _FindCreatureState extends State<SearchCreatureScreen> with TickerProvider
                             ),
                             child: Icon(Icons.camera_alt_outlined, color: Colors.white,)),
                       ),
-                    ),
+                    ) : Container(),
                     ConstrainedBox(
                       constraints: BoxConstraints.tightFor(
                           width: buttonWidth, height: buttonHeight),
