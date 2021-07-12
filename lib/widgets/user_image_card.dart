@@ -48,7 +48,20 @@ class UserImageCard {
                     fit: BoxFit.fitWidth,
                     loadingBuilder: (context, child, progress) {
                       if (progress == null) return child;
-                      return Container(child: Center(child: Text("로딩중", style: TextStyle(color: CustomColors.orange, fontSize: 24),),),);
+                      return Container(
+                        width: 300,
+                        height: 200,
+                        child: Center(child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: CircularProgressIndicator(color: CustomColors.orange,),
+                            ),
+                            Text("로딩중", style: TextStyle(color: CustomColors.orange, fontSize: 24),),
+                          ],
+                        ),),);
                     },
                   ),
                 ),
@@ -172,7 +185,20 @@ class UserImageCard {
                     fit: BoxFit.fitWidth,
                     loadingBuilder: (context, child, progress) {
                       if (progress == null) return child;
-                      return Container(child: Center(child: Text("로딩중", style: TextStyle(color: CustomColors.orange, fontSize: 16),),),);
+                      return Container(
+                        width: 300,
+                        height: 200,
+                        child: Center(child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: CircularProgressIndicator(color: CustomColors.orange,),
+                            ),
+                            Text("로딩중", style: TextStyle(color: CustomColors.orange, fontSize: 16),),
+                          ],
+                        ),),);
                     },
                   ),
                 ),

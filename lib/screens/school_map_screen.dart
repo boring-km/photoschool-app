@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:lottie/lottie.dart' as lottie;
 
 import '../dto/school/school.dart';
 import '../dto/school/school_rank.dart';
-import '../res/colors.dart';
 import '../services/server_api.dart';
 import '../utils/geocode.dart';
 
@@ -53,20 +53,27 @@ class _SchoolRankMapState extends State<SchoolRankMap> {
 
     return !_isLoaded ?
     Scaffold(
-      backgroundColor: CustomColors.creatureGreen,
+      backgroundColor: Colors.lightBlue,
       body: Center(
         child: Container(
-          child: Text(
-            "로딩중",
-            style: TextStyle(
-                color: Colors.white,
-                shadows: [
-                  Shadow(
-                      blurRadius: 4.0,
-                      color: Colors.black45,
-                      offset: Offset(3.0, 3.0))
-                ],
-                fontSize: 40),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              lottie.Lottie.asset('assets/243-updating-map.json', height: h/4),
+              Text(
+                "로딩중",
+                style: TextStyle(
+                    color: Colors.white,
+                    shadows: [
+                      Shadow(
+                          blurRadius: 4.0,
+                          color: Colors.black45,
+                          offset: Offset(3.0, 3.0))
+                    ],
+                    fontSize: 40),
+              ),
+            ],
           ),
         ),
       ),
@@ -269,6 +276,7 @@ class _SchoolRankMapState extends State<SchoolRankMap> {
         }
       }
     }
+    await Future.delayed(Duration(milliseconds: 500), () async {});
     setState(() {
       _isLoaded = true;
     });

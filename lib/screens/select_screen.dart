@@ -68,12 +68,9 @@ class _SelectScreenState extends State<SelectScreen> with TickerProviderStateMix
                       children: [
                         Padding(
                           padding: EdgeInsets.only(top: boxHeight/8, bottom: boxHeight/9),
-                          child: Hero(
-                            tag: "SelectWiki",
-                            child: SvgPicture.asset(
-                              'assets/book_reading.svg',
-                              height: boxHeight * (1/2),
-                            ),
+                          child: SvgPicture.asset(
+                            'assets/book_reading.svg',
+                            height: boxHeight * (1/2),
                           ),
                         ),
                         Text(
@@ -117,12 +114,9 @@ class _SelectScreenState extends State<SelectScreen> with TickerProviderStateMix
                       children: [
                         Padding(
                           padding: EdgeInsets.only(top: boxHeight/8, bottom: boxHeight/9),
-                          child: Hero(
-                            tag: "Friends",
-                            child: SvgPicture.asset(
-                              'assets/friends.svg',
-                              height: boxHeight * (1/2),
-                            ),
+                          child: SvgPicture.asset(
+                            'assets/friends.svg',
+                            height: boxHeight * (1/2),
                           ),
                         ),
                         Text(

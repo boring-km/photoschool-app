@@ -57,24 +57,24 @@ class _AppBarTitleState extends State<AppBarTitle> {
     var image = Container(
       child: Row(
         children: [
-          Hero(tag: "", child: Container()),
+          Container(),
         ],
       ),
     );
 
     if (_image == "creature") {
       image = Container(
-        color: Colors.transparent,
+        decoration: BoxDecoration(
+          color: CustomColors.orange,
+          borderRadius: BorderRadius.all(Radius.circular(8))
+        ),
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: baseSize/8, horizontal: baseSize/3),
           child: Row(
             children: [
-              Hero(
-                tag: "SelectWiki",
-                child: SvgPicture.asset(
-                  'assets/book_reading.svg',
-                  height: baseSize/2,
-                ),
+              SvgPicture.asset(
+                'assets/book_reading.svg',
+                height: baseSize/2,
               ),
               Padding(
                 padding: EdgeInsets.only(left: w/40),
@@ -96,17 +96,17 @@ class _AppBarTitleState extends State<AppBarTitle> {
       );
     } else if (_image == "friends") {
       image = Container(
-        color: Colors.transparent,
+        decoration: BoxDecoration(
+            color: CustomColors.creatureGreen,
+            borderRadius: BorderRadius.all(Radius.circular(8))
+        ),
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: baseSize/8, horizontal: baseSize/3),
           child: Row(
             children: [
-              Hero(
-                tag: "Friends",
-                child: SvgPicture.asset(
-                  'assets/friends.svg',
-                  height: h / 20,
-                ),
+              SvgPicture.asset(
+                'assets/friends.svg',
+                height: h / 20,
               ),
               Padding(
                 padding: EdgeInsets.only(left: w/40),
@@ -130,7 +130,7 @@ class _AppBarTitleState extends State<AppBarTitle> {
       image = Container(
         decoration: BoxDecoration(
             color: CustomColors.friendsYellow,
-            borderRadius: BorderRadius.horizontal(left: Radius.circular(16.0), right: Radius.circular(16.0))
+            borderRadius: BorderRadius.all(Radius.circular(8))
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: baseSize/8, horizontal: baseSize/3),
