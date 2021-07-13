@@ -157,7 +157,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
                             itemCount: _postList.length + 1,
                             itemBuilder: (context, index) {
                               if (_postList.length == index) {
-                                return _isPostsLoading  ? Container(
+                                return _isPostsLoading ? Container(
                                   child: Center(
                                     child: Column(
                                       mainAxisAlignment: MainAxisAlignment.center,
@@ -196,7 +196,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
     setState(() {
       _postList.addAll(resultList);
       _isLoading = false;
-      if (_postReceived == 0) {
+      if (_postReceived != 9) {
         _isPostsLoading = false;
       }
     });
@@ -680,8 +680,8 @@ class _MyPostScreenState extends State<MyPostScreen> {
   Future<void> deleteUserImage(PostResponse item, BuildContext context, BuildContext rootContext) async {
     final result = await CustomAPIService.deleteImage(item.postId);
     if (result == true) {
-      var realImageRef = FirebaseStorage.instance.ref().child('real/${_post.postId}.png');
-      var thumbImageRef = FirebaseStorage.instance.ref().child('thumbnail/${_post.postId}.png');
+      var realImageRef = FirebaseStorage.instance.ref().child('real/${item.postId}.png');
+      var thumbImageRef = FirebaseStorage.instance.ref().child('thumbnail/${item.postId}.png');
       await realImageRef.delete();
       await thumbImageRef.delete();
 
