@@ -24,6 +24,7 @@ import '../widgets/image_dialog.dart';
 import '../widgets/loading.dart';
 import '../widgets/single_message_dialog.dart';
 import '../widgets/user_image_card.dart';
+import 'painter_image.dart';
 
 class PediaDetailScreen extends StatefulWidget {
   final DictResponse _pedia;
@@ -57,6 +58,7 @@ class _PediaDetailState extends State<PediaDetailScreen> {
   bool _isLoading = false;
 
   final _scrollController = ScrollController();
+  final _dialogTextController = TextEditingController();
 
   _PediaDetailState(this._pedia);
 
@@ -475,9 +477,8 @@ class _PediaDetailState extends State<PediaDetailScreen> {
                           if (result) {
                             _showTitleDialog(context, rootContext);
                           } else {
-                            print("실패");
+                            SingleMessageDialog.alert(context, "실패");
                           }
-                          // TODO 실패 시 알려주기
                         },
                         child: Padding(
                           padding: EdgeInsets.all(baseSize / 4),
@@ -568,18 +569,27 @@ class _PediaDetailState extends State<PediaDetailScreen> {
     final pickedFile = await picker.getImage(source: source);
 
     if (pickedFile != null) {
-      _imageFileToUpload = File(pickedFile.path);
+      var targetImageFile = File(pickedFile.path);
+      final result = await Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => PainterImageTest(backgroundImageFile: targetImageFile,)),
+      );
+      if (result == null) {
+        return false;
+      }
+      final imageFile = result['image'];
+      _imageFileToUpload = imageFile;
       _thumbnailFileToUpload = await FlutterNativeImage.compressImage(
-        pickedFile.path,
+        imageFile.path,
         quality: 20,
       );
+      _dialogTextController.text = result['title'];
       return true;
     } else {
       return false;
     }
   }
+
   _showTitleDialog(BuildContext parentContext, BuildContext rootContext) {
-    final dialogTextController = TextEditingController();
     Navigator.of(context).push(HeroDialogRoute(builder: (context) {
       var w = MediaQuery.of(context).size.width / 10;
       var h = MediaQuery.of(context).size.height / 10;
@@ -591,15 +601,25 @@ class _PediaDetailState extends State<PediaDetailScreen> {
             children: [
               TextField(
                 autofocus: true,
-                controller: dialogTextController,
-                decoration: InputDecoration(hintText: "사진 이름"),
+                controller: _dialogTextController,
+                decoration: InputDecoration(
+                  floatingLabelBehavior:FloatingLabelBehavior.never,
+                  border: UnderlineInputBorder(),
+                  labelText: '8자 이내로 입력',
+                  labelStyle: TextStyle(color: Colors.black45),
+                  fillColor: Colors.black,),
+                style: TextStyle(color: Colors.black, fontSize: 20),
                 onSubmitted: (text) async {
-                  setState(() {
-                    Navigator.pop(context);
-                    Navigator.pop(parentContext);
-                    _isUploaded = false;
-                  });
-                  await _uploadImage(rootContext, dialogTextController.text);
+                  if (text.length <= 8) {
+                    setState(() {
+                      Navigator.pop(context);
+                      Navigator.pop(parentContext);
+                      _isUploaded = false;
+                    });
+                    await _uploadImage(rootContext, _dialogTextController.text);
+                  } else {
+                    SingleMessageDialog.alert(context, "제목을 8자 이내로 입력해주세요");
+                  }
                 },
               ),
               Row(
@@ -634,7 +654,7 @@ class _PediaDetailState extends State<PediaDetailScreen> {
                               FocusScope.of(context).unfocus();
                               _isUploaded = false;
                             });
-                            await _uploadImage(rootContext, dialogTextController.text);
+                            await _uploadImage(rootContext, _dialogTextController.text);
                           },
                           style: ElevatedButton.styleFrom(primary: Colors.white, onSurface: Colors.white70, side: BorderSide(style: BorderStyle.none, width: 2.0, color: Colors.black)),
                           child: Text(

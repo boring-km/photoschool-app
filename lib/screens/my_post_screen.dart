@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:photoschool/screens/painter_image.dart';
 
 import '../dto/post/post_response.dart';
 import '../res/colors.dart';
@@ -43,6 +44,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
   int _postReceived = -1;
 
   ImagePicker picker = ImagePicker();
+  final _updateTextController = TextEditingController();
 
   File? _imageFileToUpload;
   File? _thumbnailFileToUpload;
@@ -208,7 +210,9 @@ class _MyPostScreenState extends State<MyPostScreen> {
     for (var item in posts) {
       final widget = GestureDetector(
         onTap: () async {
-          await UserImageCard.route(context, item, user);
+          if (item.isApproved == 1 && item.isRejected == 0) {
+            await UserImageCard.route(context, item, user);
+          }
         },
         child: Padding(
           padding: EdgeInsets.all(4),
@@ -393,8 +397,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
     return resultList;
   }
 
-  static void _buildTitleChangeDialog(BuildContext rootContext, PostResponse item, User user) {
-    var _updateTextController = TextEditingController();
+  void _buildTitleChangeDialog(BuildContext rootContext, PostResponse item, User user) {
     Navigator.of(rootContext).push(HeroDialogRoute(builder: (context) => Center(
       child: AlertDialog(
         title: Text("제목 수정하기"),
@@ -431,7 +434,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
     )));
   }
 
-  static Future<void> _onUpdateTitle(String text, PostResponse item, BuildContext context, BuildContext rootContext, User user) async {
+  Future<void> _onUpdateTitle(String text, PostResponse item, BuildContext context, BuildContext rootContext, User user) async {
     if (text.length <= 8) {
       final result = await CustomAPIService.changePostTitle(text, item.postId);
       if (result == true) {
@@ -466,135 +469,141 @@ class _MyPostScreenState extends State<MyPostScreen> {
           '사진을 촬영하거나 가져오기',
           textAlign: TextAlign.center,
         ),
-        content: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.all(baseSize / 4),
-                    child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(boxRounded)), primary: Colors.white, onSurface: Colors.white30),
-                        onPressed: () async {
-                          final result = await _pickImage(ImageSource.camera);
-                          if (result) {
-                            setState(() {
-                              Navigator.of(context).pop();
-                              _isUploaded = false;
-                            });
-                            _uploadImage(rootContext);
-                          } else {
-                            print("실패");
-                          }
-                          // TODO 실패 시 알려주기
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.all(baseSize / 4),
-                          child: Container(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  CupertinoIcons.camera,
-                                  color: Colors.black,
-                                  size: baseSize,
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(top: baseSize / 10),
-                                  child: Text(
-                                    "카메라",
-                                    style: TextStyle(fontSize: baseSize / 4, color: Colors.black),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(baseSize / 4),
-                    child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(boxRounded)), primary: Colors.white, onSurface: Colors.white30),
-                        onPressed: () async {
-                          final result = await _pickImage(ImageSource.gallery);
-                          if (result) {
-                            setState(() {
-                              Navigator.of(context).pop();
-                            });
-                            _uploadImage(rootContext);
-                          } else {
-                            print("실패");
-                          }
-                          // TODO 실패 시 알려주기
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.all(baseSize / 4),
-                          child: Container(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  Icons.photo_album,
-                                  color: Colors.black,
-                                  size: baseSize,
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(top: baseSize / 10),
-                                  child: Text(
-                                    "갤러리",
-                                    style: TextStyle(fontSize: baseSize / 4, color: Colors.black),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: baseWidth / 4),
-                child: Container(
-                  width: baseWidth * 3,
-                  height: baseHeight,
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(baseSize / 4),
                   child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
+                      style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(boxRounded)), primary: Colors.white, onSurface: Colors.white30),
+                      onPressed: () async {
+                        final result = await _pickImage(ImageSource.camera);
+                        if (result) {
+                          setState(() {
+                            Navigator.of(context).pop();
+                            _isUploaded = false;
+                          });
+                          _uploadImage(rootContext);
+                        } else {
+                          SingleMessageDialog.alert(context, "실패");
+                        }
                       },
-                      style: ElevatedButton.styleFrom(primary: Colors.white, onSurface: Colors.white70, side: BorderSide(style: BorderStyle.none, width: 2.0, color: Colors.black)),
-                      child: Text(
-                        "닫기",
-                        style: TextStyle(fontSize: baseWidth / 4, color: Colors.black),
+                      child: Padding(
+                        padding: EdgeInsets.all(baseSize / 4),
+                        child: Container(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                CupertinoIcons.camera,
+                                color: Colors.black,
+                                size: baseSize,
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: baseSize / 10),
+                                child: Text(
+                                  "카메라",
+                                  style: TextStyle(fontSize: baseSize / 4, color: Colors.black),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       )),
                 ),
-              )
-            ],
-          ),
+                Padding(
+                  padding: EdgeInsets.all(baseSize / 4),
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(boxRounded)), primary: Colors.white, onSurface: Colors.white30),
+                      onPressed: () async {
+                        final result = await _pickImage(ImageSource.gallery);
+                        if (result) {
+                          setState(() {
+                            Navigator.of(context).pop();
+                          });
+                          _uploadImage(rootContext);
+                        } else {
+                          SingleMessageDialog.alert(context, "실패");
+                        }
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.all(baseSize / 4),
+                        child: Container(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.photo_album,
+                                color: Colors.black,
+                                size: baseSize,
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: baseSize / 10),
+                                child: Text(
+                                  "갤러리",
+                                  style: TextStyle(fontSize: baseSize / 4, color: Colors.black),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )),
+                ),
+              ],
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: baseWidth / 4),
+              child: Container(
+                width: baseWidth * 3,
+                height: baseHeight,
+                child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    style: ElevatedButton.styleFrom(primary: Colors.white, onSurface: Colors.white70, side: BorderSide(style: BorderStyle.none, width: 2.0, color: Colors.black)),
+                    child: Text(
+                      "닫기",
+                      style: TextStyle(fontSize: baseWidth / 4, color: Colors.black),
+                    )),
+              ),
+            )
+          ],
         ),
       ),
     )));
   }
+
   Future<bool> _pickImage(ImageSource source) async {
     final pickedFile = await picker.getImage(source: source);
 
     if (pickedFile != null) {
-      _imageFileToUpload = File(pickedFile.path);
+      var targetImageFile = File(pickedFile.path);
+      final result = await Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => PainterImageTest(backgroundImageFile: targetImageFile,)),
+      );
+      if (result == null) {
+        return false;
+      }
+      final imageFile = result['image'];
+      _imageFileToUpload = imageFile;
       _thumbnailFileToUpload = await FlutterNativeImage.compressImage(
-        pickedFile.path,
+        imageFile.path,
         quality: 20,
       );
+      _updateTextController.text = result['title'];
       return true;
     } else {
       return false;
     }
   }
+
   Future<void> _uploadImage(BuildContext rootContext) async {
 
     if (_imageFileToUpload != null && _thumbnailFileToUpload != null) {
@@ -653,17 +662,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
                       child: Text("취소")),
                   ElevatedButton(
                       onPressed: () async {
-                        final result = await CustomAPIService.deleteImage(item.postId);
-                        if (result == true) {
-                          Navigator.of(context).pop();
-                          Navigator.of(rootContext).pushReplacement(
-                            MaterialPageRoute(
-                                builder: (context) => MyPostScreen(user: _user)
-                            ),
-                          );
-                        } else {
-                          SingleMessageDialog.alert(context, "삭제 실패");
-                        }
+                        await deleteUserImage(item, context, rootContext);
                       },
                       style: ElevatedButton.styleFrom(
                           primary: Colors.red
@@ -676,6 +675,25 @@ class _MyPostScreenState extends State<MyPostScreen> {
           ),
         )
     )));
+  }
+
+  Future<void> deleteUserImage(PostResponse item, BuildContext context, BuildContext rootContext) async {
+    final result = await CustomAPIService.deleteImage(item.postId);
+    if (result == true) {
+      var realImageRef = FirebaseStorage.instance.ref().child('real/${_post.postId}.png');
+      var thumbImageRef = FirebaseStorage.instance.ref().child('thumbnail/${_post.postId}.png');
+      await realImageRef.delete();
+      await thumbImageRef.delete();
+
+      Navigator.of(context).pop();
+      Navigator.of(rootContext).pushReplacement(
+        MaterialPageRoute(
+            builder: (context) => MyPostScreen(user: _user)
+        ),
+      );
+    } else {
+      SingleMessageDialog.alert(context, "삭제 실패");
+    }
   }
 
   _buildApproval(int postId, int isApproved, int isRejected) {

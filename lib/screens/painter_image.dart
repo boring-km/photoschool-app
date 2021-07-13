@@ -9,6 +9,7 @@ import 'package:image_size_getter/file_input.dart';
 import 'package:image_size_getter/image_size_getter.dart' as size;
 import 'package:painter/painter.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:photoschool/widgets/loading.dart';
 import '../widgets/hero_dialog_route.dart';
 
 class PainterImageTest extends StatefulWidget {
@@ -32,6 +33,14 @@ class _ExamplePageState extends State<PainterImageTest> {
 
   Color? _color;
 
+  final _titleController = TextEditingController();
+
+  var _titleText = "  제목 입력  ";
+
+  bool _isTapped = false;
+
+  bool _isUploading = false;
+
   @override
   void initState() {
     backgroundImageFile = widget.backgroundImageFile;
@@ -50,14 +59,11 @@ class _ExamplePageState extends State<PainterImageTest> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return _isUploading ?
+    LoadingWidget.buildLoadingView("그림 만드는 중", 30) :
+    Scaffold(
       appBar: AppBar(
-          title: const Text('Painter Example'),
-          backgroundColor: Colors.transparent,
-          bottom: PreferredSize(
-            child: DrawBar(_controller),
-            preferredSize: Size(MediaQuery.of(context).size.width, 30.0),
-          )),
+          backgroundColor: Colors.transparent),
       backgroundColor: Colors.black,
       body: Stack(
         children: [
@@ -95,9 +101,11 @@ class _ExamplePageState extends State<PainterImageTest> {
                               _controller.undo();
                             }
                           },
+                          backgroundColor: Colors.yellow,
                           heroTag: "undo",
                           child: Icon(
                             Icons.undo,
+                            color: Colors.black
                           ),
                         ),
                       ),
@@ -111,7 +119,8 @@ class _ExamplePageState extends State<PainterImageTest> {
                         child: FloatingActionButton(
                           onPressed: _controller.clear,
                           heroTag: "clear",
-                          child: Icon(Icons.delete),
+                          backgroundColor: Colors.white70,
+                          child: Icon(Icons.delete, color: Colors.white,),
                         ),
                       ),
                       Text("전부 지우기", style: TextStyle(color: Colors.white, fontSize: 20),)
@@ -128,13 +137,14 @@ class _ExamplePageState extends State<PainterImageTest> {
                             });
                           },
                           heroTag: "mode",
+                          backgroundColor: _controller.eraseMode ? Colors.orange : Colors.blue,
                           child: RotatedBox(
                               quarterTurns: _controller.eraseMode ? 2 : 0,
                               child: _controller.eraseMode ? Icon(Icons.edit_off_outlined) : Icon(Icons.create),
                           )
                         ),
                       ),
-                      Text(_controller.eraseMode ? "그리기" : "지우개", style: TextStyle(color: Colors.white, fontSize: 20),)
+                      Text(_controller.eraseMode ? "지우개" : "그리기", style: TextStyle(color: Colors.white, fontSize: 20),)
                     ],
                   ),
                   Row(
@@ -146,7 +156,8 @@ class _ExamplePageState extends State<PainterImageTest> {
                             await _pickColor(context, Colors.white);
                           },
                           heroTag: "pick",
-                          child: Icon(Icons.brush, color: _color == null ? Colors.white : _color),
+                          backgroundColor: Colors.red,
+                          child: Icon(Icons.brush, color: _color == null ? Colors.black : _color),
                         ),
                       ),
                       Text("색 바꾸기", style: TextStyle(color: Colors.white, fontSize: 20),)
@@ -156,20 +167,120 @@ class _ExamplePageState extends State<PainterImageTest> {
               )
           ),
           Positioned(
-              right: 20,
-              bottom: 20,
-              child: FloatingActionButton(
-                onPressed: _capture,
-                backgroundColor: Colors.green,
-                child: Icon(Icons.check),
-              ),
+            top: 10,
+            right: 10,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text("제목 설정", style: TextStyle(fontSize: 24, color: Colors.white),),
+                ),
+                _isTapped ?
+                Container(
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(8.0))
+                  ),
+                  width: 200,
+                  height: 40,
+                  child: TextField(
+                    controller: _titleController,
+                    decoration: InputDecoration(
+                      floatingLabelBehavior:FloatingLabelBehavior.never,
+                      border: UnderlineInputBorder(),
+                      labelText: '8자 이내로 입력',
+                      labelStyle: TextStyle(color: Colors.black45),
+                      fillColor: Colors.black,),
+                    autofocus: true,
+                    style: TextStyle(color: Colors.black, fontSize: 20),
+                    onSubmitted: (text) {
+                      setState(() {
+                        _titleText = text;
+                        _isTapped = false;
+                      });
+                    },
+                  )
+                ) :
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _isTapped = true;
+                    });
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(8.0))
+                    ),
+                    height: 40,
+                    child: Center(
+                      child: Text(_titleText,
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 24
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text("두께 조절", style: TextStyle(fontSize: 24, color: Colors.white),),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Flexible(
+                      child: StatefulBuilder(
+                        builder: (context, setState) {
+                          return Container(
+                            child: Slider(
+                              value: _controller.thickness,
+                              onChanged: (value) => setState(() {
+                                _controller.thickness = value;
+                              }),
+                              min: 1,
+                              max: 40,
+                              activeColor: Colors.white,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            )
+          ),
+          Positioned(
+            right: 20,
+            bottom: 20,
+            child: Row(
+              children: [
+                Text("업로드", style: TextStyle(color: Colors.white, fontSize: 20),),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: FloatingActionButton(
+                    onPressed: () {
+                      setState(() {
+                        _isUploading = true;
+                      });
+                      _capture(context);
+                    },
+                    backgroundColor: Colors.green,
+                    child: Icon(Icons.check),
+                  ),
+                ),
+              ],
+            ),
           )
         ],
       )
     );
   }
 
-  void _capture() async {
+  void _capture(BuildContext context) async {
     print("START CAPTURE");
     var renderObject = globalKey.currentContext!.findRenderObject();
     if (renderObject is RenderRepaintBoundary) {
@@ -180,10 +291,11 @@ class _ExamplePageState extends State<PainterImageTest> {
       var pngBytes = byteData!.buffer.asUint8List();
       print(pngBytes);
       var imgFile = File('$directory/screenshot.png');
-      imgFile.writeAsBytes(pngBytes);
+      final imageFile = await imgFile.writeAsBytes(pngBytes);
       print("FINISH CAPTURE ${imgFile.path}");
-      setState(() {
-        _image = Image.file(imgFile, width: 300, height: 300,);
+      Navigator.of(context).pop({
+        "image": imageFile,
+        "title": _titleController.text,
       });
     }
   }
@@ -246,35 +358,5 @@ class _ExamplePageState extends State<PainterImageTest> {
       _color = result;
       _controller.drawColor = result;
     });
-  }
-}
-
-class DrawBar extends StatelessWidget {
-  final PainterController _controller;
-
-  DrawBar(this._controller);
-
-  @override
-  Widget build(BuildContext context) {
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Flexible(child: StatefulBuilder(
-            builder: (context, setState) {
-              return Container(
-                  child: Slider(
-                    value: _controller.thickness,
-                    onChanged: (value) => setState(() {
-                      _controller.thickness = value;
-                    }),
-                    min: 1.0,
-                    max: 40.0,
-                    label: "${_controller.thickness}",
-                    activeColor: Colors.white,
-                  ));
-            })),
-      ],
-    );
   }
 }

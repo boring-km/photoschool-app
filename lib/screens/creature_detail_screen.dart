@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:photoschool/widgets/single_message_dialog.dart';
 
 import '../dto/creature/creature_detail_response.dart';
 import '../res/colors.dart';
@@ -19,6 +18,7 @@ import '../widgets/box_decoration.dart';
 import '../widgets/hero_dialog_route.dart';
 import '../widgets/image_dialog.dart';
 import '../widgets/loading.dart';
+import '../widgets/single_message_dialog.dart';
 import '../widgets/user_image_card.dart';
 import 'painter_image.dart';
 
@@ -472,11 +472,13 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
       if (result == null) {
         return false;
       }
-      _imageFileToUpload = result;
+      final imageFile = result['image'];
+      _imageFileToUpload = imageFile;
       _thumbnailFileToUpload = await FlutterNativeImage.compressImage(
-        pickedFile.path,
+        imageFile.path,
         quality: 20,
       );
+      _dialogTextController.text = result['title'];
       return true;
     } else {
       return false;
@@ -484,9 +486,6 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
   }
 
   _showTitleDialog(BuildContext parentContext, BuildContext rootContext) {
-
-
-
     Navigator.of(context).push(HeroDialogRoute(builder: (context) {
       var w = MediaQuery.of(context).size.width / 10;
       var h = MediaQuery.of(context).size.height / 10;
@@ -499,14 +498,24 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
               TextField(
                 autofocus: true,
                 controller: _dialogTextController,
-                decoration: InputDecoration(hintText: "사진 이름"),
+                decoration: InputDecoration(
+                  floatingLabelBehavior:FloatingLabelBehavior.never,
+                  border: UnderlineInputBorder(),
+                  labelText: '8자 이내로 입력',
+                  labelStyle: TextStyle(color: Colors.black45),
+                  fillColor: Colors.black,),
+                style: TextStyle(color: Colors.black, fontSize: 20),
                 onSubmitted: (text) async {
-                  setState(() {
-                    Navigator.pop(context);
-                    Navigator.pop(parentContext);
-                    _isUploaded = false;
-                  });
-                  await _uploadImage(rootContext, _dialogTextController.text);
+                  if (text.length <= 8) {
+                    setState(() {
+                      Navigator.pop(context);
+                      Navigator.pop(parentContext);
+                      _isUploaded = false;
+                    });
+                    await _uploadImage(rootContext, _dialogTextController.text);
+                  } else {
+                    SingleMessageDialog.alert(context, "제목을 8자 이내로 입력해주세요");
+                  }
                 },
               ),
               Row(
