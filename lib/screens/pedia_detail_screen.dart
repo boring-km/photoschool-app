@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -690,9 +689,6 @@ class _PediaDetailState extends State<PediaDetailScreen> {
       // 3. 다시 이미지 등록
       final result = await CustomAPIService.updateImage(postId, _thumbImgURL, _realImgURL);
       print(result);
-
-      // 4. 푸시 알림 등록
-      FirebaseMessaging.instance.subscribeToTopic("$postId");
 
       setState(() {
         _isUploaded = true;
