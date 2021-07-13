@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:photoschool/widgets/single_message_dialog.dart';
 
 import '../dto/creature/creature_detail_response.dart';
 import '../res/colors.dart';
@@ -30,8 +31,7 @@ class CreatureDetailScreen extends StatefulWidget {
         super(key: key);
 
   @override
-  _CreatureDetailScreenState createState() =>
-      _CreatureDetailScreenState(_creature);
+  _CreatureDetailScreenState createState() => _CreatureDetailScreenState(_creature);
 }
 
 class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
@@ -105,33 +105,27 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                         children: [
                           _user != null && !kIsWeb
                               ? ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(boxRounded)
-                                  ),
-                                  primary: Colors.blue,
-                                  onSurface: Colors.blueAccent),
-                              onPressed: () {_showSelectSource(context);},
-                              child: Container(
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      CupertinoIcons.camera,
-                                      color: Colors.white,
+                                  style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(boxRounded)), primary: Colors.blue, onSurface: Colors.blueAccent),
+                                  onPressed: () {
+                                    _showSelectSource(context);
+                                  },
+                                  child: Container(
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          CupertinoIcons.camera,
+                                          color: Colors.white,
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(left: _baseSize / 5),
+                                          child: Text(
+                                            "사진 올리기",
+                                            style: TextStyle(fontSize: _baseSize / 5, color: Colors.white),
+                                          ),
+                                        )
+                                      ],
                                     ),
-                                    Padding(
-                                      padding: EdgeInsets.only(
-                                          left: _baseSize / 5),
-                                      child: Text(
-                                        "사진 올리기",
-                                        style: TextStyle(
-                                            fontSize: _baseSize / 5,
-                                            color: Colors.white),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ))
+                                  ))
                               : Container(),
                         ],
                       ),
@@ -147,59 +141,38 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                             children: [
                               Expanded(
                                   child: Container(
-                                    height: _baseSize * 4,
-                                    child: Center(
-                                      child: ListView(
-                                        shrinkWrap: true,
-                                        scrollDirection: Axis.horizontal,
-                                        children: [
-                                          _drawImage(_creature.imgUrl1, _baseSize,
-                                              boxRounded),
-                                          _drawImage(_creature.imgUrl2, _baseSize,
-                                              boxRounded),
-                                        ],
-                                      ),
-                                    ),
-                                  )
-                              )
+                                height: _baseSize * 4,
+                                child: Center(
+                                  child: ListView(
+                                    shrinkWrap: true,
+                                    scrollDirection: Axis.horizontal,
+                                    children: [
+                                      _drawImage(_creature.imgUrl1, _baseSize, boxRounded),
+                                      _drawImage(_creature.imgUrl2, _baseSize, boxRounded),
+                                    ],
+                                  ),
+                                ),
+                              ))
                             ],
                           ),
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            ElevatedButton(
-                                onPressed: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                        builder: (context) => PainterImageTest()
-                                    ),
-                                  );
-                                },
-                                child: Text("테스트")
-                            ),
                             Padding(
-                              padding: EdgeInsets.only(
-                                  top: _baseSize / 3, left: _baseSize / 2),
+                              padding: EdgeInsets.only(top: _baseSize / 3, left: _baseSize / 2),
                               child: Text(
                                 "${_creature.name}",
-                                style: TextStyle(
-                                    fontSize: _baseSize * (2 / 3),
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.black),
+                                style: TextStyle(fontSize: _baseSize * (2 / 3), fontWeight: FontWeight.w700, color: Colors.black),
                               ),
                             ),
                             Padding(
-                              padding: EdgeInsets.only(
-                                  top: _baseSize / 2, right: _baseSize / 2),
+                              padding: EdgeInsets.only(top: _baseSize / 2, right: _baseSize / 2),
                               child: Column(
                                 children: [
                                   Text(
                                     "종류: ${_creature.type}",
-                                    style: TextStyle(
-                                        fontSize: _baseSize / 4,
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors.black),
+                                    style: TextStyle(fontSize: _baseSize / 4, fontWeight: FontWeight.w700, color: Colors.black),
                                   ),
                                 ],
                               ),
@@ -207,68 +180,48 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                           ],
                         ),
                         Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: _baseSize / 3,
-                              horizontal: _baseSize / 2),
+                          padding: EdgeInsets.symmetric(vertical: _baseSize / 3, horizontal: _baseSize / 2),
                           child: Container(
                             height: 2,
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(
-                              bottom: _baseSize / 3,
-                              left: _baseSize / 2,
-                              right: _baseSize / 2),
+                          padding: EdgeInsets.only(bottom: _baseSize / 3, left: _baseSize / 2, right: _baseSize / 2),
                           child: Html(
                             data: _creature.detail,
                             style: {
-                              "html": Style(
-                                  color: Colors.black,
-                                  fontSize: FontSize(_baseSize / 3)),
+                              "html": Style(color: Colors.black, fontSize: FontSize(_baseSize / 3)),
                             },
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(
-                              top: _baseSize / 10,
-                              left: _baseSize / 2,
-                              right: _baseSize / 2),
+                          padding: EdgeInsets.only(top: _baseSize / 10, left: _baseSize / 2, right: _baseSize / 2),
                           child: Text(
                             "출처 | 산림청 국립수목원 국가생물종지식정보시스템 어린이생물도감\n본 콘텐츠의 저작권은 제공처에 있으며, 해당 자료의 무단복제 및 배포를 금합니다.\n외부 콘텐츠는 웅진씽크빅의 입장과 다를 수 있습니다.",
-                            style: TextStyle(
-                                color: Colors.grey, fontSize: _baseSize / 5),
+                            style: TextStyle(color: Colors.grey, fontSize: _baseSize / 5),
                           ),
                         ),
                         Padding(
                           padding: EdgeInsets.only(top: 12.0),
                           child: Container(
-                            decoration: BoxDecoration(
-                                color: Color(0xF3FFEE98),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(28))),
+                            decoration: BoxDecoration(color: Color(0xF3FFEE98), borderRadius: BorderRadius.all(Radius.circular(28))),
                             child: Column(
                               children: [
                                 _othersImageCardList.length == 1
                                     ? Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            vertical: _baseSize / 4),
+                                        padding: EdgeInsets.symmetric(vertical: _baseSize / 4),
                                         child: Text(
                                           "아직 관련 사진을 찍은 친구가 없어요!",
                                           textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: _baseSize * (1 / 3)),
+                                          style: TextStyle(color: Colors.black, fontSize: _baseSize * (1 / 3)),
                                         ),
                                       )
                                     : Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            vertical: _baseSize / 4),
+                                        padding: EdgeInsets.symmetric(vertical: _baseSize / 4),
                                         child: Text(
                                           "친구들이 찍은 사진",
                                           textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: _baseSize * (2 / 3)),
+                                          style: TextStyle(color: Colors.black, fontSize: _baseSize * (2 / 3)),
                                         ),
                                       ),
                                 _othersImageCardList.length == 1
@@ -281,28 +234,17 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                                             Expanded(
                                                 child: Container(
                                                     height: 400,
-                                                    child: NotificationListener<
-                                                        ScrollEndNotification>(
-                                                      onNotification:
-                                                          (scrollEnd) {
-                                                        final metrics =
-                                                            scrollEnd.metrics;
+                                                    child: NotificationListener<ScrollEndNotification>(
+                                                      onNotification: (scrollEnd) {
+                                                        final metrics = scrollEnd.metrics;
                                                         if (metrics.atEdge) {
-                                                          if (metrics.pixels !=
-                                                              0) {
-                                                            if (_received ==
-                                                                    -1 ||
-                                                                _received ==
-                                                                    5) {
+                                                          if (metrics.pixels != 0) {
+                                                            if (_received == -1 || _received == 5) {
                                                               setState(() {
-                                                                _isLoading =
-                                                                    true;
+                                                                _isLoading = true;
                                                               });
                                                               _othersIndex++;
-                                                              _buildOthersCardList(
-                                                                  _creature
-                                                                      .apiId,
-                                                                  context);
+                                                              _buildOthersCardList(_creature.apiId, context);
                                                             }
                                                           }
                                                         }
@@ -310,37 +252,23 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                                                       },
                                                       child: ListView.builder(
                                                         shrinkWrap: true,
-                                                        scrollDirection:
-                                                            Axis.horizontal,
-                                                        itemCount:
-                                                            _othersImageCardList
-                                                                    .length +
-                                                                1,
-                                                        itemBuilder:
-                                                            (context, index) {
-                                                          if (index ==
-                                                              _othersImageCardList
-                                                                  .length) {
+                                                        scrollDirection: Axis.horizontal,
+                                                        itemCount: _othersImageCardList.length + 1,
+                                                        itemBuilder: (context, index) {
+                                                          if (index == _othersImageCardList.length) {
                                                             return _isLoading
                                                                 ? Container(
-                                                                    child:
-                                                                        Center(
-                                                                      child:
-                                                                          Column(
-                                                                        mainAxisAlignment:
-                                                                            MainAxisAlignment.center,
-                                                                        crossAxisAlignment:
-                                                                            CrossAxisAlignment.center,
+                                                                    child: Center(
+                                                                      child: Column(
+                                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                                        crossAxisAlignment: CrossAxisAlignment.center,
                                                                         children: [
                                                                           CircularProgressIndicator(
-                                                                            color:
-                                                                                Colors.red,
+                                                                            color: Colors.red,
                                                                           ),
                                                                           Padding(
-                                                                            padding:
-                                                                                EdgeInsets.all(_baseSize / 10),
-                                                                            child:
-                                                                                Text(
+                                                                            padding: EdgeInsets.all(_baseSize / 10),
+                                                                            child: Text(
                                                                               "로딩중",
                                                                               style: TextStyle(color: Colors.red, fontSize: _baseSize / 2),
                                                                             ),
@@ -351,8 +279,7 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                                                                   )
                                                                 : Container();
                                                           }
-                                                          return _othersImageCardList[
-                                                              index];
+                                                          return _othersImageCardList[index];
                                                         },
                                                       ),
                                                     )))
@@ -400,9 +327,7 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                         child: Center(
                           child: Text(
                             "로딩중",
-                            style: TextStyle(
-                                color: CustomColors.creatureGreen,
-                                fontSize: _baseSize / 2),
+                            style: TextStyle(color: CustomColors.creatureGreen, fontSize: _baseSize / 2),
                           ),
                         ),
                       );
@@ -442,28 +367,20 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                           Padding(
                             padding: EdgeInsets.all(baseSize / 4),
                             child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(boxRounded)),
-                                    primary: Colors.white,
-                                    onSurface: Colors.white30),
+                                style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(boxRounded)), primary: Colors.white, onSurface: Colors.white30),
                                 onPressed: () async {
-                                  final result =
-                                      await _pickImage(ImageSource.camera);
+                                  final result = await _pickImage(ImageSource.camera);
                                   if (result) {
                                     _showTitleDialog(context, rootContext);
                                   } else {
-                                    print("실패");
+                                    SingleMessageDialog.alert(context, "실패");
                                   }
-                                  // TODO 실패 시 알려주기
                                 },
                                 child: Padding(
                                   padding: EdgeInsets.all(baseSize / 4),
                                   child: Container(
                                     child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         Icon(
@@ -472,13 +389,10 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                                           size: baseSize,
                                         ),
                                         Padding(
-                                          padding: EdgeInsets.only(
-                                              top: baseSize / 10),
+                                          padding: EdgeInsets.only(top: baseSize / 10),
                                           child: Text(
                                             "카메라",
-                                            style: TextStyle(
-                                                fontSize: baseSize / 4,
-                                                color: Colors.black),
+                                            style: TextStyle(fontSize: baseSize / 4, color: Colors.black),
                                           ),
                                         ),
                                       ],
@@ -489,28 +403,20 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                           Padding(
                             padding: EdgeInsets.all(baseSize / 4),
                             child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(boxRounded)),
-                                    primary: Colors.white,
-                                    onSurface: Colors.white30),
+                                style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(boxRounded)), primary: Colors.white, onSurface: Colors.white30),
                                 onPressed: () async {
-                                  final result =
-                                      await _pickImage(ImageSource.gallery);
+                                  final result = await _pickImage(ImageSource.gallery);
                                   if (result) {
                                     _showTitleDialog(context, rootContext);
                                   } else {
-                                    print("실패");
+                                    SingleMessageDialog.alert(context, "실패");
                                   }
-                                  // TODO 실패 시 알려주기
                                 },
                                 child: Padding(
                                   padding: EdgeInsets.all(baseSize / 4),
                                   child: Container(
                                     child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         Icon(
@@ -519,13 +425,10 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                                           size: baseSize,
                                         ),
                                         Padding(
-                                          padding: EdgeInsets.only(
-                                              top: baseSize / 10),
+                                          padding: EdgeInsets.only(top: baseSize / 10),
                                           child: Text(
                                             "갤러리",
-                                            style: TextStyle(
-                                                fontSize: baseSize / 4,
-                                                color: Colors.black),
+                                            style: TextStyle(fontSize: baseSize / 4, color: Colors.black),
                                           ),
                                         ),
                                       ],
@@ -544,18 +447,10 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                               onPressed: () {
                                 Navigator.pop(context);
                               },
-                              style: ElevatedButton.styleFrom(
-                                  primary: Colors.white,
-                                  onSurface: Colors.white70,
-                                  side: BorderSide(
-                                      style: BorderStyle.none,
-                                      width: 2.0,
-                                      color: Colors.black)),
+                              style: ElevatedButton.styleFrom(primary: Colors.white, onSurface: Colors.white70, side: BorderSide(style: BorderStyle.none, width: 2.0, color: Colors.black)),
                               child: Text(
                                 "닫기",
-                                style: TextStyle(
-                                    fontSize: baseWidth / 4,
-                                    color: Colors.black),
+                                style: TextStyle(fontSize: baseWidth / 4, color: Colors.black),
                               )),
                         ),
                       )
@@ -570,7 +465,14 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
     final pickedFile = await picker.getImage(source: source);
 
     if (pickedFile != null) {
-      _imageFileToUpload = File(pickedFile.path);
+      var targetImageFile = File(pickedFile.path);
+      final result = await Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => PainterImageTest(backgroundImageFile: targetImageFile,)),
+      );
+      if (result == null) {
+        return false;
+      }
+      _imageFileToUpload = result;
       _thumbnailFileToUpload = await FlutterNativeImage.compressImage(
         pickedFile.path,
         quality: 20,
@@ -582,6 +484,9 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
   }
 
   _showTitleDialog(BuildContext parentContext, BuildContext rootContext) {
+
+
+
     Navigator.of(context).push(HeroDialogRoute(builder: (context) {
       var w = MediaQuery.of(context).size.width / 10;
       var h = MediaQuery.of(context).size.height / 10;
@@ -616,18 +521,11 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                           onPressed: () {
                             Navigator.pop(context);
                           },
-                          style: ElevatedButton.styleFrom(
-                              primary: Colors.white,
-                              onSurface: Colors.white70,
-                              side: BorderSide(
-                                  style: BorderStyle.none,
-                                  width: 2.0,
-                                  color: Colors.black)),
+                          style: ElevatedButton.styleFrom(primary: Colors.white, onSurface: Colors.white70, side: BorderSide(style: BorderStyle.none, width: 2.0, color: Colors.black)),
                           child: Text(
                             "닫기",
                             textAlign: TextAlign.center,
-                            style:
-                                TextStyle(fontSize: w / 4, color: Colors.black),
+                            style: TextStyle(fontSize: w / 4, color: Colors.black),
                           )),
                     ),
                   ),
@@ -643,20 +541,12 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                               FocusScope.of(context).unfocus();
                               _isUploaded = false;
                             });
-                            await _uploadImage(
-                                rootContext, _dialogTextController.text);
+                            await _uploadImage(rootContext, _dialogTextController.text);
                           },
-                          style: ElevatedButton.styleFrom(
-                              primary: Colors.white,
-                              onSurface: Colors.white70,
-                              side: BorderSide(
-                                  style: BorderStyle.none,
-                                  width: 2.0,
-                                  color: Colors.black)),
+                          style: ElevatedButton.styleFrom(primary: Colors.white, onSurface: Colors.white70, side: BorderSide(style: BorderStyle.none, width: 2.0, color: Colors.black)),
                           child: Text(
                             "업로드",
-                            style:
-                                TextStyle(fontSize: w / 4, color: Colors.black),
+                            style: TextStyle(fontSize: w / 4, color: Colors.black),
                           )),
                     ),
                   )
@@ -672,28 +562,22 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
   Future<void> _uploadImage(BuildContext rootContext, String title) async {
     if (_imageFileToUpload != null && _thumbnailFileToUpload != null) {
       // 1. 이미지 없이 등록 후 postId 받아서
-      var postId =
-          await CustomAPIService.registerPost("C${_creature.apiId}", title);
+      var postId = await CustomAPIService.registerPost("C${_creature.apiId}", title);
 
       // 2. storage에 썸네일 및 원본 이미지 저장 후 url 추출
-      var realImageRef =
-          FirebaseStorage.instance.ref().child('real/$postId.png');
-      var thumbImageRef =
-          FirebaseStorage.instance.ref().child('thumbnail/$postId.png');
+      var realImageRef = FirebaseStorage.instance.ref().child('real/$postId.png');
+      var thumbImageRef = FirebaseStorage.instance.ref().child('thumbnail/$postId.png');
 
       final uploadTask1 = realImageRef.putFile(_imageFileToUpload!);
-      final snapshot1 =
-          await uploadTask1.whenComplete(() => print("원본 이미지 업로드 완료"));
+      final snapshot1 = await uploadTask1.whenComplete(() => print("원본 이미지 업로드 완료"));
       final _realImgURL = await snapshot1.ref.getDownloadURL();
 
       final uploadTask2 = thumbImageRef.putFile(_thumbnailFileToUpload!);
-      final snapshot2 =
-          await uploadTask2.whenComplete(() => print("썸네일 이미지 업로드 완료"));
+      final snapshot2 = await uploadTask2.whenComplete(() => print("썸네일 이미지 업로드 완료"));
       final _thumbImgURL = await snapshot2.ref.getDownloadURL();
 
       // 3. 다시 이미지 등록
-      final result =
-          await CustomAPIService.updateImage(postId, _thumbImgURL, _realImgURL);
+      final result = await CustomAPIService.updateImage(postId, _thumbImgURL, _realImgURL);
       print(result);
 
       // 4. 푸시 알림 등록
@@ -714,8 +598,7 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
   }
 
   _buildOthersCardList(String apiId, BuildContext context) async {
-    final posts =
-        await CustomAPIService.getOthersPostBy("C$apiId", _othersIndex);
+    final posts = await CustomAPIService.getOthersPostBy("C$apiId", _othersIndex);
     _received = posts.length;
     var resultList = UserImageCard.buildImageCard(posts, context, _user);
     setState(() {
