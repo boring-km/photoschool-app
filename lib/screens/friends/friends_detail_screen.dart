@@ -59,7 +59,15 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
       _original = await PublicAPIService.getChildBookDetail(_post.apiId.substring(1), "");
     } else if (_post.apiId[0] == 'P') {
       _original = await WoongJinAPIService.searchDetailWJPedia(_post.apiId.substring(1));
-      _pedia = (await WoongJinAPIService.searchWJPedia((_original as DictDetailResponse).name))[0];
+
+      final orgList = await WoongJinAPIService.searchWJPedia((_original as DictDetailResponse).name);
+      for (var response in orgList) {
+        if (response.apiId ==  _post.apiId.substring(1)) {
+          _pedia = response;
+          break;
+        }
+      }
+
       _dictImgUrl = (await WoongJinAPIService.searchPhotoLibrary((_original as DictDetailResponse).name, (_original as DictDetailResponse).categoryNo))[0].imgURL;
     }
     if (_user != null) {
