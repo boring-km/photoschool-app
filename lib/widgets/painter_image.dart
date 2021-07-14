@@ -10,7 +10,7 @@ import 'package:image_size_getter/image_size_getter.dart' as size;
 import 'package:painter/painter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:photoschool/widgets/loading.dart';
-import '../widgets/hero_dialog_route.dart';
+import 'hero_dialog_route.dart';
 
 class PainterImageTest extends StatefulWidget {
 

@@ -3,15 +3,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:photoschool/res/colors.dart';
-import 'package:photoschool/widgets/snackbar.dart';
 
-import '../dto/post/post_response.dart';
-import '../services/server_api.dart';
-import '../widgets/app_bar_base.dart';
-import '../widgets/image_dialog.dart';
-import '../widgets/loading.dart';
-import '../widgets/user_image_card.dart';
+import '../../dto/post/post_response.dart';
+import '../../res/colors.dart';
+import '../../services/server_api.dart';
+import '../../widgets/app_bar_base.dart';
+import '../../widgets/image_dialog.dart';
+import '../../widgets/loading.dart';
+import '../../widgets/snackbar.dart';
+import '../../widgets/user_image_card.dart';
 
 class ManagementScreen extends StatefulWidget {
 

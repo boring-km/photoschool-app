@@ -2,20 +2,20 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../dto/creature/creature_detail_response.dart';
-import '../dto/dict/dict_detail_response.dart';
-import '../dto/dict/dict_response.dart';
-import '../dto/post/searched_post_response.dart';
-import '../res/colors.dart';
-import '../services/public_api.dart';
-import '../services/server_api.dart';
-import '../services/woongjin_api.dart';
-import '../widgets/app_bar_base.dart';
-import '../widgets/box_decoration.dart';
-import '../widgets/hero_dialog_route.dart';
-import '../widgets/loading.dart';
-import 'creature_detail_screen.dart';
-import 'pedia_detail_screen.dart';
+import '../../dto/creature/creature_detail_response.dart';
+import '../../dto/dict/dict_detail_response.dart';
+import '../../dto/dict/dict_response.dart';
+import '../../dto/post/searched_post_response.dart';
+import '../../res/colors.dart';
+import '../../services/public_api.dart';
+import '../../services/server_api.dart';
+import '../../services/woongjin_api.dart';
+import '../../widgets/app_bar_base.dart';
+import '../../widgets/box_decoration.dart';
+import '../../widgets/hero_dialog_route.dart';
+import '../../widgets/loading.dart';
+import '../dictionary/creature_detail_screen.dart';
+import '../dictionary/pedia_detail_screen.dart';
 
 class FriendsDetailScreen extends StatefulWidget {
 
@@ -59,7 +59,15 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
       _original = await PublicAPIService.getChildBookDetail(_post.apiId.substring(1), "");
     } else if (_post.apiId[0] == 'P') {
       _original = await WoongJinAPIService.searchDetailWJPedia(_post.apiId.substring(1));
-      _pedia = (await WoongJinAPIService.searchWJPedia((_original as DictDetailResponse).name))[0];
+
+      final orgList = await WoongJinAPIService.searchWJPedia((_original as DictDetailResponse).name);
+      for (var response in orgList) {
+        if (response.apiId ==  _post.apiId.substring(1)) {
+          _pedia = response;
+          break;
+        }
+      }
+
       _dictImgUrl = (await WoongJinAPIService.searchPhotoLibrary((_original as DictDetailResponse).name, (_original as DictDetailResponse).categoryNo))[0].imgURL;
     }
     if (_user != null) {

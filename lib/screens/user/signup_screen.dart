@@ -3,13 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../dto/school/school_search_response.dart';
-import '../res/colors.dart';
-import '../services/server_api.dart';
-import '../utils/auth.dart';
-import '../widgets/box_decoration.dart';
-import '../widgets/single_message_dialog.dart';
-import 'select_screen.dart';
+import '../../dto/school/school_search_response.dart';
+import '../../res/colors.dart';
+import '../../services/server_api.dart';
+import '../../utils/auth.dart';
+import '../../widgets/box_decoration.dart';
+import '../../widgets/single_message_dialog.dart';
+import '../main_screen.dart';
 import 'signin_screen.dart';
 
 class SignUpScreen extends StatefulWidget {

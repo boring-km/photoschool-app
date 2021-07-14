@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../res/colors.dart';
-import '../utils/auth.dart';
-import 'select_screen.dart';
+import '../../res/colors.dart';
+import '../../utils/auth.dart';
+import '../main_screen.dart';
 
 class SignInScreen extends StatefulWidget {
   @override

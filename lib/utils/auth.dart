@@ -6,8 +6,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:photoschool/widgets/snackbar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../screens/select_screen.dart';
-import '../screens/signup_screen.dart';
+import '../screens/main_screen.dart';
+import '../screens/user/signup_screen.dart';
 import '../services/server_api.dart';
 
 class Authentication {
