@@ -13,8 +13,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-import 'screens/my_post_screen.dart';
-import 'screens/signin_screen.dart';
+import 'screens/management/my_post_screen.dart';
+import 'screens/user/signin_screen.dart';
 
 AndroidNotificationChannel channel = const AndroidNotificationChannel(
   'high_importance_channel', // id

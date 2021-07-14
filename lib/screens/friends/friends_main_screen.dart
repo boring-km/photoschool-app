@@ -4,14 +4,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
-import '../dto/school/school_rank.dart';
-import '../res/colors.dart';
-import '../services/server_api.dart';
-import '../widgets/app_bar_base.dart';
-import '../widgets/box_decoration.dart';
-import '../widgets/hero_dialog_route.dart';
-import '../widgets/user_image_card.dart';
-import 'school_map_screen.dart';
+import '../../dto/school/school_rank.dart';
+import '../../res/colors.dart';
+import '../../services/server_api.dart';
+import '../../widgets/app_bar_base.dart';
+import '../../widgets/box_decoration.dart';
+import '../../widgets/hero_dialog_route.dart';
+import '../../widgets/school_map.dart';
+import '../../widgets/user_image_card.dart';
 
 class FriendsMainScreen extends StatefulWidget {
 

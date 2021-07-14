@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 
 import '../dto/post/post_response.dart';
 import '../res/colors.dart';
-import '../screens/friends_detail_screen.dart';
-import '../screens/friends_main_screen.dart';
+import '../screens/friends/friends_detail_screen.dart';
+import '../screens/friends/friends_main_screen.dart';
 
 class UserImageCard {
   static List<Widget> buildImageCard(List<PostResponse> posts, BuildContext context, User? user) {

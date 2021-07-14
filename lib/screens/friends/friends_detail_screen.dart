@@ -2,20 +2,20 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../dto/creature/creature_detail_response.dart';
-import '../dto/dict/dict_detail_response.dart';
-import '../dto/dict/dict_response.dart';
-import '../dto/post/searched_post_response.dart';
-import '../res/colors.dart';
-import '../services/public_api.dart';
-import '../services/server_api.dart';
-import '../services/woongjin_api.dart';
-import '../widgets/app_bar_base.dart';
-import '../widgets/box_decoration.dart';
-import '../widgets/hero_dialog_route.dart';
-import '../widgets/loading.dart';
-import 'creature_detail_screen.dart';
-import 'pedia_detail_screen.dart';
+import '../../dto/creature/creature_detail_response.dart';
+import '../../dto/dict/dict_detail_response.dart';
+import '../../dto/dict/dict_response.dart';
+import '../../dto/post/searched_post_response.dart';
+import '../../res/colors.dart';
+import '../../services/public_api.dart';
+import '../../services/server_api.dart';
+import '../../services/woongjin_api.dart';
+import '../../widgets/app_bar_base.dart';
+import '../../widgets/box_decoration.dart';
+import '../../widgets/hero_dialog_route.dart';
+import '../../widgets/loading.dart';
+import '../dictionary/creature_detail_screen.dart';
+import '../dictionary/pedia_detail_screen.dart';
 
 class FriendsDetailScreen extends StatefulWidget {
 

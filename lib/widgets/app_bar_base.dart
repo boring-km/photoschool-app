@@ -7,9 +7,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../res/colors.dart';
-import '../screens/manage_screen.dart';
-import '../screens/my_post_screen.dart';
-import '../screens/signin_screen.dart';
+import '../screens/management/manage_screen.dart';
+import '../screens/management/my_post_screen.dart';
+import '../screens/user/signin_screen.dart';
 import '../utils/auth.dart';
 import '../utils/screen_animation.dart';
 

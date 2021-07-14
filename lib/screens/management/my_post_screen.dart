@@ -8,17 +8,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:photoschool/screens/painter_image.dart';
 
-import '../dto/post/post_response.dart';
-import '../res/colors.dart';
-import '../services/server_api.dart';
-import '../widgets/app_bar_base.dart';
-import '../widgets/box_decoration.dart';
-import '../widgets/hero_dialog_route.dart';
-import '../widgets/loading.dart';
-import '../widgets/single_message_dialog.dart';
-import '../widgets/user_image_card.dart';
+import '../../dto/post/post_response.dart';
+import '../../res/colors.dart';
+import '../../services/server_api.dart';
+import '../../widgets/app_bar_base.dart';
+import '../../widgets/box_decoration.dart';
+import '../../widgets/hero_dialog_route.dart';
+import '../../widgets/loading.dart';
+import '../../widgets/painter_image.dart';
+import '../../widgets/single_message_dialog.dart';
+import '../../widgets/user_image_card.dart';
 
 class MyPostScreen extends StatefulWidget {
 

@@ -8,19 +8,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:lottie/lottie.dart';
 
-import '../dto/creature/creature_detail_response.dart';
-import '../dto/dict/dict_response.dart';
-import '../res/colors.dart';
-import '../services/public_api.dart';
-import '../services/woongjin_api.dart';
-import '../widgets/app_bar_base.dart';
-import '../widgets/google_image_search.dart';
-import '../widgets/hero_dialog_route.dart';
+import '../../dto/creature/creature_detail_response.dart';
+import '../../dto/dict/dict_response.dart';
+import '../../res/colors.dart';
+import '../../services/public_api.dart';
+import '../../services/woongjin_api.dart';
+import '../../widgets/app_bar_base.dart';
+import '../../widgets/google_image_search.dart';
+import '../../widgets/hero_dialog_route.dart';
 import 'creature_detail_screen.dart';
 import 'pedia_detail_screen.dart';
 
-class SearchCreatureScreen extends StatefulWidget {
-  SearchCreatureScreen({Key? key, User? user})
+class SearchingDictionaryScreen extends StatefulWidget {
+  SearchingDictionaryScreen({Key? key, User? user})
       : _user = user,
         super(key: key);
 
@@ -30,7 +30,7 @@ class SearchCreatureScreen extends StatefulWidget {
   _FindCreatureState createState() => _FindCreatureState();
 }
 
-class _FindCreatureState extends State<SearchCreatureScreen>
+class _FindCreatureState extends State<SearchingDictionaryScreen>
     with TickerProviderStateMixin {
   late User? _user;
   final _creatureSearchController = TextEditingController();
@@ -244,7 +244,7 @@ class _FindCreatureState extends State<SearchCreatureScreen>
                                                           mainAxisSize:
                                                               MainAxisSize.min,
                                                           children: [
-                                                            GoogleImageSearchWidget(),
+                                                            GoogleImageSearchWebView(),
                                                             Padding(
                                                               padding: EdgeInsets
                                                                   .symmetric(

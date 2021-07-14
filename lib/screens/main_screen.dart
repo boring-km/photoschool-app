@@ -5,8 +5,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../res/colors.dart';
 import '../widgets/app_bar_base.dart';
-import 'friends_main_screen.dart';
-import 'search_creature_screen.dart';
+import 'dictionary/searching_dictionary_screen.dart';
+import 'friends/friends_main_screen.dart';
 
 class SelectScreen extends StatefulWidget {
 
@@ -60,7 +60,7 @@ class _SelectScreenState extends State<SelectScreen> with TickerProviderStateMix
                     onPressed: () {
                       Navigator.of(context).push(
                           MaterialPageRoute(
-                              builder: (context) => SearchCreatureScreen(user: _user)
+                              builder: (context) => SearchingDictionaryScreen(user: _user)
                           )
                       );
                     },
