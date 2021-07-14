@@ -71,7 +71,6 @@ _initializeFirebaseMessaging() async {
       android: androidSettings,
     );
     await flutterLocalNotificationsPlugin.initialize(settings);
-    print("token: ${await FirebaseMessaging.instance.getToken()}");
 
     var onMessage = FirebaseMessaging.onMessage;
 
@@ -142,24 +141,6 @@ Future<void> _messageHandler(RemoteMessage message) async {
 
   var data = message.data;
   final postId = data['postId'];
-  final title = data['title'];
-  final nickname = data['nickname'];
   FirebaseMessaging.instance.unsubscribeFromTopic("$postId");
-  print("background: $postId $title $nickname");
-
-  // flutterLocalNotificationsPlugin.show(
-  //     message.data.hashCode,
-  //     message.data['title'],
-  //     message.data['body'],
-  //     NotificationDetails(
-  //       android: AndroidNotificationDetails(
-  //         channel.id,
-  //         channel.name,
-  //         channel.description,
-  //         playSound: false,
-  //         autoCancel: true,
-  //       ),
-  //     )
-  // );
   return;
 }
