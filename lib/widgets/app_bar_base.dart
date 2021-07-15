@@ -7,6 +7,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../res/colors.dart';
+import '../screens/dictionary/searching_dictionary_screen.dart';
+import '../screens/friends/friends_main_screen.dart';
+import '../screens/main_screen.dart';
 import '../screens/management/manage_screen.dart';
 import '../screens/management/my_post_screen.dart';
 import '../screens/user/signin_screen.dart';
@@ -54,7 +57,7 @@ class _AppBarTitleState extends State<AppBarTitle> {
 
     var baseSize = w > h ? w / 20 : h / 20;
 
-    var image = Container(
+    Widget image = Container(
       child: Row(
         children: [
           Container(),
@@ -63,68 +66,130 @@ class _AppBarTitleState extends State<AppBarTitle> {
     );
 
     if (_image == "creature") {
-      image = Container(
-        decoration: BoxDecoration(
-          color: CustomColors.orange,
-          borderRadius: BorderRadius.all(Radius.circular(8))
-        ),
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: baseSize/8, horizontal: baseSize/3),
-          child: Row(
-            children: [
-              SvgPicture.asset(
-                'assets/book_reading.svg',
-                height: baseSize/2,
+      image = Row(
+        children: [
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => SelectScreen(user: _user!)), (route) => false);
+              Navigator.of(context).push(ScreenAnimation.routeTo(SearchingDictionaryScreen(user: _user!)));
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                  color: CustomColors.orange,
+                  borderRadius: BorderRadius.all(Radius.circular(8))
               ),
-              Padding(
-                padding: EdgeInsets.only(left: w/40),
-                child: Text("백과사전 보기",
-                  style: TextStyle(
-                      color: Colors.white,
-                      shadows: [
-                        Shadow(
-                          blurRadius: 4.0,
-                          color: Colors.black45,
-                          offset: Offset(2.0, 2.0)
-                        )
-                      ],
-                      fontSize: baseSize/2,),),
-              )
-            ],
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: baseSize/8, horizontal: baseSize/3),
+                child: Row(
+                  children: [
+                    SvgPicture.asset(
+                      'assets/book_reading.svg',
+                      height: baseSize/2,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: w/40),
+                      child: Text("백과사전 보기",
+                        style: TextStyle(
+                          color: Colors.white,
+                          shadows: [
+                            Shadow(
+                                blurRadius: 4.0,
+                                color: Colors.black45,
+                                offset: Offset(2.0, 2.0)
+                            )
+                          ],
+                          fontSize: baseSize/2,),),
+                    )
+                  ],
+                ),
+              ),
+            )
           ),
-        ),
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => SelectScreen(user: _user!)), (route) => false);
+              Navigator.of(context).push(ScreenAnimation.routeTo(FriendsMainScreen(user: _user!)));
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                  color: CustomColors.creatureGreen,
+                  borderRadius: BorderRadius.all(Radius.circular(8))
+              ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: baseSize/8, horizontal: baseSize/3),
+                child: SvgPicture.asset(
+                  'assets/friends.svg',
+                  height: h / 20,
+                ),
+              )
+            ),
+          )
+        ],
       );
     } else if (_image == "friends") {
-      image = Container(
-        decoration: BoxDecoration(
-            color: CustomColors.creatureGreen,
-            borderRadius: BorderRadius.all(Radius.circular(8))
-        ),
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: baseSize/8, horizontal: baseSize/3),
-          child: Row(
-            children: [
-              SvgPicture.asset(
-                'assets/friends.svg',
-                height: h / 20,
+      image = Row(
+        children: [
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => SelectScreen(user: _user!)), (route) => false);
+              Navigator.of(context).push(ScreenAnimation.routeTo(SearchingDictionaryScreen(user: _user!)));
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                  color: CustomColors.orange,
+                  borderRadius: BorderRadius.all(Radius.circular(8))
               ),
-              Padding(
-                padding: EdgeInsets.only(left: w/40),
-                child: Text("친구들 사진보기",
-                  style: TextStyle(
-                    color: Colors.white,
-                    shadows: [
-                      Shadow(
-                          blurRadius: 4.0,
-                          color: Colors.black45,
-                          offset: Offset(2.0, 2.0)
-                      )
-                    ],
-                    fontSize: baseSize/2,),),
-              )
-            ],
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: baseSize/8, horizontal: baseSize/3),
+                child: SvgPicture.asset(
+                  'assets/book_reading.svg',
+                  height: baseSize/2,
+                ),
+              ),
+            ),
           ),
-        ),
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => SelectScreen(user: _user!)), (route) => false);
+              Navigator.of(context).push(ScreenAnimation.routeTo(FriendsMainScreen(user: _user!)));
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                  color: CustomColors.creatureGreen,
+                  borderRadius: BorderRadius.all(Radius.circular(8))
+              ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: baseSize/8, horizontal: baseSize/3),
+                child: Row(
+                  children: [
+                    SvgPicture.asset(
+                      'assets/friends.svg',
+                      height: h / 20,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: w/40),
+                      child: Text("친구들 사진보기",
+                        style: TextStyle(
+                          color: Colors.white,
+                          shadows: [
+                            Shadow(
+                                blurRadius: 4.0,
+                                color: Colors.black45,
+                                offset: Offset(2.0, 2.0)
+                            )
+                          ],
+                          fontSize: baseSize/2,),),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       );
     } else if (_image == "mypost") {
       image = Container(
@@ -224,8 +289,9 @@ class _AppBarTitleState extends State<AppBarTitle> {
                   ) : PopupMenuButton(
                       onSelected: (result) async {
                         if (result == 1) {
-                          Navigator.of(context)
-                              .push(ScreenAnimation.routeTo(MyPostScreen(user: _user!)));
+                          Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(builder: (context) => SelectScreen(user: _user!)), (route) => false);
+                          Navigator.of(context).push(ScreenAnimation.routeTo(MyPostScreen(user: _user!)));
                         } else if (result == 2) {
                           setState(() {
                             _isSigningOut = true;
@@ -237,6 +303,8 @@ class _AppBarTitleState extends State<AppBarTitle> {
                           Navigator.of(context)
                               .pushReplacement(ScreenAnimation.routeTo(SignInScreen()));
                         } else if (result == 3) {
+                          Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(builder: (context) => SelectScreen(user: _user!)), (route) => false);
                           Navigator.of(context).push(
                               MaterialPageRoute(
                                   builder: (context) => ManagementScreen(user: _user!,)
