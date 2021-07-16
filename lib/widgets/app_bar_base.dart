@@ -301,7 +301,7 @@ class _AppBarTitleState extends State<AppBarTitle> {
                             _isSigningOut = false;
                           });
                           Navigator.of(context)
-                              .pushReplacement(ScreenAnimation.routeTo(SignInScreen()));
+                              .pushAndRemoveUntil(ScreenAnimation.routeTo(SignInScreen()), (route) => false);
                         } else if (result == 3) {
                           Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(builder: (context) => SelectScreen(user: _user!)), (route) => false);

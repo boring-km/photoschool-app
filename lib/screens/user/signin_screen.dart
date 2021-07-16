@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../res/colors.dart';
@@ -12,8 +13,43 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
+
+  bool _isLoaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    Future.delayed(Duration(seconds: 2), () async {
+      final prefs = await SharedPreferences.getInstance();
+      final nickname = prefs.getString("nickname") ?? "";
+
+      if (nickname.isNotEmpty) {
+        await Authentication.initializeFirebase(context: context);
+        final user = await Authentication.signInWithGoogle();
+        await Authentication.signUp(user, context);
+      }
+      setState(() {
+        _isLoaded = true;
+      });
+    });
+
+  }
+
   @override
   Widget build(BuildContext context) {
+
+    if (!_isLoaded) {
+      return Scaffold(
+        backgroundColor: CustomColors.deepblue,
+        body: SafeArea(
+          child: Center(
+            child: Lottie.asset('assets/intro2.json', height: 500, repeat: false),
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: CustomColors.deepblue,
       body: SafeArea(
@@ -32,14 +68,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      '포토스쿨',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'SDSamlip',
-                        fontSize: MediaQuery.of(context).size.width / 15,
-                      ),
-                    ),
+                    Lottie.asset('assets/intro2.json', height: 500, repeat: false),
                   ],
                 ),
               ),
@@ -99,7 +128,7 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
                         ),
                         onPressed: () async {
                           setState(() { _isSigningIn = true; });
-                          var user = await Authentication.signInWithGoogle(context: context);
+                          var user = await Authentication.signInWithGoogle();
                           setState(() { _isSigningIn = false; });
                           Authentication.signUp(user, context);
                         },
