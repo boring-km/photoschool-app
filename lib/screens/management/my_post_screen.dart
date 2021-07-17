@@ -302,9 +302,11 @@ class _MyPostScreenState extends State<MyPostScreen> {
                                 if (result == 1) {
                                   _buildTitleChangeDialog(context, item, user);
                                 } else if (result == 2) {
+
+                                } else if (result == 3) {
                                   _post = item;
                                   _showSelectSource(context);
-                                } else {
+                                } else if (result == 4) {
                                   _buildDeletePostDialog(context, item, user);
                                 }
                               },
@@ -347,6 +349,24 @@ class _MyPostScreenState extends State<MyPostScreen> {
                                       Padding(
                                         padding: EdgeInsets.only(right: 8.0),
                                         child: Icon(
+                                          Icons.camera,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      Text(
+                                        "이미지 수정하기",
+                                        style: TextStyle(color: Colors.black, fontSize: 16),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                PopupMenuItem(
+                                  value: 3,
+                                  child: Row(
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.only(right: 8.0),
+                                        child: Icon(
                                           CupertinoIcons.camera,
                                           color: Colors.black,
                                           size: 24,
@@ -360,7 +380,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
                                   ),
                                 ),
                                 PopupMenuItem(
-                                  value: 3,
+                                  value: 4,
                                   child: Row(
                                     children: [
                                       Padding(
