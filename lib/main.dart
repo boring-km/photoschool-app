@@ -7,10 +7,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-// import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
-import 'screens/my_post_screen.dart';
-import 'screens/signin_screen.dart';
+import 'screens/management/my_post_screen.dart';
+import 'screens/user/signin_screen.dart';
+// import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
