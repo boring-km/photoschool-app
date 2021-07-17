@@ -121,7 +121,7 @@ class _AppBarTitleState extends State<AppBarTitle> {
                 padding: EdgeInsets.symmetric(vertical: baseSize/8, horizontal: baseSize/3),
                 child: SvgPicture.asset(
                   'assets/friends.svg',
-                  height: h / 20,
+                  height: baseSize/2,
                 ),
               )
             ),
@@ -168,7 +168,7 @@ class _AppBarTitleState extends State<AppBarTitle> {
                   children: [
                     SvgPicture.asset(
                       'assets/friends.svg',
-                      height: h / 20,
+                      height: baseSize/2,
                     ),
                     Padding(
                       padding: EdgeInsets.only(left: w/40),
