@@ -60,6 +60,8 @@ class _PediaDetailState extends State<PediaDetailScreen> {
   final _scrollController = ScrollController();
   final _dialogTextController = TextEditingController();
 
+  File? _originalFile;
+
   _PediaDetailState(this._pedia);
 
   @override
@@ -569,18 +571,19 @@ class _PediaDetailState extends State<PediaDetailScreen> {
     final pickedFile = await picker.getImage(source: source);
 
     if (pickedFile != null) {
-      var targetImageFile = File(pickedFile.path);
+      _originalFile = File(pickedFile.path);
       final result = await Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => PainterImageTest(backgroundImageFile: targetImageFile,)),
+        MaterialPageRoute(builder: (context) => PainterImageTest(backgroundImageFile: _originalFile!,)),
       );
       if (result == null) {
         return false;
       }
       final imageFile = result['image'];
+      final quality = result['quality'];
       _imageFileToUpload = imageFile;
       _thumbnailFileToUpload = await FlutterNativeImage.compressImage(
         imageFile.path,
-        quality: 20,
+        quality: quality,
       );
       _dialogTextController.text = result['title'];
       return true;
@@ -676,8 +679,12 @@ class _PediaDetailState extends State<PediaDetailScreen> {
       var postId = await CustomAPIService.registerPost("P${_pedia.apiId}", title);
 
       // 2. storage에 썸네일 및 원본 이미지 저장 후 url 추출
+      var orgImageRef = FirebaseStorage.instance.ref().child('original/$postId.png');
       var realImageRef = FirebaseStorage.instance.ref().child('real/$postId.png');
       var thumbImageRef = FirebaseStorage.instance.ref().child('thumbnail/$postId.png');
+
+      final uploadTask = orgImageRef.putFile(_originalFile!);
+      await uploadTask.whenComplete(() => print("그림 없는 원본 이미지 업로드 완료"));
 
       final uploadTask1 = realImageRef.putFile(_imageFileToUpload!);
       final snapshot1 = await uploadTask1.whenComplete(() => print("원본 이미지 업로드 완료"));
