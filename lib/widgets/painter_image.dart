@@ -9,8 +9,9 @@ import 'package:image_size_getter/file_input.dart';
 import 'package:image_size_getter/image_size_getter.dart' as size;
 import 'package:painter/painter.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:photoschool/widgets/loading.dart';
+
 import 'hero_dialog_route.dart';
+import 'loading.dart';
 
 class PainterImageTest extends StatefulWidget {
 
@@ -256,21 +257,46 @@ class _ExamplePageState extends State<PainterImageTest> {
           Positioned(
             right: 20,
             bottom: 20,
-            child: Row(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text("업로드", style: TextStyle(color: Colors.white, fontSize: 20),),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: FloatingActionButton(
-                    onPressed: () {
-                      setState(() {
-                        _isUploading = true;
-                      });
-                      _capture(context);
-                    },
-                    backgroundColor: Colors.green,
-                    child: Icon(Icons.check),
-                  ),
+                Row(
+                  children: [
+                    Text("원본 업로드", style: TextStyle(color: Colors.white, fontSize: 20),),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: FloatingActionButton(
+                        heroTag: "org",
+                        onPressed: () {
+                          setState(() {
+                            _isUploading = true;
+                          });
+                          _capture(context, isOrigin: true);
+                        },
+                        backgroundColor: Colors.blue,
+                        child: Icon(Icons.check),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Text("업로드", style: TextStyle(color: Colors.white, fontSize: 20),),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: FloatingActionButton(
+                        heroTag: "full",
+                        onPressed: () {
+                          setState(() {
+                            _isUploading = true;
+                          });
+                          _capture(context);
+                        },
+                        backgroundColor: Colors.green,
+                        child: Icon(Icons.check),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -280,24 +306,34 @@ class _ExamplePageState extends State<PainterImageTest> {
     );
   }
 
-  void _capture(BuildContext context) async {
-    print("START CAPTURE");
-    var renderObject = globalKey.currentContext!.findRenderObject();
-    if (renderObject is RenderRepaintBoundary) {
-      var boundary = renderObject;
-      var image = await boundary.toImage();
-      final directory = (await getApplicationDocumentsDirectory()).path;
-      var byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-      var pngBytes = byteData!.buffer.asUint8List();
-      print(pngBytes);
-      var imgFile = File('$directory/screenshot.png');
-      final imageFile = await imgFile.writeAsBytes(pngBytes);
-      print("FINISH CAPTURE ${imgFile.path}");
+  void _capture(BuildContext context, {bool? isOrigin}) async {
+    if (isOrigin != null) {
       Navigator.of(context).pop({
-        "image": imageFile,
+        "image": backgroundImageFile,
         "title": _titleController.text,
+        "quality": 50,
       });
+    } else {
+      print("START CAPTURE");
+      var renderObject = globalKey.currentContext!.findRenderObject();
+      if (renderObject is RenderRepaintBoundary) {
+        var boundary = renderObject;
+        var image = await boundary.toImage();
+        final directory = (await getApplicationDocumentsDirectory()).path;
+        var byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+        var pngBytes = byteData!.buffer.asUint8List();
+        print(pngBytes);
+        var imgFile = File('$directory/screenshot.png');
+        final imageFile = await imgFile.writeAsBytes(pngBytes);
+        print("FINISH CAPTURE ${imgFile.path}");
+        Navigator.of(context).pop({
+          "image": imageFile,
+          "title": _titleController.text,
+          "quality": 20,
+        });
+      }
     }
+
   }
 
   _pickColor(BuildContext context, Color color) async {

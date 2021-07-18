@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'dart:math';
+import 'package:http/http.dart' as http;
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -7,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../../dto/post/post_response.dart';
 import '../../res/colors.dart';
@@ -298,11 +301,20 @@ class _MyPostScreenState extends State<MyPostScreen> {
                               ],
                             ),
                             PopupMenuButton(
-                              onSelected: (result) {
+                              onSelected: (result) async {
                                 if (result == 1) {
                                   _buildTitleChangeDialog(context, item, user);
                                 } else if (result == 2) {
-
+                                  _post = item;
+                                  final result = await _pickImage(ImageSource.gallery, isRepainting: true, context: context);
+                                  if (result) {
+                                    setState(() {
+                                      _isUploaded = false;
+                                    });
+                                    _uploadImage(context);
+                                  } else {
+                                    SingleMessageDialog.alert(context, "취소됨");
+                                  }
                                 } else if (result == 3) {
                                   _post = item;
                                   _showSelectSource(context);
@@ -354,7 +366,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
                                         ),
                                       ),
                                       Text(
-                                        "이미지 수정하기",
+                                        "다시 그리기",
                                         style: TextStyle(color: Colors.black, fontSize: 16),
                                       ),
                                     ],
@@ -597,28 +609,55 @@ class _MyPostScreenState extends State<MyPostScreen> {
     )));
   }
 
-  Future<bool> _pickImage(ImageSource source) async {
-    final pickedFile = await picker.getImage(source: source);
+  Future<bool> _pickImage(ImageSource source, { bool? isRepainting, BuildContext? context }) async {
+    dynamic pickedFile;
+    File? targetImageFile;
+    if (isRepainting != null) {
+      try {
+        final orgImageURL = await FirebaseStorage.instance.ref().child('original/${_post.postId}.png').getDownloadURL();
+        targetImageFile = await urlToFile(orgImageURL);
+      } on Exception {
+        SingleMessageDialog.alert(context!, "기존 그림을 지울 수 없는 상태입니다.");
+        final orgImageURL = await FirebaseStorage.instance.ref().child('real/${_post.postId}.png').getDownloadURL();
+        targetImageFile = await urlToFile(orgImageURL);
+      }
 
-    if (pickedFile != null) {
-      var targetImageFile = File(pickedFile.path);
-      final result = await Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => PainterImageTest(backgroundImageFile: targetImageFile,)),
+    } else {
+      pickedFile = await picker.getImage(source: source);
+      if (pickedFile != null) {
+        targetImageFile = File(pickedFile.path);
+      }
+    }
+
+    if (targetImageFile != null) {
+      final result = await Navigator.of(context!).push(
+        MaterialPageRoute(builder: (context) => PainterImageTest(backgroundImageFile: targetImageFile!,)),
       );
       if (result == null) {
         return false;
       }
       final imageFile = result['image'];
+      final quality = result['quality'];
       _imageFileToUpload = imageFile;
       _thumbnailFileToUpload = await FlutterNativeImage.compressImage(
         imageFile.path,
-        quality: 20,
+        quality: quality,
       );
       _updateTextController.text = result['title'];
       return true;
     } else {
       return false;
     }
+  }
+
+  Future<File> urlToFile(String imageUrl) async {
+    var rng = Random();
+    var tempDir = await getTemporaryDirectory();
+    var tempPath = tempDir.path;
+    var file = File('${'$tempPath'}${rng.nextInt(100)}.png');
+    var response = await http.get(Uri.parse(imageUrl));
+    await file.writeAsBytes(response.bodyBytes);
+    return file;
   }
 
   Future<void> _uploadImage(BuildContext rootContext) async {
