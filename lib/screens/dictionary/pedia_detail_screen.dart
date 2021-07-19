@@ -573,7 +573,7 @@ class _PediaDetailState extends State<PediaDetailScreen> {
     if (pickedFile != null) {
       _originalFile = File(pickedFile.path);
       final result = await Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => PainterImageTest(backgroundImageFile: _originalFile!,)),
+        MaterialPageRoute(builder: (context) => PainterWidget(backgroundImageFile: _originalFile!,)),
       );
       if (result == null) {
         return false;

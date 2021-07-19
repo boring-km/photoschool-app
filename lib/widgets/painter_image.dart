@@ -13,17 +13,17 @@ import 'package:path_provider/path_provider.dart';
 import 'hero_dialog_route.dart';
 import 'loading.dart';
 
-class PainterImageTest extends StatefulWidget {
+class PainterWidget extends StatefulWidget {
 
   final File backgroundImageFile;
 
-  const PainterImageTest({Key? key, required this.backgroundImageFile}) : super(key: key);
+  const PainterWidget({Key? key, required this.backgroundImageFile}) : super(key: key);
 
   @override
-  _ExamplePageState createState() => _ExamplePageState();
+  _PainterWidgetState createState() => _PainterWidgetState();
 }
 
-class _ExamplePageState extends State<PainterImageTest> {
+class _PainterWidgetState extends State<PainterWidget> {
 
   late File backgroundImageFile;
   final PainterController _controller = _newController();

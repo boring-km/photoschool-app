@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../dto/creature/creature_detail_response.dart';
 import '../../dto/dict/dict_detail_response.dart';
@@ -43,6 +44,7 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
   String _regTime = "";
   String _dictImgUrl = "";
   late DictResponse _pedia;
+  Color? buttonTextColor;
 
   @override
   void initState() {
@@ -91,7 +93,7 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
     _baseSize = w > h ? h / 10 : w / 15;
 
     var buttonColor = _isLiked ? Colors.red : Colors.white;
-    var buttonTextColor = _isLiked ? Colors.white : Colors.red;
+    buttonTextColor = _isLiked ? Colors.white : Colors.red;
 
     return _isLoading ? LoadingWidget.buildLoadingView("로딩중", _baseSize) : Scaffold(
       backgroundColor: CustomColors.deepblue,
@@ -123,7 +125,7 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
                                 Container(
-                                  color: CustomColors.creatureGreen,
+                                  color: Color(0xC4000000),
                                   child: InteractiveViewer(
                                     panEnabled: true,
                                     scaleEnabled: true,
@@ -141,14 +143,9 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
                                         return Container(
                                           width: w * 2/3,
                                           height: 400,
-                                          color: CustomColors.creatureGreen,
+                                          color: Colors.black,
                                           child: Center(
-                                            child: Text(
-                                              "이미지 로딩중: ${(loadingProgress.expectedTotalBytes != null ?
-                                              (loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!) * 100
-                                                  : 100).round()}%",
-                                              style: TextStyle(color: Colors.white, fontSize: _baseSize),
-                                            ),
+                                            child: Lottie.asset('assets/loading.json', height: 400)
                                           ),
                                         );
                                       },
@@ -163,7 +160,7 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
                                     color: Color(0xFFFFF4A6),
                                     borderRadius: BorderRadius.all(Radius.circular(8.0)),
                                   ),
-                                  width: 200,
+                                  width: _baseSize * 3,
                                   height: 400,
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -234,14 +231,14 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
                                             },
                                             style: ElevatedButton.styleFrom(
                                                 primary: buttonColor,
-                                                side: BorderSide(color: buttonTextColor, width: 1.0)
+                                                side: BorderSide(color: buttonTextColor!, width: 1.0)
                                             ),
                                             child: Row(
                                               children: [
                                                 Padding(
                                                   padding: EdgeInsets.only(right: 8.0),
                                                   child: Hero(
-                                                    tag: "like",
+                                                    tag: 'like',
                                                     child: Icon(
                                                       Icons.thumb_up_alt_rounded,
                                                       color: buttonTextColor,
@@ -366,7 +363,7 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
                       tag: 'like',
                       child: Icon(
                         Icons.thumb_up_alt_rounded,
-                        color: Colors.red,
+                        color: buttonTextColor,
                         size: w/4,
                       ),
                     ),
@@ -418,6 +415,7 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
     return _original.runtimeType == CreatureDetailResponse ?
     Image.network(
       (_original as CreatureDetailResponse).imgUrl1,
+      width: _baseSize * 2.5,
       height: _baseSize * 2.5,
       fit: BoxFit.fitHeight,
       loadingBuilder: (context, child, progress) {
@@ -427,6 +425,7 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
     ) :
     Image.network(
       _dictImgUrl,
+      width: _baseSize * 2.5,
       height: _baseSize * 2.5,
       fit: BoxFit.fitHeight,
       loadingBuilder: (context, child, progress) {

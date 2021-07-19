@@ -627,7 +627,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
 
     if (targetImageFile != null) {
       final result = await Navigator.of(context!).push(
-        MaterialPageRoute(builder: (context) => PainterImageTest(backgroundImageFile: targetImageFile!,)),
+        MaterialPageRoute(builder: (context) => PainterWidget(backgroundImageFile: targetImageFile!,)),
       );
       if (result == null) {
         return false;
