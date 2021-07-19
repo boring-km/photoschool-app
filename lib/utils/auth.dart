@@ -10,13 +10,17 @@ import '../screens/user/signup_screen.dart';
 import '../services/server_api.dart';
 
 class Authentication {
-  static Future<FirebaseApp> initializeFirebase({
+  static Future<FirebaseApp?> initializeFirebase({
     required BuildContext context,
   }) async {
     var firebaseApp = await Firebase.initializeApp();
     var user = FirebaseAuth.instance.currentUser;
-    signUp(user, context);
-    return firebaseApp;
+    final result = await signUp(user, context);
+    if (result) {
+      return firebaseApp;
+    } else {
+      return null;
+    }
   }
 
   static Future<User?> signInWithGoogle() async {
@@ -87,6 +91,9 @@ class Authentication {
           ),
         );
       }
+      return true;
+    } else {
+      return false;
     }
   }
 

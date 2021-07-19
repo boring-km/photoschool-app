@@ -16,6 +16,8 @@ class _SignInScreenState extends State<SignInScreen> {
 
   bool _isLoaded = false;
 
+  bool _haveLoggedIn = false;
+
   @override
   void initState() {
     super.initState();
@@ -23,9 +25,11 @@ class _SignInScreenState extends State<SignInScreen> {
     Future.delayed(Duration(seconds: 2), () async {
       final prefs = await SharedPreferences.getInstance();
       final nickname = prefs.getString("nickname") ?? "";
-
       if (nickname.isNotEmpty) {
-        await Authentication.initializeFirebase(context: context);
+        final result = await Authentication.initializeFirebase(context: context);
+        if (result != null) {
+          _haveLoggedIn = true;
+        }
       }
       setState(() {
         _isLoaded = true;
@@ -57,7 +61,7 @@ class _SignInScreenState extends State<SignInScreen> {
             right: 16.0,
             bottom: 20.0,
           ),
-          child: Column(
+          child: _haveLoggedIn ? Container() : Column(
             mainAxisSize: MainAxisSize.max,
             children: [
               Row(),
