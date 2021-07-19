@@ -50,6 +50,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
 
   File? _imageFileToUpload;
   File? _thumbnailFileToUpload;
+  File? _orgImageFile;
 
   bool _isUploaded = true;
 
@@ -604,28 +605,27 @@ class _MyPostScreenState extends State<MyPostScreen> {
 
   Future<bool> _pickImage(ImageSource source, { bool? isRepainting, BuildContext? context }) async {
     dynamic pickedFile;
-    File? targetImageFile;
     if (isRepainting != null) {
       try {
         final orgImageURL = await FirebaseStorage.instance.ref().child('original/${_post.postId}.jpg').getDownloadURL();
-        targetImageFile = await urlToFile(orgImageURL);
+        _orgImageFile = await urlToFile(orgImageURL);
       } on Exception {
         SingleMessageDialog.alert(context!, "기존 그림이 있다면 지울 수 없는 상태입니다.");
         final orgImageURL = await FirebaseStorage.instance.ref().child('real/${_post.postId}.png').getDownloadURL();
-        targetImageFile = await urlToFile(orgImageURL);
+        _orgImageFile = await urlToFile(orgImageURL);
       }
 
     } else {
       pickedFile = await picker.getImage(source: source);
       if (pickedFile != null) {
-        targetImageFile = File(pickedFile.path);
+        _orgImageFile = File(pickedFile.path);
       }
     }
 
-    if (targetImageFile != null) {
-      print("경로: ${targetImageFile.path}");
+    if (_orgImageFile != null) {
+      print("경로: ${_orgImageFile!.path}");
       final result = await Navigator.of(context!).push(
-        MaterialPageRoute(builder: (context) => PainterWidget(backgroundImageFile: targetImageFile!,)),
+        MaterialPageRoute(builder: (context) => PainterWidget(backgroundImageFile: _orgImageFile!,)),
       );
       if (result == null) {
         return false;
@@ -659,8 +659,13 @@ class _MyPostScreenState extends State<MyPostScreen> {
     if (_imageFileToUpload != null && _thumbnailFileToUpload != null) {
 
       // 1. storage에 썸네일 및 원본 이미지 저장 후 url 추출
+      final orgImageRef = FirebaseStorage.instance.ref().child('original/${_post.postId}.jpg');
       var realImageRef = FirebaseStorage.instance.ref().child('real/${_post.postId}.png');
       var thumbImageRef = FirebaseStorage.instance.ref().child('thumbnail/${_post.postId}.png');
+
+      final uploadTask = orgImageRef.putFile(_orgImageFile!);
+      final snapshot = await uploadTask.whenComplete(() => print("그림 없는 원본 이미지 업로드 완료"));
+      await snapshot.ref.getDownloadURL();
 
       final uploadTask1 = realImageRef.putFile(_imageFileToUpload!);
       final snapshot1 = await uploadTask1.whenComplete(() => print("원본 이미지 업로드 완료"));
