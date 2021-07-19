@@ -39,6 +39,7 @@ class _AppBarTitleState extends State<AppBarTitle> {
 
   @override
   void initState() {
+    super.initState();
     _user = widget._user;
     _image = widget._image;
     Future.delayed(Duration(milliseconds: 100), () async {
@@ -47,14 +48,12 @@ class _AppBarTitleState extends State<AppBarTitle> {
       _isAdmin = prefs.getBool('isAdmin') ?? false;
       setState(() { });
     });
-    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     var w = MediaQuery.of(context).size.width;
     var h = MediaQuery.of(context).size.height;
-
     var baseSize = w > h ? w / 20 : h / 20;
 
     Widget image = Container(

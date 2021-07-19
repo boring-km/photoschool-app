@@ -205,8 +205,8 @@ class _MyPostScreenState extends State<MyPostScreen> {
   }
 
   List<Widget> _buildMyImageCard(List<PostResponse> posts, BuildContext context, User user) {
-    var w = context.size!.width;
-    var h = context.size!.height;
+    var w = MediaQuery.of(context).size.width;
+    var h = MediaQuery.of(context).size.height;
 
     final resultList = <Widget>[];
     for (var item in posts) {
@@ -504,7 +504,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
                   child: ElevatedButton(
                       style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(boxRounded)), primary: Colors.white, onSurface: Colors.white30),
                       onPressed: () async {
-                        final result = await _pickImage(ImageSource.camera);
+                        final result = await _pickImage(ImageSource.camera, context: context);
                         if (result) {
                           setState(() {
                             Navigator.of(context).pop();
@@ -607,10 +607,10 @@ class _MyPostScreenState extends State<MyPostScreen> {
     File? targetImageFile;
     if (isRepainting != null) {
       try {
-        final orgImageURL = await FirebaseStorage.instance.ref().child('original/${_post.postId}.png').getDownloadURL();
+        final orgImageURL = await FirebaseStorage.instance.ref().child('original/${_post.postId}.jpg').getDownloadURL();
         targetImageFile = await urlToFile(orgImageURL);
       } on Exception {
-        SingleMessageDialog.alert(context!, "기존 그림을 지울 수 없는 상태입니다.");
+        SingleMessageDialog.alert(context!, "기존 그림이 있다면 지울 수 없는 상태입니다.");
         final orgImageURL = await FirebaseStorage.instance.ref().child('real/${_post.postId}.png').getDownloadURL();
         targetImageFile = await urlToFile(orgImageURL);
       }
@@ -623,6 +623,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
     }
 
     if (targetImageFile != null) {
+      print("경로: ${targetImageFile.path}");
       final result = await Navigator.of(context!).push(
         MaterialPageRoute(builder: (context) => PainterWidget(backgroundImageFile: targetImageFile!,)),
       );
@@ -725,20 +726,33 @@ class _MyPostScreenState extends State<MyPostScreen> {
 
   Future<void> deleteUserImage(PostResponse item, BuildContext context, BuildContext rootContext) async {
     final result = await CustomAPIService.deleteImage(item.postId);
-    if (result == true) {
-      var realImageRef = FirebaseStorage.instance.ref().child('real/${item.postId}.png');
-      var thumbImageRef = FirebaseStorage.instance.ref().child('thumbnail/${item.postId}.png');
-      await realImageRef.delete();
-      await thumbImageRef.delete();
+    try {
+      if (result == true) {
+        try {
+          var orgImageRef = FirebaseStorage.instance.ref().child('original/${item.postId}.jpg');
+          await orgImageRef.delete();
+        } on Exception catch(e) {
+          print(e);
+        }
 
-      Navigator.of(context).pop();
-      Navigator.of(rootContext).pushReplacement(
-        MaterialPageRoute(
-            builder: (context) => MyPostScreen(user: _user)
-        ),
-      );
-    } else {
+        var realImageRef = FirebaseStorage.instance.ref().child('real/${item.postId}.png');
+        var thumbImageRef = FirebaseStorage.instance.ref().child('thumbnail/${item.postId}.png');
+
+        await realImageRef.delete();
+        await thumbImageRef.delete();
+
+        Navigator.of(context).pop();
+        Navigator.of(rootContext).pushReplacement(
+          MaterialPageRoute(
+              builder: (context) => MyPostScreen(user: _user)
+          ),
+        );
+      } else {
+        SingleMessageDialog.alert(context, "삭제 실패");
+      }
+    } on Exception catch(e) {
       SingleMessageDialog.alert(context, "삭제 실패");
+      print(e);
     }
   }
 

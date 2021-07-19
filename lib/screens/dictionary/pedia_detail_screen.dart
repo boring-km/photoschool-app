@@ -678,7 +678,7 @@ class _PediaDetailState extends State<PediaDetailScreen> {
       var postId = await CustomAPIService.registerPost("P${_pedia.apiId}", title);
 
       // 2. storage에 썸네일 및 원본 이미지 저장 후 url 추출
-      var orgImageRef = FirebaseStorage.instance.ref().child('original/$postId.png');
+      var orgImageRef = FirebaseStorage.instance.ref().child('original/$postId.jpg');
       var realImageRef = FirebaseStorage.instance.ref().child('real/$postId.png');
       var thumbImageRef = FirebaseStorage.instance.ref().child('thumbnail/$postId.png');
 
