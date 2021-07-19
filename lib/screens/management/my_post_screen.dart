@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:math';
-import 'package:http/http.dart' as http;
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -8,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -155,7 +155,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
                             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 3,
                                 mainAxisSpacing: 2.0,
-                                childAspectRatio: w > h ? 3/4 : 3/5),
+                                childAspectRatio: w > h ? 9/10 : 3/5),
                             itemCount: _postList.length + 1,
                             itemBuilder: (context, index) {
                               if (_postList.length == index) {
@@ -221,24 +221,17 @@ class _MyPostScreenState extends State<MyPostScreen> {
           child: Container(
             decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(8)), border: Border.all(color: Colors.black, width: 2.0)),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Row(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(left: 8.0, bottom: 16.0),
-                      child: _buildApproval(item.postId, item.isApproved!, item.isRejected!)
-                    ),
-                  ],
-                ),
+                _buildApproval(item.postId, item.isApproved!, item.isRejected!),
                 Padding(
-                  padding: EdgeInsets.only(bottom: 16, left: 16, right: 16),
+                  padding: EdgeInsets.only(top: 16, bottom: 16, left: 16, right: 16),
                   child: Image.network(
                     item.tbImgURL,
-                    width: w/4,
-                    height: h/4,
-                    fit: BoxFit.fitHeight,
+                    width: w > h ? w/4 : w/3,
+                    height: w > h ? h/4 : h/6,
+                    fit: BoxFit.fitWidth,
                     loadingBuilder: (context, child, progress) {
                       if (progress == null) return child;
                       return Container(child: Center(child: Text("로딩중", style: TextStyle(color: CustomColors.orange, fontSize: 24),),),);
@@ -631,7 +624,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
 
     if (targetImageFile != null) {
       final result = await Navigator.of(context!).push(
-        MaterialPageRoute(builder: (context) => PainterImageTest(backgroundImageFile: targetImageFile!,)),
+        MaterialPageRoute(builder: (context) => PainterWidget(backgroundImageFile: targetImageFile!,)),
       );
       if (result == null) {
         return false;
@@ -766,14 +759,18 @@ class _MyPostScreenState extends State<MyPostScreen> {
     }
 
     return Container(
-      width: 90,
-      height: 30,
       decoration: BoxDecoration(
         color: resultBackGroundColor,
         borderRadius: BorderRadius.all(Radius.circular(4))
       ),
-      child: Center(
-        child: Text(resultText, style: TextStyle(color: resultTextColor, fontSize: 20)),
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(resultText, style: TextStyle(color: resultTextColor, fontSize: 20)),
+          ],
+        ),
       ),
     );
   }

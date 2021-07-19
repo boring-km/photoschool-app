@@ -48,14 +48,13 @@ class _FindCreatureState extends State<SearchingDictionaryScreen>
     super.initState();
   }
 
-  void _initialize() async {
+  _initialize() async {
     _user = widget._user;
     try {
       await _searchCreature(
           _creatureSearchController.text, _currentPage); // 처음에 기본 생물만 검색
     } on Exception catch (e) {
-      await _searchCreature(
-          _creatureSearchController.text, _currentPage); // 한번 더 시도
+      Navigator.of(context).pop();
       print(e);
     }
   }
@@ -127,7 +126,7 @@ class _FindCreatureState extends State<SearchingDictionaryScreen>
                     Padding(
                       padding: EdgeInsets.all((w > h ? w / 10 : h / 15) / 2),
                       child: Text(
-                        "로딩중",
+                        "사전 가져오는 중",
                         style: TextStyle(
                             color: Colors.white,
                             shadows: [

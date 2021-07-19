@@ -468,7 +468,7 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
     if (pickedFile != null) {
       _originalFile = File(pickedFile.path);
       final result = await Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => PainterImageTest(backgroundImageFile: _originalFile!)),
+        MaterialPageRoute(builder: (context) => PainterWidget(backgroundImageFile: _originalFile!)),
       );
       if (result == null) {
         return false;
