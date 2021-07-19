@@ -31,15 +31,12 @@ class _ExamplePageState extends State<PainterImageTest> {
   Image? _image;
   late double _imageWidth;
   late double _imageHeight;
-
   Color? _color;
 
   final _titleController = TextEditingController();
-
   var _titleText = "  제목 입력  ";
 
   bool _isTapped = false;
-
   bool _isUploading = false;
 
   @override
@@ -47,6 +44,7 @@ class _ExamplePageState extends State<PainterImageTest> {
     backgroundImageFile = widget.backgroundImageFile;
     _imageWidth = size.ImageSizeGetter.getSize(FileInput(backgroundImageFile)).width + 0.0;
     _imageHeight = size.ImageSizeGetter.getSize(FileInput(backgroundImageFile)).height + 0.0;
+    print("이미지 너비: $_imageWidth, 이미지 높이: $_imageHeight");
     super.initState();
     _color = Colors.white;
   }

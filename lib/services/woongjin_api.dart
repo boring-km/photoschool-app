@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import '../utils/http_custom.dart';
 
 import '../dto/dict/dict_detail_response.dart';
 import '../dto/dict/dict_main_image_response.dart';
@@ -10,6 +9,7 @@ import '../dto/dict/dict_reference.dart';
 import '../dto/dict/dict_response.dart';
 import '../dto/photos/photo_detail_response.dart';
 import '../dto/photos/photo_response.dart';
+import '../utils/http_custom.dart';
 import '../utils/http_wjdict.dart';
 
 class WoongJinAPIService {
