@@ -42,11 +42,13 @@ class _PainterWidgetState extends State<PainterWidget> {
   @override
   void initState() {
     backgroundImageFile = widget.backgroundImageFile;
+    print("경로: ${backgroundImageFile.path}");
     _imageWidth = size.ImageSizeGetter.getSize(FileInput(backgroundImageFile)).width + 0.0;
     _imageHeight = size.ImageSizeGetter.getSize(FileInput(backgroundImageFile)).height + 0.0;
     print("이미지 너비: $_imageWidth, 이미지 높이: $_imageHeight");
     super.initState();
     _color = Colors.white;
+    _controller.drawColor = _color!;
   }
 
   static PainterController _newController() {
@@ -58,11 +60,17 @@ class _PainterWidgetState extends State<PainterWidget> {
 
   @override
   Widget build(BuildContext context) {
+    var h = MediaQuery.of(context).size.height;
+
+    if (_imageHeight > h) {
+      _imageWidth = _imageWidth / (_imageHeight / h);
+      _imageHeight = h;
+      print("줄인 너비: $_imageWidth, 높이: $_imageHeight");
+    }
+
     return _isUploading ?
     LoadingWidget.buildLoadingView("그림 만드는 중", 30) :
     Scaffold(
-      appBar: AppBar(
-          backgroundColor: Colors.transparent),
       backgroundColor: Colors.black,
       body: Stack(
         children: [
@@ -166,7 +174,7 @@ class _PainterWidgetState extends State<PainterWidget> {
               )
           ),
           Positioned(
-            top: 10,
+            top: 30,
             right: 10,
             child: Column(
               children: [
@@ -320,14 +328,14 @@ class _PainterWidgetState extends State<PainterWidget> {
         final directory = (await getApplicationDocumentsDirectory()).path;
         var byteData = await image.toByteData(format: ui.ImageByteFormat.png);
         var pngBytes = byteData!.buffer.asUint8List();
-        print(pngBytes);
         var imgFile = File('$directory/screenshot.png');
+
         final imageFile = await imgFile.writeAsBytes(pngBytes);
         print("FINISH CAPTURE ${imgFile.path}");
         Navigator.of(context).pop({
           "image": imageFile,
           "title": _titleController.text,
-          "quality": 20,
+          "quality": 30,
         });
       }
     }
