@@ -127,7 +127,7 @@ class _FindCreatureState extends State<SearchingDictionaryScreen>
                     Padding(
                       padding: EdgeInsets.all((w > h ? w / 10 : h / 15) / 2),
                       child: Text(
-                        "로딩중",
+                        "사전 가져오는 중",
                         style: TextStyle(
                             color: Colors.white,
                             shadows: [

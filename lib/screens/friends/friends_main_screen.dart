@@ -98,7 +98,7 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
                     Padding(
                       padding: EdgeInsets.all(_baseSize / 2),
                       child: Text(
-                        "로딩중",
+                        "사진 가져오는 중",
                         style: TextStyle(
                             color: Colors.white,
                             shadows: [

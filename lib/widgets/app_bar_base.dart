@@ -32,8 +32,8 @@ class AppBarTitle extends StatefulWidget {
 class _AppBarTitleState extends State<AppBarTitle> {
   String _nickname = "";
   bool _isSigningOut = false;
-  late User? _user;
-  late String? _image;
+  User? _user;
+  String? _image;
   Timer? timer;
   bool _isAdmin = false;
 
@@ -253,25 +253,21 @@ class _AppBarTitleState extends State<AppBarTitle> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
+          _image == null ? Text(
             '포토스쿨',
             style: TextStyle(
               color: Colors.white,
               fontFamily: 'SDSamlip',
               fontSize: 28,
             ),
-          ),
-          Row(
-            children: [
-              image,
-            ],
-          ),
+          ) : Container(),
+          image,
           Padding(
             padding: EdgeInsets.all(h / 50),
             child: Container(
               decoration: BoxDecoration(
-                color: CustomColors.friendsYellow,
-                borderRadius: BorderRadius.all(Radius.circular(4.0))
+                  color: CustomColors.friendsYellow,
+                  borderRadius: BorderRadius.all(Radius.circular(4.0))
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -325,40 +321,40 @@ class _AppBarTitleState extends State<AppBarTitle> {
                       itemBuilder: (context) {
                         var itemList = [
                           PopupMenuItem(
-                                value: 1,
-                                child: Row(
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.all(2.0),
-                                      child: Icon(
-                                        Icons.manage_accounts,
-                                        color: Colors.black,
-                                      ),
+                              value: 1,
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.all(2.0),
+                                    child: Icon(
+                                      Icons.manage_accounts,
+                                      color: Colors.black,
                                     ),
-                                    Text(
-                                      '활동관리',
-                                      style: TextStyle(color: Colors.black, fontSize: baseSize/2),
-                                    )
-                                  ],
-                                )
-                            ),
+                                  ),
+                                  Text(
+                                    '활동관리',
+                                    style: TextStyle(color: Colors.black, fontSize: baseSize/2),
+                                  )
+                                ],
+                              )
+                          ),
                           PopupMenuItem(
-                             value: 2,
-                             child: Row(
-                               children: [
-                                 Padding(
-                                   padding: EdgeInsets.all(2.0),
-                                   child: Icon(
-                                     Icons.logout,
-                                     color: Colors.black,
-                                   ),
-                                 ),
-                                 Text(
-                                   '로그아웃',
-                                   style: TextStyle(color: Colors.black, fontSize: baseSize/2),
-                                 )
-                               ],
-                             )
+                              value: 2,
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.all(2.0),
+                                    child: Icon(
+                                      Icons.logout,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  Text(
+                                    '로그아웃',
+                                    style: TextStyle(color: Colors.black, fontSize: baseSize/2),
+                                  )
+                                ],
+                              )
                           ),
                         ];
                         if (_isAdmin) {
@@ -386,17 +382,17 @@ class _AppBarTitleState extends State<AppBarTitle> {
                         return itemList;
                       }
                   ) : ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context)
-                            .pushAndRemoveUntil(ScreenAnimation.routeTo(SignInScreen()), (route) => false);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.transparent,
-                        onPrimary: Colors.transparent,
-                        onSurface: Colors.transparent,
-                        shadowColor: Colors.transparent,
-                      ),
-                      child: Text("로그인 하기", style: TextStyle(color: Colors.black, fontSize: baseSize/2)),
+                    onPressed: () {
+                      Navigator.of(context)
+                          .pushAndRemoveUntil(ScreenAnimation.routeTo(SignInScreen()), (route) => false);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.transparent,
+                      onPrimary: Colors.transparent,
+                      onSurface: Colors.transparent,
+                      shadowColor: Colors.transparent,
+                    ),
+                    child: Text("로그인 하기", style: TextStyle(color: Colors.black, fontSize: baseSize/2)),
                   )
                 ],
               ),

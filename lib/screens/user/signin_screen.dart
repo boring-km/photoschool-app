@@ -26,8 +26,6 @@ class _SignInScreenState extends State<SignInScreen> {
 
       if (nickname.isNotEmpty) {
         await Authentication.initializeFirebase(context: context);
-        final user = await Authentication.signInWithGoogle();
-        await Authentication.signUp(user, context);
       }
       setState(() {
         _isLoaded = true;

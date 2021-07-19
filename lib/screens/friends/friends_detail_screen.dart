@@ -122,37 +122,40 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
-                                InteractiveViewer(
-                                  panEnabled: true,
-                                  scaleEnabled: true,
-                                  minScale: 0.5,
-                                  maxScale: 4,
-                                  child: Image.network(
-                                    _post.imgURL,
-                                    width: w * (4/7),
-                                    height: 500,
-                                    fit: BoxFit.fitHeight,
-                                    loadingBuilder: (context, child, loadingProgress) {
-                                      if (loadingProgress == null) {
-                                        return child;
-                                      }
-                                      return Container(
-                                        width: w * (4/7),
-                                        height: 500,
-                                        color: CustomColors.creatureGreen,
-                                        child: Center(
-                                          child: Text(
-                                            "이미지 로딩중: ${(loadingProgress.expectedTotalBytes != null ?
-                                            (loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!) * 100
-                                                : 100).round()}%",
-                                            style: TextStyle(color: Colors.white, fontSize: _baseSize),
+                                Container(
+                                  color: CustomColors.creatureGreen,
+                                  child: InteractiveViewer(
+                                    panEnabled: true,
+                                    scaleEnabled: true,
+                                    minScale: 0.5,
+                                    maxScale: 4,
+                                    child: Image.network(
+                                      _post.imgURL,
+                                      width: w * 2/3,
+                                      height: 400,
+                                      fit: BoxFit.fitHeight,
+                                      loadingBuilder: (context, child, loadingProgress) {
+                                        if (loadingProgress == null) {
+                                          return child;
+                                        }
+                                        return Container(
+                                          width: w * 2/3,
+                                          height: 400,
+                                          color: CustomColors.creatureGreen,
+                                          child: Center(
+                                            child: Text(
+                                              "이미지 로딩중: ${(loadingProgress.expectedTotalBytes != null ?
+                                              (loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!) * 100
+                                                  : 100).round()}%",
+                                              style: TextStyle(color: Colors.white, fontSize: _baseSize),
+                                            ),
                                           ),
-                                        ),
-                                      );
-                                    },
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return Text("이미지 호출 에러");
-                                    },
+                                        );
+                                      },
+                                      errorBuilder: (context, error, stackTrace) {
+                                        return Text("이미지 호출 에러");
+                                      },
+                                    ),
                                   ),
                                 ),
                                 Container(
@@ -161,13 +164,13 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
                                     borderRadius: BorderRadius.all(Radius.circular(8.0)),
                                   ),
                                   width: 200,
-                                  height: 500,
+                                  height: 400,
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       _buildOriginTitle(),
                                       Padding(
-                                        padding: EdgeInsets.all(_baseSize/4),
+                                        padding: EdgeInsets.all(_baseSize/16),
                                         child: _buildImageView(),
                                       ),
                                       Text("관련자료명", style: TextStyle(fontSize: _baseSize/4, color: Colors.black),),
@@ -416,6 +419,7 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
     Image.network(
       (_original as CreatureDetailResponse).imgUrl1,
       height: _baseSize * 2.5,
+      fit: BoxFit.fitHeight,
       loadingBuilder: (context, child, progress) {
         if (progress == null) return child;
         return Container(child: Center(child: Text("로딩중", style: TextStyle(color: CustomColors.creatureGreen, fontSize: _baseSize/2),),),);
@@ -423,7 +427,8 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
     ) :
     Image.network(
       _dictImgUrl,
-      height: _baseSize * 3,
+      height: _baseSize * 2.5,
+      fit: BoxFit.fitHeight,
       loadingBuilder: (context, child, progress) {
         if (progress == null) return child;
         return Container(child: Center(child: Text("로딩중", style: TextStyle(color: CustomColors.orange, fontSize: _baseSize/2),),),);
