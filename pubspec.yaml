@@ -12,24 +12,39 @@ dependencies:
   flutter:
     sdk: flutter
 
+  # icon 라이브러리
   cupertino_icons: ^1.0.3
+
+  # 카메라, 사진 호출
   image_picker: ^0.8.1+3
-  google_sign_in: ^5.0.4
-  http: 0.13.3
+  # 사진 압축
+  flutter_native_image: ^0.0.6
+  # svg 이미지 사용
+  flutter_svg: ^0.22.0
+  # 이미지 캐싱 사용
+  cached_network_image: ^3.0.0
+
+  # 환경변수 .env 사용
   flutter_dotenv: ^5.0.0
+
+  # http 및 xml 파싱
+  http: 0.13.3
   xml_parser: 1.0.0
   flutter_html: ^2.1.0
-  flutter_native_image: ^0.0.6
+
+  # 런처 아이콘
   flutter_launcher_icons: ^0.9.0
+
+  # 내부 기기에 특정 값을 저장
   shared_preferences: ^2.0.6
+
+  # Google 로그인
+  google_sign_in: ^5.0.4
 
   # firebase
   firebase_core: ^1.3.0
   firebase_storage: ^9.0.0
   firebase_auth: ^2.0.0
-
-  flutter_svg: ^0.22.0
-  cached_network_image: ^3.0.0
 
   # dart linter
   effective_dart: ^1.3.2
@@ -47,10 +62,10 @@ dependencies:
   # scroll_refresh
   pull_to_refresh: ^2.0.0
 
-  # loading
+  # lottie 애니메이션
   lottie: ^1.1.0
 
-  # get
+  # getX
   get: ^4.1.4
 
   # webview

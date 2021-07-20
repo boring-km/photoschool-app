@@ -42,7 +42,7 @@ class _PainterWidgetState extends State<PainterWidget> {
   @override
   void initState() {
     backgroundImageFile = widget.backgroundImageFile;
-    print("경로: ${backgroundImageFile.path}");
+    print("받은 경로: ${backgroundImageFile.path}");
     _imageWidth = size.ImageSizeGetter.getSize(FileInput(backgroundImageFile)).width + 0.0;
     _imageHeight = size.ImageSizeGetter.getSize(FileInput(backgroundImageFile)).height + 0.0;
     print("이미지 너비: $_imageWidth, 이미지 높이: $_imageHeight");
@@ -62,7 +62,7 @@ class _PainterWidgetState extends State<PainterWidget> {
   Widget build(BuildContext context) {
     var h = MediaQuery.of(context).size.height;
 
-    if (_imageHeight > h) {
+    if (_imageHeight > h || _imageWidth > h) {
       _imageWidth = _imageWidth / (_imageHeight / h);
       _imageHeight = h;
       print("줄인 너비: $_imageWidth, 높이: $_imageHeight");

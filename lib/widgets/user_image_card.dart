@@ -9,6 +9,11 @@ import '../screens/friends/friends_main_screen.dart';
 
 class UserImageCard {
   static List<Widget> buildImageCard(List<PostResponse> posts, BuildContext context, User? user) {
+
+    var w = MediaQuery.of(context).size.width;
+    var h = MediaQuery.of(context).size.height;
+    var base = w > h ? w / 10 : h / 10;
+
     final resultList = <Widget>[];
     for (var item in posts) {
       final school = item.schoolName == null ? "" : item.schoolName!.replaceFirst("등학교", "");
@@ -21,7 +26,7 @@ class UserImageCard {
           child: Container(
             width: 350,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: CustomColors.white,
               borderRadius: BorderRadius.all( Radius.circular(40), ),
               boxShadow: [
                 BoxShadow(
@@ -37,32 +42,35 @@ class UserImageCard {
               ],
             ),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Padding(
-                  padding: EdgeInsets.only(bottom: 16, left: 16, right: 16),
-                  child: Image.network(
-                    item.tbImgURL,
-                    width: 300,
-                    height: 200,
-                    fit: BoxFit.fitWidth,
-                    loadingBuilder: (context, child, progress) {
-                      if (progress == null) return child;
-                      return Container(
-                        width: 300,
-                        height: 200,
-                        child: Center(child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: CircularProgressIndicator(color: CustomColors.orange,),
-                            ),
-                            Text("로딩중", style: TextStyle(color: CustomColors.orange, fontSize: 24),),
-                          ],
-                        ),),);
-                    },
+                  padding: EdgeInsets.all(base/10),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(36),
+                    child: Image.network(
+                      item.tbImgURL,
+                      width: base * 3,
+                      height: base * 2,
+                      fit: BoxFit.cover,
+                      loadingBuilder: (context, child, progress) {
+                        if (progress == null) return child;
+                        return Container(
+                          width: base * 3,
+                          height: base * 2,
+                          child: Center(child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: CircularProgressIndicator(color: CustomColors.orange,),
+                              ),
+                              Text("로딩중", style: TextStyle(color: CustomColors.orange, fontSize: 24),),
+                            ],
+                          ),),);
+                      },
+                    ),
                   ),
                 ),
                 Padding(
@@ -142,9 +150,21 @@ class UserImageCard {
   }
 
   static List<Widget> buildAwardImageCard(List<PostResponse> posts, BuildContext context, User? user) {
+
+    var w = MediaQuery.of(context).size.width;
+    var h = MediaQuery.of(context).size.height;
+    var base = w > h ? w / 10 : h / 10;
+
     final resultList = <Widget>[];
     for (var item in posts) {
       var month = item.month!.substring(4);
+      var awardColor = Colors.black;
+      if (item.awardName!.substring(0,3) == "좋아요") {
+        awardColor = CustomColors.lightRed;
+      } else if (item.awardName!.substring(0,3) == "조회수") {
+        awardColor = CustomColors.orange;
+      }
+
       if (month[0] == '0') {
         month = month.substring(1);
       }
@@ -157,49 +177,69 @@ class UserImageCard {
           child: Container(
             width: 350,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: CustomColors.white,
               borderRadius: BorderRadius.all( Radius.circular(40), ),
               boxShadow: [
                 BoxShadow(
-                  color: CustomColors.friendsYellow,
+                  color: awardColor,
                   offset: Offset(2.0, 2.0),
                   blurRadius: 10.0,
                   spreadRadius: 1.0, ),
                 BoxShadow(
-                  color: CustomColors.friendsYellow,
+                  color: awardColor,
                   offset: Offset(-2.0, -2.0),
                   blurRadius: 1.0, spreadRadius: 0,
                 ),
               ],
             ),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text("$month월의 ${item.awardName}", style: TextStyle(color: Colors.black, fontSize: 30),),
+                Padding(
+                  padding: EdgeInsets.only(left: base * (2/5), right: base * (2/5), bottom: base / 10),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: awardColor,
+                        borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(base / 8),
+                            bottomRight: Radius.circular(base / 8))),
+                    height: base / 3,
+                    child: Center(
+                      child: Text(
+                        "$month월의 ${item.awardName}",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.white, fontSize: base/4),
+                      ),
+                    ),
+                  ),
+                ),
                 Padding(
                   padding: EdgeInsets.all(8.0),
-                  child: Image.network(
-                    item.tbImgURL,
-                    width: 300,
-                    height: 200,
-                    fit: BoxFit.fitWidth,
-                    loadingBuilder: (context, child, progress) {
-                      if (progress == null) return child;
-                      return Container(
-                        width: 300,
-                        height: 200,
-                        child: Center(child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: CircularProgressIndicator(color: CustomColors.orange,),
-                            ),
-                            Text("로딩중", style: TextStyle(color: CustomColors.orange, fontSize: 16),),
-                          ],
-                        ),),);
-                    },
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(36),
+                    child: Image.network(
+                      item.tbImgURL,
+                      width: base * 3,
+                      height: base * 2,
+                      fit: BoxFit.cover,
+                      loadingBuilder: (context, child, progress) {
+                        if (progress == null) return child;
+                        return Container(
+                          width: base * 3,
+                          height: base * 2,
+                          child: Center(child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: CircularProgressIndicator(color: CustomColors.orange,),
+                              ),
+                              Text("로딩중", style: TextStyle(color: CustomColors.orange, fontSize: 16),),
+                            ],
+                          ),),);
+                      },
+                    ),
                   ),
                 ),
                 Padding(

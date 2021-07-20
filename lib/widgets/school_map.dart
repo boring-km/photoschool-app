@@ -60,9 +60,9 @@ class _SchoolRankMapState extends State<SchoolRankMap> {
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              lottie.Lottie.asset('assets/243-updating-map.json', height: h/4),
+              lottie.Lottie.asset('assets/243-updating-map.json', height: h/3),
               Text(
-                "로딩중",
+                "지도 그리는 중",
                 style: TextStyle(
                     color: Colors.white,
                     shadows: [

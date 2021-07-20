@@ -41,16 +41,12 @@ class PublicAPIService {
           creatureList.add(CreatureResponse(name, type, "$apiId"));
         }
       } else {
-        try {
-          final list = XMLParser.parseXMLItems(searched);
-          for (var item in list) {
-            final apiId = int.parse(item.getChild('childLvbngPilbkNo')!.text!);
-            final name = item.getChild('lvbngKrlngNm')!.text!;
-            final type = item.getChild('lvbngTpcdNm')!.text!;
-            creatureList.add(CreatureResponse(name, type, "$apiId"));
-          }
-        } on Exception catch (e) {
-          print(e);
+        final list = XMLParser.parseXMLItems(searched);
+        for (var item in list) {
+          final apiId = int.parse(item.getChild('childLvbngPilbkNo')!.text!);
+          final name = item.getChild('lvbngKrlngNm')!.text!;
+          final type = item.getChild('lvbngTpcdNm')!.text!;
+          creatureList.add(CreatureResponse(name, type, "$apiId"));
         }
       }
     }

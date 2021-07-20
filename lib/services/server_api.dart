@@ -217,6 +217,7 @@ class CustomAPIService {
       post.isApproved = item['isApproved'];
       post.isRejected = item['isRejected'];
       post.imgURL = item['imgURL'];
+      post.apiId = item['apiId'];
       resultList.add(post);
     }
     return resultList;

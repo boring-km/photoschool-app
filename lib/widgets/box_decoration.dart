@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import '../res/colors.dart';
 
 class CustomBoxDecoration {
   static BoxDecoration buildWhiteBoxDecoration({bool? isTransparent}) {
     return BoxDecoration(
-        color: isTransparent == true ? Colors.transparent : Colors.white,
+        color: isTransparent == true ? Colors.transparent : CustomColors.white,
         border: isTransparent == true ? null : Border.all(
             width: 1, color: Colors.white30),
         borderRadius: BorderRadius.all(Radius.circular(10)),

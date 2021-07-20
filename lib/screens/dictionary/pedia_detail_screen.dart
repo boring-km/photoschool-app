@@ -367,7 +367,7 @@ class _PediaDetailState extends State<PediaDetailScreen> {
     final resultList = <Widget>[];
     for (var url in imageUrlList) {
       resultList.add(Material(
-        color: Colors.white,
+        color: CustomColors.white,
         child: InkWell(
           onTap: () {
             ImageDialog.show(context, url);
@@ -376,14 +376,32 @@ class _PediaDetailState extends State<PediaDetailScreen> {
             padding: EdgeInsets.symmetric(horizontal: baseSize / 8),
             child: Container(
               child: Center(
-                  child: Image.network(
-                    url,
-                    height: baseSize * 5,
-                    fit: BoxFit.cover,
-                    loadingBuilder: (context, child, progress) {
-                      if (progress == null) return child;
-                      return Container(child: Center(child: Text("로딩중", style: TextStyle(color: CustomColors.orange, fontSize: _baseSize/2),),),);
-                    },
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.network(
+                      url,
+                      height: baseSize * 5,
+                      fit: BoxFit.cover,
+                      loadingBuilder: (context, child, progress) {
+                        if (progress == null) return child;
+                        return Container(
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                CircularProgressIndicator(color: CustomColors.orange,),
+                                SizedBox(height: _baseSize/2,),
+                                Text(
+                                  "로딩중",
+                                  style: TextStyle(color: CustomColors.orange, fontSize: _baseSize / 2),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
                   )
               ),
             ),
@@ -391,7 +409,7 @@ class _PediaDetailState extends State<PediaDetailScreen> {
         ),
       ));
     }
-    resultList.add(
+    imageUrlList.isNotEmpty ? resultList.add(
       Padding(
         padding: EdgeInsets.symmetric(horizontal: 8.0),
         child: Container(
@@ -400,10 +418,10 @@ class _PediaDetailState extends State<PediaDetailScreen> {
           color: Colors.black,
         ),
       )
-    );
+    ) : null;
     for (var subItem in _subImageList) {
       resultList.add(Material(
-        color: Colors.white,
+        color: CustomColors.white,
         child: InkWell(
           onTap: () async {
             await ImageDialog.showWithWJDict(context, subItem.imgURL, subItem.apiId);
@@ -413,14 +431,17 @@ class _PediaDetailState extends State<PediaDetailScreen> {
             child: Container(
               child: Container(
                 child: Center(
-                  child: Image.network(
-                    subItem.imgURL,
-                    height: baseSize * (4.5),
-                    fit: BoxFit.fitHeight,
-                    loadingBuilder: (context, child, progress) {
-                      if (progress == null) return child;
-                      return Container(child: Center(child: Text("로딩중", style: TextStyle(color: CustomColors.orange, fontSize: baseSize/2),),),);
-                    },
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.network(
+                      subItem.imgURL,
+                      height: baseSize * (4.5),
+                      fit: BoxFit.fitHeight,
+                      loadingBuilder: (context, child, progress) {
+                        if (progress == null) return child;
+                        return Container(child: Center(child: Text("로딩중", style: TextStyle(color: CustomColors.orange, fontSize: baseSize/2),),),);
+                      },
+                    ),
                   ),
                 ),
               ),

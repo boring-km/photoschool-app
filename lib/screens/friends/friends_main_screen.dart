@@ -165,8 +165,22 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
                                         padding: EdgeInsets.only(top: _baseSize / 10),
                                         child: Row(
                                           mainAxisSize: MainAxisSize.min,
-                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
+                                            Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Padding(
+                                                padding: EdgeInsets.only(
+                                                  left: _baseSize / 4,
+                                                ),
+                                                child: Text(
+                                                  "축하해요!",
+                                                  style: TextStyle(
+                                                      fontSize: buttonFontSize * 3,
+                                                      color: Colors.white),
+                                                ),
+                                              ),
+                                            ),
                                             ElevatedButton(
                                                 style: ElevatedButton.styleFrom(
                                                     shape: RoundedRectangleBorder(
@@ -210,20 +224,7 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
                                         ),
                                       ),
                                     ),
-                                    Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Padding(
-                                        padding: EdgeInsets.only(
-                                          left: _baseSize / 4,
-                                        ),
-                                        child: Text(
-                                          "축하해요!",
-                                          style: TextStyle(
-                                              fontSize: buttonFontSize * 3,
-                                              color: Colors.white),
-                                        ),
-                                      ),
-                                    ),
+                                    SizedBox(height: _baseSize/4,),
                                     Flex(
                                       direction: Axis.horizontal,
                                       children: [
@@ -281,7 +282,7 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
                                       children: [
                                         Container(
                                             width: w / 8,
-                                            color: Color(0x20FFFFFF),
+                                            color: Color(0x40FFFFFF),
                                             child: Padding(
                                               padding: EdgeInsets.symmetric(horizontal: 8.0),
                                               child: DropdownButtonHideUnderline(
@@ -400,7 +401,7 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
                                               left: _baseSize / 3),
                                           child: Container(
                                             width: w / 8,
-                                            color: Color(0x20FFFFFF),
+                                            color: Color(0x40FFFFFF),
                                             child: Padding(
                                               padding: EdgeInsets.symmetric(horizontal: 8.0),
                                               child: DropdownButtonHideUnderline(
@@ -452,7 +453,7 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
                                             crossAxisCount: 3,
                                             mainAxisSpacing: 8.0,
                                             crossAxisSpacing: 8.0,
-                                            childAspectRatio: w > h ? 8/9 : 3/5),
+                                            childAspectRatio: w > h ? 19/20 : 3/5),
                                         itemCount: _searchedList.length + 1,
                                         itemBuilder: (context, index) {
                                           if (_searchedList.length == index) {

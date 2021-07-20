@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import '../res/colors.dart';
 
 class LoadingWidget {
@@ -6,7 +7,9 @@ class LoadingWidget {
     return Scaffold(
       backgroundColor: CustomColors.deepblue,
       body: Center(
-        child: Column(
+        child: message == "로딩중" ?
+        Lottie.asset('assets/loading.json', height: 300) :
+        Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(

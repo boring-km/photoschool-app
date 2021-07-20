@@ -316,13 +316,14 @@ class _AppBarTitleState extends State<AppBarTitle> {
                           ),
                         ),
                         color: CustomColors.lightAmber,
-                        offset: Offset(0, 45),
+                        offset: Offset(0, 40),
                         // icon: Icon(Icons.menu, color: Colors.black),
                         itemBuilder: (context) {
                           var itemList = [
                             PopupMenuItem(
                                 value: 1,
                                 child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                                   children: [
                                     Padding(
                                       padding: EdgeInsets.all(2.0),
@@ -341,6 +342,7 @@ class _AppBarTitleState extends State<AppBarTitle> {
                             PopupMenuItem(
                                 value: 2,
                                 child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                                   children: [
                                     Padding(
                                       padding: EdgeInsets.all(2.0),
@@ -362,6 +364,7 @@ class _AppBarTitleState extends State<AppBarTitle> {
                               PopupMenuItem(
                                   value: 3,
                                   child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                                     children: [
                                       Padding(
                                         padding: EdgeInsets.all(2.0),
