@@ -136,7 +136,7 @@ class _AppBarTitleState extends State<AppBarTitle> {
                               offset: Offset(2.0, 2.0)
                           )
                         ],
-                        fontSize: baseSize/2,),)
+                        fontSize: w > h ? baseSize/2 : baseSize/3,),)
                   ],
                 ),
               ),
