@@ -163,23 +163,23 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
                         ),
                       ),
                   ),
-                    ElevatedButton(
-                        onPressed: () async {
-                          final prefs = await SharedPreferences.getInstance();
-                          prefs.setString('nickname', "테스트 계정");
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                              builder: (context) => SelectScreen(),
-                            ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                          ),
-                        ),
-                        child: Text("로그인 없이 이용", style: TextStyle(color: Colors.black),))
+                    // ElevatedButton(
+                    //     onPressed: () async {
+                    //       final prefs = await SharedPreferences.getInstance();
+                    //       prefs.setString('nickname', "테스트 계정");
+                    //       Navigator.of(context).pushReplacement(
+                    //         MaterialPageRoute(
+                    //           builder: (context) => SelectScreen(),
+                    //         ),
+                    //       );
+                    //     },
+                    //     style: ElevatedButton.styleFrom(
+                    //       primary: Colors.white,
+                    //       shape: RoundedRectangleBorder(
+                    //         borderRadius: BorderRadius.circular(30.0),
+                    //       ),
+                    //     ),
+                    //     child: Text("로그인 없이 이용", style: TextStyle(color: Colors.black),))
                 ],
               ),
         ),
