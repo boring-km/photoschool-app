@@ -6,7 +6,9 @@ import 'package:intl/intl.dart';
 
 import '../../dto/post/post_response.dart';
 import '../../res/colors.dart';
+import '../../services/public_api.dart';
 import '../../services/server_api.dart';
+import '../../services/woongjin_api.dart';
 import '../../widgets/app_bar_base.dart';
 import '../../widgets/image_dialog.dart';
 import '../../widgets/loading.dart';
@@ -28,6 +30,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
   late User _user;
   int _postIndex = 0;
   final List<PostResponse> _postList = [];
+  final List<dynamic> _dictNameList = [];
   bool _isLoaded = false;
   double _baseSize = 100;
   var _postReceived = -1;
@@ -37,12 +40,28 @@ class _ManagementScreenState extends State<ManagementScreen> {
   void initState() {
     _user = widget.user;
     Future.delayed(Duration.zero, () async {
-      _postList.addAll(await CustomAPIService.getNotApprovedPosts(_postIndex));
+      final posts = await CustomAPIService.getNotApprovedPosts(_postIndex);
+      _dictNameList.addAll(await _setDictNameList(posts));
+      _postList.addAll(posts);
       setState(() {
         _isLoaded = true;
       });
     });
     super.initState();
+  }
+
+  Future<List> _setDictNameList(List<PostResponse> posts) async {
+    final resultList = [];
+    for (var post in posts) {
+      var _original;
+      if (post.apiId![0] == 'C') {
+        _original = await PublicAPIService.getChildBookDetail(post.apiId!.substring(1), "");
+      } else if (post.apiId![0] == 'P') {
+        _original = await WoongJinAPIService.searchDetailWJPedia(post.apiId!.substring(1));
+      }
+      resultList.add(_original.name);
+    }
+    return resultList;
   }
 
   @override
@@ -148,10 +167,11 @@ class _ManagementScreenState extends State<ManagementScreen> {
   Widget _buildListViewItem(double w, double h, BuildContext context, int index) {
     final post = _postList[index];
     final regTime = DateFormat("yyyy-MM-dd HH:mm").format(DateTime.parse(post.regTime).add(Duration(hours: 9)));
+    final upTime = DateFormat("yyyy-MM-dd HH:mm").format(DateTime.parse(post.upTime).add(Duration(hours: 9)));
 
     return ListTile(title: Container(
       height: 250,
-      color: Color(0xFFFFF3C0),
+      color: CustomColors.white,
       child: Center(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -170,7 +190,23 @@ class _ManagementScreenState extends State<ManagementScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text("제목: ${post.title}", style: TextStyle(fontSize: _baseSize/2),),
+                    Text("관련 사전: ${_dictNameList[index]}", style: TextStyle(fontSize: _baseSize/3),),
                     Text("작성일자: $regTime", style: TextStyle(fontSize: _baseSize/3),),
+                    Text("수정일자: $upTime", style: TextStyle(fontSize: _baseSize/3),),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: _baseSize / 8),
+                      child: Row(
+                        children: [
+                          Icon(Icons.thumb_up, color: Colors.red,),
+                          SizedBox(width: _baseSize / 16,),
+                          Text("${post.likes}"),
+                          SizedBox(width: _baseSize / 8,),
+                          Icon(CupertinoIcons.eye, color: Colors.black,),
+                          SizedBox(width: _baseSize / 16,),
+                          Text("${post.views}")
+                        ],
+                      ),
+                    )
                   ],
                 ),
               ),
@@ -245,6 +281,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
   _buildPosts(BuildContext context) async {
     final posts = await CustomAPIService.getNotApprovedPosts(_postIndex);
     _postReceived = posts.length;
+    _dictNameList.addAll(await _setDictNameList(posts));
     _postList.addAll(posts);
     setState(() {
       _isPostLoading = false;

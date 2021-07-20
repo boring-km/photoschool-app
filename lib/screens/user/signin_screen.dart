@@ -41,6 +41,9 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
 
+    var w = MediaQuery.of(context).size.width;
+    var h = MediaQuery.of(context).size.height;
+
     if (!_isLoaded) {
       return Scaffold(
         backgroundColor: CustomColors.deepblue,
@@ -64,13 +67,13 @@ class _SignInScreenState extends State<SignInScreen> {
           child: _haveLoggedIn ? Container() : Column(
             mainAxisSize: MainAxisSize.max,
             children: [
-              Row(),
               Expanded(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Lottie.asset('assets/intro2.json', height: 500, repeat: false),
+                    Row(),
+                    Image.asset('assets/photoschool.png', width: w > h ? w / 3 : h / 3,)
                   ],
                 ),
               ),

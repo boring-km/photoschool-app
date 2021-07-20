@@ -77,6 +77,7 @@ class _FindCreatureState extends State<SearchingDictionaryScreen>
             _isSearching = true;
           });
           await _allSearch(_creatureSearchController.text);
+          FocusScope.of(context).unfocus();
           setState(() {
             _isSearching = false;
           });
@@ -513,22 +514,25 @@ class _FindCreatureState extends State<SearchingDictionaryScreen>
                     ? Padding(
                         padding: EdgeInsets.only(
                             top: base / 10, left: base / 6, right: base / 6),
-                        child: CachedNetworkImage(
-                          imageUrl: pedia.imageURLs[0],
-                          placeholder: (context, url) => Container(
-                            child: Center(
-                              child: Text(
-                                "로딩중",
-                                style: TextStyle(
-                                    color: CustomColors.orange,
-                                    fontSize: base / 2),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(30),
+                          child: CachedNetworkImage(
+                            imageUrl: pedia.imageURLs[0],
+                            placeholder: (context, url) => Container(
+                              child: Center(
+                                child: Text(
+                                  "로딩중",
+                                  style: TextStyle(
+                                      color: CustomColors.orange,
+                                      fontSize: base / 2),
+                                ),
                               ),
                             ),
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error),
+                            height: base * 2,
+                            fit: BoxFit.fitWidth,
                           ),
-                          errorWidget: (context, url, error) =>
-                              Icon(Icons.error),
-                          height: base * 2,
-                          fit: BoxFit.fitWidth,
                         ))
                     : Container()
               ],
@@ -605,8 +609,7 @@ class _FindCreatureState extends State<SearchingDictionaryScreen>
                   ),
                 ),
                 Padding(
-                    padding: EdgeInsets.only(
-                        top: base / 20, left: base / 6, right: base / 6),
+                    padding: EdgeInsets.only(left: base / 6, right: base / 6),
                     child: CachedNetworkImage(
                       imageUrl: creature.imgUrl1,
                       placeholder: (context, url) => Container(

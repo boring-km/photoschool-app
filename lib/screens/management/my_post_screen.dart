@@ -16,7 +16,6 @@ import '../../dto/post/post_response.dart';
 import '../../res/colors.dart';
 import '../../services/server_api.dart';
 import '../../widgets/app_bar_base.dart';
-import '../../widgets/box_decoration.dart';
 import '../../widgets/hero_dialog_route.dart';
 import '../../widgets/loading.dart';
 import '../../widgets/painter_image.dart';
@@ -124,14 +123,23 @@ class _MyPostScreenState extends State<MyPostScreen> {
               child: Center(
                 child: Container(
                   padding: EdgeInsets.all(_baseSize/10),
-                  decoration: CustomBoxDecoration.buildWhiteBoxDecoration(),
                   child: Flex(
                     direction: Axis.vertical,
                     children: [
                       Container(
                         width: w * 0.9,
                         height: _baseSize/2,
-                        child: Text("학교: $_schoolName", style: TextStyle(color: Colors.white, fontSize: _baseSize/3),),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.school_rounded,
+                              color: Colors.white,
+                              size: _baseSize/2,
+                            ),
+                            SizedBox(width: 15,),
+                            Text("$_schoolName", style: TextStyle(color: Colors.white, fontSize: _baseSize/3),),
+                          ],
+                        ),
                       ),
                       Expanded(
                         child: NotificationListener<ScrollEndNotification>(
@@ -157,7 +165,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
                             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 3,
                                 mainAxisSpacing: 2.0,
-                                childAspectRatio: w > h ? 9/10 : 3/5),
+                                childAspectRatio: w > h ? 4/5 : 1/2),
                             itemCount: _postList.length + 1,
                             itemBuilder: (context, index) {
                               if (_postList.length == index) {
@@ -209,6 +217,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
   List<Widget> _buildMyImageCard(List<PostResponse> posts, BuildContext context, User user) {
     var w = MediaQuery.of(context).size.width;
     var h = MediaQuery.of(context).size.height;
+    var base = w > h ? w / 10 : h / 10;
 
     final resultList = <Widget>[];
     for (var item in posts) {
@@ -221,23 +230,26 @@ class _MyPostScreenState extends State<MyPostScreen> {
         child: Padding(
           padding: EdgeInsets.all(4),
           child: Container(
-            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(8)), border: Border.all(color: Colors.black, width: 2.0)),
+            decoration: BoxDecoration(color: CustomColors.white, borderRadius: BorderRadius.all(Radius.circular(16)), ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
                 _buildApproval(item.postId, item.isApproved!, item.isRejected!),
                 Padding(
-                  padding: EdgeInsets.only(top: 16, bottom: 16, left: 16, right: 16),
-                  child: Image.network(
-                    item.tbImgURL,
-                    width: w > h ? w/4 : w/3,
-                    height: w > h ? h/4 : h/6,
-                    fit: BoxFit.fitWidth,
-                    loadingBuilder: (context, child, progress) {
-                      if (progress == null) return child;
-                      return Container(child: Center(child: Text("로딩중", style: TextStyle(color: CustomColors.orange, fontSize: 24),),),);
-                    },
+                  padding: EdgeInsets.all(16),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.network(
+                      item.tbImgURL,
+                      width: base * 3,
+                      height: base * 2,
+                      fit: BoxFit.cover,
+                      loadingBuilder: (context, child, progress) {
+                        if (progress == null) return child;
+                        return Container(child: Center(child: Text("로딩중", style: TextStyle(color: CustomColors.orange, fontSize: 24),),),);
+                      },
+                    ),
                   ),
                 ),
                 Padding(
@@ -548,7 +560,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
                   child: ElevatedButton(
                       style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(boxRounded)), primary: Colors.white, onSurface: Colors.white30),
                       onPressed: () async {
-                        final result = await _pickImage(ImageSource.gallery);
+                        final result = await _pickImage(ImageSource.gallery, context: context);
                         if (result) {
                           setState(() {
                             Navigator.of(context).pop();
@@ -626,7 +638,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
     }
 
     if (_orgImageFile != null) {
-      print("경로: ${_orgImageFile!.path}");
+      print("마이페이지 경로: ${_orgImageFile!.path}");
       final result = await Navigator.of(context!).push(
         MaterialPageRoute(builder: (context) => PainterWidget(backgroundImageFile: _orgImageFile!,)),
       );
@@ -651,7 +663,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
     var rng = Random();
     var tempDir = await getTemporaryDirectory();
     var tempPath = tempDir.path;
-    var file = File('${'$tempPath'}${rng.nextInt(100)}.png');
+    var file = File('${'$tempPath'}${rng.nextInt(100)}.jpg');
     var response = await http.get(Uri.parse(imageUrl));
     await file.writeAsBytes(response.bodyBytes);
     return file;
@@ -787,14 +799,14 @@ class _MyPostScreenState extends State<MyPostScreen> {
     return Container(
       decoration: BoxDecoration(
         color: resultBackGroundColor,
-        borderRadius: BorderRadius.all(Radius.circular(4))
+        borderRadius: BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16))
       ),
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 8.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(resultText, style: TextStyle(color: resultTextColor, fontSize: 20)),
+            Text(resultText, style: TextStyle(color: resultTextColor, fontSize: 24)),
           ],
         ),
       ),

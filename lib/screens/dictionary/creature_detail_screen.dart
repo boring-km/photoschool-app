@@ -143,17 +143,17 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                             children: [
                               Expanded(
                                   child: Container(
-                                height: _baseSize * 4,
-                                child: Center(
-                                  child: ListView(
-                                    shrinkWrap: true,
-                                    scrollDirection: Axis.horizontal,
-                                    children: [
-                                      _drawImage(_creature.imgUrl1, _baseSize, boxRounded),
-                                      _drawImage(_creature.imgUrl2, _baseSize, boxRounded),
-                                    ],
-                                  ),
-                                ),
+                                    height: _baseSize * 4,
+                                    child: Center(
+                                      child: ListView(
+                                        shrinkWrap: true,
+                                        scrollDirection: Axis.horizontal,
+                                        children: [
+                                          _drawImage(_creature.imgUrl1, _baseSize, boxRounded),
+                                          _drawImage(_creature.imgUrl2, _baseSize, boxRounded),
+                                        ],
+                                      ),
+                                    ),
                               ))
                             ],
                           ),
@@ -310,16 +310,20 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
             padding: EdgeInsets.all(baseSize / 4),
             child: Container(child: null),
           )
-        : Material(
-            child: InkWell(
-              onTap: () {
-                ImageDialog.show(context, imageUrl);
-              },
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: baseSize / 3),
-                child: Container(
-                  child: Center(
-                      child: Image.network(
+        :
+    Material(
+      color: CustomColors.white,
+      child: InkWell(
+        onTap: () {
+          ImageDialog.show(context, imageUrl);
+        },
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: baseSize / 3),
+          child: Container(
+            child: Center(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.network(
                     imageUrl,
                     height: baseSize * 8,
                     fit: BoxFit.cover,
@@ -327,18 +331,27 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                       if (progress == null) return child;
                       return Container(
                         child: Center(
-                          child: Text(
-                            "로딩중",
-                            style: TextStyle(color: CustomColors.creatureGreen, fontSize: _baseSize / 2),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              CircularProgressIndicator(color: CustomColors.creatureGreen,),
+                              SizedBox(height: _baseSize/2,),
+                              Text(
+                                "로딩중",
+                                style: TextStyle(color: CustomColors.creatureGreen, fontSize: _baseSize / 2),
+                              ),
+                            ],
                           ),
                         ),
                       );
                     },
-                  )),
-                ),
-              ),
-            ),
-          );
+                  ),
+                )),
+          ),
+        ),
+      ),
+    );
   }
 
   _showSelectSource(BuildContext rootContext) {

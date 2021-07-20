@@ -452,7 +452,7 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
                                             crossAxisCount: 3,
                                             mainAxisSpacing: 8.0,
                                             crossAxisSpacing: 8.0,
-                                            childAspectRatio: w > h ? 8/9 : 3/5),
+                                            childAspectRatio: w > h ? 19/20 : 3/5),
                                         itemCount: _searchedList.length + 1,
                                         itemBuilder: (context, index) {
                                           if (_searchedList.length == index) {

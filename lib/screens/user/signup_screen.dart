@@ -228,6 +228,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   _searchSchool(String schoolName) async {
     _schoolList.clear();
     final result = await CustomAPIService.searchSchool(schoolName);
+    FocusScope.of(context).unfocus();
     setState(() {
       _schoolList.addAll(result);
     });

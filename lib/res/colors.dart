@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class CustomColors {
   static final Color deepblue = Color(0xff0e5b6a);
+  static final Color lightblue = Color(0xff189bb6);
   static final Color orange = Color(0xFFff9e40);
   static final Color orangeAccent = Color(0xfffa8c22);
   static final Color deepOrange = Color(0xFFFF7826);
@@ -22,4 +23,6 @@ class CustomColors {
   static final Color red = Color(0xFFF53838);
 
   static final Color lightAmber = Color(0xFFFFBE61);
+
+  static final Color white = Color(0xFFF6F6F6);
 }

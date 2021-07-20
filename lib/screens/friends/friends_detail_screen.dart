@@ -125,33 +125,39 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
                                 Container(
-                                  color: Color(0xC4000000),
-                                  child: InteractiveViewer(
-                                    panEnabled: true,
-                                    scaleEnabled: true,
-                                    minScale: 0.5,
-                                    maxScale: 4,
-                                    child: Image.network(
-                                      _post.imgURL,
-                                      width: w * 2/3,
-                                      height: 400,
-                                      fit: BoxFit.fitHeight,
-                                      loadingBuilder: (context, child, loadingProgress) {
-                                        if (loadingProgress == null) {
-                                          return child;
-                                        }
-                                        return Container(
-                                          width: w * 2/3,
-                                          height: 400,
-                                          color: Colors.black,
-                                          child: Center(
-                                            child: Lottie.asset('assets/loading.json', height: 400)
-                                          ),
-                                        );
-                                      },
-                                      errorBuilder: (context, error, stackTrace) {
-                                        return Text("이미지 호출 에러");
-                                      },
+                                  decoration: BoxDecoration(
+                                    color: Color(0xC4000000),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(20),
+                                    child: InteractiveViewer(
+                                      panEnabled: true,
+                                      scaleEnabled: true,
+                                      minScale: 0.5,
+                                      maxScale: 4,
+                                      child: Image.network(
+                                        _post.imgURL,
+                                        width: w * 2/3,
+                                        height: 400,
+                                        fit: BoxFit.fitHeight,
+                                        loadingBuilder: (context, child, loadingProgress) {
+                                          if (loadingProgress == null) {
+                                            return child;
+                                          }
+                                          return Container(
+                                            width: w * 2/3,
+                                            height: 400,
+                                            color: Colors.black,
+                                            child: Center(
+                                                child: Lottie.asset('assets/loading.json', height: 400)
+                                            ),
+                                          );
+                                        },
+                                        errorBuilder: (context, error, stackTrace) {
+                                          return Text("이미지 호출 에러");
+                                        },
+                                      ),
                                     ),
                                   ),
                                 ),
