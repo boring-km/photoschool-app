@@ -78,7 +78,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
 
     return _isLoading ?
     Scaffold(
-      backgroundColor: CustomColors.friendsYellow,
+      backgroundColor: CustomColors.friendsYellowAccent,
       body: Center(
         child: Container(
           child: Column(
@@ -237,7 +237,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
               children: [
                 _buildApproval(item.postId, item.isApproved!, item.isRejected!),
                 Padding(
-                  padding: EdgeInsets.all(16),
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 24),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(20),
                     child: Image.network(

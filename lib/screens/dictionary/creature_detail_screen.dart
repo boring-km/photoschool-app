@@ -60,7 +60,7 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
     super.initState();
     _user = widget._user;
     Future.delayed(Duration.zero, () {
-      _buildOthersCardList(_creature.apiId, context);
+      _buildOthersCardList(_creature.apiId, context, _user);
     });
   }
 
@@ -246,7 +246,7 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
                                                                 _isLoading = true;
                                                               });
                                                               _othersIndex++;
-                                                              _buildOthersCardList(_creature.apiId, context);
+                                                              _buildOthersCardList(_creature.apiId, context, _user);
                                                             }
                                                           }
                                                         }
@@ -626,10 +626,10 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
     );
   }
 
-  _buildOthersCardList(String apiId, BuildContext context) async {
+  _buildOthersCardList(String apiId, BuildContext context, User? user) async {
     final posts = await CustomAPIService.getOthersPostBy("C$apiId", _othersIndex);
     _received = posts.length;
-    var resultList = UserImageCard.buildImageCard(posts, context, _user);
+    var resultList = UserImageCard.buildImageCard(posts, context, user);
     setState(() {
       _othersImageCardList.addAll(resultList);
       _isDetailLoaded = true;

@@ -12,7 +12,7 @@ class CustomColors {
   static final Color googleBackground = Color(0xFF4285F4);
 
   static final Color friendsYellow = Color(0xFFFFDE14);
-  static final Color friendsYellowAccent = Color(0xFFFAE141);
+  static final Color friendsYellowAccent = Color(0xFFFFE96F);
 
   static final Color creatureGreen = Color(0xFF88c669);
   static final Color lightGreen = Color(0xE6C5ECB3);

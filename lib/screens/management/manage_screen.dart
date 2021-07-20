@@ -79,7 +79,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
           image: "manage",
         ),
       ),
-      backgroundColor: CustomColors.deepblue,
+      backgroundColor: Colors.black,
       body: SafeArea(
         child: Center(
           child: Padding(
@@ -184,28 +184,35 @@ class _ManagementScreenState extends State<ManagementScreen> {
                 errorWidget: (context, url, error) => Icon(Icons.error),
               ),
               Container(
-                width: _baseSize * 4,
+                width: _baseSize * 4.5,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("제목: ${post.title}", style: TextStyle(fontSize: _baseSize/2),),
-                    Text("관련 사전: ${_dictNameList[index]}", style: TextStyle(fontSize: _baseSize/3),),
-                    Text("작성일자: $regTime", style: TextStyle(fontSize: _baseSize/3),),
-                    Text("수정일자: $upTime", style: TextStyle(fontSize: _baseSize/3),),
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: _baseSize / 8),
-                      child: Row(
-                        children: [
-                          Icon(Icons.thumb_up, color: Colors.red,),
-                          SizedBox(width: _baseSize / 16,),
-                          Text("${post.likes}"),
-                          SizedBox(width: _baseSize / 8,),
-                          Icon(CupertinoIcons.eye, color: Colors.black,),
-                          SizedBox(width: _baseSize / 16,),
-                          Text("${post.views}")
-                        ],
-                      ),
+                    Text("${post.title}", style: TextStyle(fontSize: _baseSize/2),),
+                    SizedBox(height: _baseSize/8,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Icon(CupertinoIcons.book_solid, color: CustomColors.creatureGreen, size: _baseSize/3,),
+                        SizedBox(width: _baseSize/8,),
+                        Text("관련 사전: ${_dictNameList[index]}", style: TextStyle(fontSize: _baseSize/3),),
+                      ],
+                    ),
+                    SizedBox(height: _baseSize/8,),
+                    Text("작성됨: $regTime", style: TextStyle(color: Colors.black38, fontSize: _baseSize/4),),
+                    Text("수정됨: $upTime", style: TextStyle(color: Colors.black38, fontSize: _baseSize/4),),
+                    SizedBox(height: _baseSize/3,),
+                    Row(
+                      children: [
+                        Icon(Icons.thumb_up, color: Colors.red,),
+                        SizedBox(width: _baseSize / 16,),
+                        Text("${post.likes}"),
+                        SizedBox(width: _baseSize / 8,),
+                        Icon(CupertinoIcons.eye, color: Colors.black,),
+                        SizedBox(width: _baseSize / 16,),
+                        Text("${post.views}")
+                      ],
                     )
                   ],
                 ),

@@ -162,7 +162,7 @@ class UserImageCard {
       if (item.awardName!.substring(0,3) == "좋아요") {
         awardColor = CustomColors.lightRed;
       } else if (item.awardName!.substring(0,3) == "조회수") {
-        awardColor = CustomColors.lightblue;
+        awardColor = CustomColors.orange;
       }
 
       if (month[0] == '0') {
