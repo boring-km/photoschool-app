@@ -290,7 +290,7 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
                                         child: Padding(
                                           padding: EdgeInsets.symmetric(horizontal: _baseSize / 6),
                                           child: Text(
-                                            _original.description,
+                                            _original.runtimeType == CreatureDetailResponse ? "" : _original.description,
                                             style: TextStyle(color: Colors.black, fontSize: _baseSize / 5),
                                           ),
                                         ),
