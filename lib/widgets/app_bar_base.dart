@@ -64,7 +64,9 @@ class _AppBarTitleState extends State<AppBarTitle> {
       ),
     );
 
-    if (_image == "creature") {
+    if (_image == "creature" || _image == "friends") {
+      final creatureColor = _image == "creature" ? CustomColors.creatureGreen : Colors.grey;
+      final friendsColor = _image == "friends" ? CustomColors.orange : Colors.grey;
       image = Row(
         children: [
           GestureDetector(
@@ -75,7 +77,7 @@ class _AppBarTitleState extends State<AppBarTitle> {
             },
             child: Container(
               decoration: BoxDecoration(
-                  color: CustomColors.orange,
+                  color: creatureColor,
                   borderRadius: BorderRadius.all(Radius.circular(8))
               ),
               child: Padding(
@@ -86,25 +88,24 @@ class _AppBarTitleState extends State<AppBarTitle> {
                       'assets/book_reading.svg',
                       height: baseSize/2,
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(left: w/40),
-                      child: Text("백과사전 보기",
-                        style: TextStyle(
-                          color: Colors.white,
-                          shadows: [
-                            Shadow(
-                                blurRadius: 4.0,
-                                color: Colors.black45,
-                                offset: Offset(2.0, 2.0)
-                            )
-                          ],
-                          fontSize: baseSize/2,),),
-                    )
+                    SizedBox(width: w/60,),
+                    Text("백과사전",
+                      style: TextStyle(
+                        color: Colors.white,
+                        shadows: [
+                          Shadow(
+                              blurRadius: 4.0,
+                              color: Colors.black45,
+                              offset: Offset(2.0, 2.0)
+                          )
+                        ],
+                        fontSize: w > h ? baseSize/2 : baseSize/3,),)
                   ],
                 ),
               ),
             )
           ),
+          SizedBox(width: 15,),
           GestureDetector(
             onTap: () {
               Navigator.of(context).pushAndRemoveUntil(
@@ -113,52 +114,7 @@ class _AppBarTitleState extends State<AppBarTitle> {
             },
             child: Container(
               decoration: BoxDecoration(
-                  color: CustomColors.creatureGreen,
-                  borderRadius: BorderRadius.all(Radius.circular(8))
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: baseSize/8, horizontal: baseSize/3),
-                child: SvgPicture.asset(
-                  'assets/friends.svg',
-                  height: baseSize/2,
-                ),
-              )
-            ),
-          )
-        ],
-      );
-    } else if (_image == "friends") {
-      image = Row(
-        children: [
-          GestureDetector(
-            onTap: () {
-              Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => SelectScreen(user: _user!)), (route) => false);
-              Navigator.of(context).push(ScreenAnimation.routeTo(SearchingDictionaryScreen(user: _user!)));
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                  color: CustomColors.orange,
-                  borderRadius: BorderRadius.all(Radius.circular(8))
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: baseSize/8, horizontal: baseSize/3),
-                child: SvgPicture.asset(
-                  'assets/book_reading.svg',
-                  height: baseSize/2,
-                ),
-              ),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => SelectScreen(user: _user!)), (route) => false);
-              Navigator.of(context).push(ScreenAnimation.routeTo(FriendsMainScreen(user: _user!)));
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                  color: CustomColors.creatureGreen,
+                  color: friendsColor,
                   borderRadius: BorderRadius.all(Radius.circular(8))
               ),
               child: Padding(
@@ -169,20 +125,18 @@ class _AppBarTitleState extends State<AppBarTitle> {
                       'assets/friends.svg',
                       height: baseSize/2,
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(left: w/40),
-                      child: Text("친구들 사진보기",
-                        style: TextStyle(
-                          color: Colors.white,
-                          shadows: [
-                            Shadow(
-                                blurRadius: 4.0,
-                                color: Colors.black45,
-                                offset: Offset(2.0, 2.0)
-                            )
-                          ],
-                          fontSize: baseSize/2,),),
-                    )
+                    SizedBox(width: w/60,),
+                    Text("친구들 사진",
+                      style: TextStyle(
+                        color: Colors.white,
+                        shadows: [
+                          Shadow(
+                              blurRadius: 4.0,
+                              color: Colors.black45,
+                              offset: Offset(2.0, 2.0)
+                          )
+                        ],
+                        fontSize: baseSize/2,),)
                   ],
                 ),
               ),

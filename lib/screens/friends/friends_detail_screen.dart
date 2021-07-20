@@ -283,7 +283,7 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
                                         borderRadius: BorderRadius.circular(20),
                                         child: _buildImageView(),
                                       ),
-                                      Text(_original.name, style: TextStyle(fontSize: _baseSize, color: Colors.black),),
+                                      Text(_original.name, style: TextStyle(fontSize: _baseSize/2, color: Colors.black),),
                                       SizedBox(height: _baseSize/8,),
                                       Align(
                                         alignment: Alignment.centerLeft,

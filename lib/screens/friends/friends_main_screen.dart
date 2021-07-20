@@ -159,7 +159,7 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
                                   children: [
                                     Container(
                                       width: w * (9 / 10),
-                                      height: _baseSize,
+                                      height: _baseSize*2,
                                       color: Colors.transparent,
                                       child: Padding(
                                         padding: EdgeInsets.only(top: _baseSize / 10),
@@ -224,7 +224,6 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
                                         ),
                                       ),
                                     ),
-                                    SizedBox(height: _baseSize/4,),
                                     Flex(
                                       direction: Axis.horizontal,
                                       children: [
