@@ -428,14 +428,6 @@ class _FindCreatureState extends State<SearchingDictionaryScreen>
   Widget _buildGridViewItem(String type, dynamic item, double base) {
     if (type == "pedia") {
       final pedia = item as DictResponse;
-      var name =
-          pedia.name.length > 9 ? pedia.name.substring(0, 9) : pedia.name;
-      var subName = pedia.subName.length > 15 || name.length > 5
-          ? '${pedia.subName.substring(0, 4)}...'
-          : pedia.subName;
-      if (name.length > 7) {
-        subName = '...';
-      }
       return GestureDetector(
         onTap: () {
           Navigator.of(context).push(MaterialPageRoute(
@@ -479,26 +471,36 @@ class _FindCreatureState extends State<SearchingDictionaryScreen>
                     ),
                   ),
                 ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(top: base / 8, left: base / 6),
-                      child: Text(
-                        name,
-                        style:
+
+                Flexible(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(top: base / 8),
+                        child: Container(
+                          child: Text(
+                            pedia.name,
+                            overflow: TextOverflow.ellipsis,
+                            style:
                             TextStyle(color: Colors.black, fontSize: base / 3),
+                          ),
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(bottom: base / 20),
-                      child: Text(
-                        '($subName)',
-                        style:
+                      Padding(
+                        padding: EdgeInsets.only(bottom: base / 20),
+                        child: Container(
+                          child: Text(
+                            pedia.subName,
+                            overflow: TextOverflow.ellipsis,
+                            style:
                             TextStyle(color: Colors.black, fontSize: base / 6),
+                          ),
+                        ),
                       ),
-                    )
-                  ],
+                    ],
+                  ),
                 ),
                 Align(
                   alignment: Alignment.centerLeft,
@@ -542,9 +544,6 @@ class _FindCreatureState extends State<SearchingDictionaryScreen>
       );
     } else if (type == "creature") {
       final creature = item as CreatureDetailResponse;
-      var creatureName = creature.name.length > 8
-          ? "${creature.name.substring(0, 8)}..."
-          : creature.name;
       return GestureDetector(
         onTap: () {
           Navigator.of(context).push(MaterialPageRoute(
@@ -588,26 +587,26 @@ class _FindCreatureState extends State<SearchingDictionaryScreen>
                     ),
                   ),
                 ),
-                Align(
-                  alignment: Alignment.centerLeft,
+                Flexible(
                   child: Padding(
-                    padding: EdgeInsets.only(top: base / 8, left: base / 6),
-                    child: Text(
-                      creatureName,
-                      style: TextStyle(color: Colors.black, fontSize: base / 3),
+                    padding: EdgeInsets.only(top: base / 8),
+                    child: Container(
+                      child: Text(
+                        creature.name,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(color: Colors.black, fontSize: base / 3),
+                      ),
                     ),
                   ),
                 ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: base / 6),
-                    child: Text(
-                      creature.familyType,
-                      style: TextStyle(color: Colors.black, fontSize: base / 5),
-                    ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: base / 6),
+                  child: Text(
+                    creature.familyType,
+                    style: TextStyle(color: Colors.black, fontSize: base / 5),
                   ),
                 ),
+                SizedBox(height: 4,),
                 Padding(
                     padding: EdgeInsets.only(left: base / 6, right: base / 6),
                     child: CachedNetworkImage(

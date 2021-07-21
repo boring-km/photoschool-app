@@ -285,13 +285,16 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
                                       ),
                                       Text(_original.name, style: TextStyle(fontSize: _baseSize/2, color: Colors.black),),
                                       SizedBox(height: _baseSize/8,),
-                                      Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Padding(
-                                          padding: EdgeInsets.symmetric(horizontal: _baseSize / 6),
-                                          child: Text(
-                                            _original.runtimeType == CreatureDetailResponse ? "" : _original.description,
-                                            style: TextStyle(color: Colors.black, fontSize: _baseSize / 5),
+                                      Container(
+                                        width: _baseSize * 4,
+                                        child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(horizontal: _baseSize / 6),
+                                            child: Text(
+                                              _original.runtimeType == CreatureDetailResponse ? "" : _original.description + _original.description,
+                                              style: TextStyle(color: Colors.black, fontSize: _baseSize / 5),
+                                            ),
                                           ),
                                         ),
                                       ),
