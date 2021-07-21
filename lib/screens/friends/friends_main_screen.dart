@@ -547,7 +547,7 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
 
   _buildSchoolRankDialog(BuildContext rootContext) async {
     var _baseSize = 80.0;
-    final schoolList = await CustomAPIService.getSchoolRank();
+    final schoolList = await CustomAPIService.getSchoolRank(0);
     final widgetList = <Widget>[];
     for (var i = 0; i < schoolList.length; i++) {
       widgetList.add(

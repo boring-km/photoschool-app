@@ -296,7 +296,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
   }
 
   _approvePost(int postId) async {
-    final result = await CustomAPIService.approvePost(postId);
+    final result = await CustomAPIService.sendApproval(postId, "approve");
     if (result) {
       ScaffoldMessenger.of(context).showSnackBar(
         CustomSnackBar.show(
@@ -315,7 +315,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
   }
 
   _rejectPost(int postId) async {
-    final result = await CustomAPIService.rejectPost(postId);
+    final result = await CustomAPIService.sendApproval(postId, "reject");
     if (result) {
       ScaffoldMessenger.of(context).showSnackBar(
         CustomSnackBar.show(
