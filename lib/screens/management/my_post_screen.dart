@@ -164,7 +164,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
                             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 3,
                                 mainAxisSpacing: 2.0,
-                                childAspectRatio: w > h ? 4/5 : 1/2),
+                                childAspectRatio: w > h ? 7/10 : 1/2),
                             itemCount: _postList.length + 1,
                             itemBuilder: (context, index) {
                               if (_postList.length == index) {

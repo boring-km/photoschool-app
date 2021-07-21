@@ -674,6 +674,7 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
                 Center(
                   child: AlertDialog(
                     content: Column(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         Container(
                             width: _baseSize * 10,
