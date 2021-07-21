@@ -143,7 +143,7 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
                                           maxScale: 4,
                                           child: Image.network(
                                             _post.imgURL,
-                                            width: w * 2/3,
+                                            width: (w - (_baseSize * 13/15)) * (2/3),
                                             height: 400,
                                             fit: BoxFit.fitHeight,
                                             loadingBuilder: (context, child, loadingProgress) {
@@ -151,7 +151,7 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
                                                 return child;
                                               }
                                               return Container(
-                                                width: w * 2/3,
+                                                width: (w - (_baseSize * 13/15)) * (2/3),
                                                 height: 400,
                                                 color: Colors.black,
                                                 child: Center(
@@ -174,7 +174,7 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
                                       ],
                                     ),
                                     Container(
-                                      width: w * 2/3,
+                                      width: (w - (_baseSize * 13/15)) * (2/3),
                                       child: Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
@@ -261,7 +261,7 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
                                       ),
                                     ),
                                     Container(
-                                      width: w * 2/3,
+                                      width: (w - (_baseSize * 13/15)) * (2/3),
                                       child: Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
@@ -286,7 +286,7 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
                                       Text(_original.name, style: TextStyle(fontSize: _baseSize/2, color: Colors.black),),
                                       SizedBox(height: _baseSize/8,),
                                       Container(
-                                        width: _baseSize * 4,
+                                        width: (w - (_baseSize * 13/15)) / 4,
                                         child: Align(
                                           alignment: Alignment.centerLeft,
                                           child: Padding(
