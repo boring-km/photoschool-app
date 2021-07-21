@@ -100,9 +100,9 @@ class CustomAPIService {
     return postList;
   }
 
-  static Future<List<SchoolRank>> getSchoolRank() async {
+  static Future<List<SchoolRank>> getSchoolRank(int index) async {
     final domain = dotenv.env["server_domain"]!;
-    final result = await Http.get("$domain/rank");
+    final result = await Http.get("$domain/rank/$index");
     final json = _getResult(result);
     final schools = json['topSchools'];
     var schoolList = <SchoolRank>[];
@@ -223,20 +223,12 @@ class CustomAPIService {
     return resultList;
   }
 
-  static Future approvePost(int postId) async {
+  static Future sendApproval(int postId, String approval) async {
     final domain = dotenv.env["server_domain"]!;
     final idToken = await FirebaseAuth.instance.currentUser!.getIdToken();
-    final result = await Http.postWithJWT("$domain/admin/approve", idToken, {
-      "postId": "$postId"
-    });
-    return _getResult(result)['result'];
-  }
-
-  static Future rejectPost(int postId) async {
-    final domain = dotenv.env["server_domain"]!;
-    final idToken = await FirebaseAuth.instance.currentUser!.getIdToken();
-    final result = await Http.postWithJWT("$domain/admin/reject", idToken, {
-      "postId": "$postId"
+    final result = await Http.patchWithJWT("$domain/admin/approval", idToken, {
+      "postId": "$postId",
+      "approval": approval,
     });
     return _getResult(result)['result'];
   }
