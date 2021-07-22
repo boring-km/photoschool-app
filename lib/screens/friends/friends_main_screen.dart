@@ -639,7 +639,7 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
                                     Navigator.of(context).pop();
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    primary: CustomColors.red
+                                      primary: CustomColors.red
                                   ),
                                   child: Text("닫기", style: TextStyle(fontSize: _baseSize/3),)
                               ),
@@ -679,7 +679,7 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
                         Container(
                             width: _baseSize * 10,
                             height: _baseSize * 7.5,
-                            child: SchoolRankMap(schoolList: schoolList,)
+                            child: SchoolRankMap(schoolList: schoolList, user: _user)
                         ),
                         Container(
                           width: _baseSize * 10,

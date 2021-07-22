@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -13,8 +14,9 @@ import '../utils/geocode.dart';
 class SchoolRankMap extends StatefulWidget {
 
   final List<SchoolRank> schoolList;
+  final User? user;
 
-  const SchoolRankMap({Key? key, required this.schoolList}) : super(key: key);
+  const SchoolRankMap({Key? key, required this.schoolList, this.user}) : super(key: key);
 
   @override
   _SchoolRankMapState createState() => _SchoolRankMapState();
@@ -22,6 +24,7 @@ class SchoolRankMap extends StatefulWidget {
 
 class _SchoolRankMapState extends State<SchoolRankMap> {
 
+  User? user;
   final List<Marker> _markers = [];
 
   int _selectedRank = 0;
@@ -37,9 +40,10 @@ class _SchoolRankMapState extends State<SchoolRankMap> {
   @override
   void initState() {
     schoolList = widget.schoolList;
+    user = widget.user;
     print(schoolList);
     Future.delayed(Duration.zero, () async {
-      _school = await CustomAPIService.getMySchool();
+      _school = user == null ? null : await CustomAPIService.getMySchool();
       await _setInitialMarkers(schoolList);
 
     });
@@ -89,7 +93,7 @@ class _SchoolRankMapState extends State<SchoolRankMap> {
                   mapType: MapType.normal,
                   markers: Set.from(_markers),
                   myLocationButtonEnabled: false,
-                  initialCameraPosition: CameraPosition(target: _school!.latLng != null ? _school!.latLng! : LatLng(128, 37.6) , zoom:13),
+                  initialCameraPosition: CameraPosition(target: _school != null ? _school!.latLng! : _latLngList[0], zoom:11),
                   onMapCreated: _controller.complete,
                 )
             ),
@@ -269,7 +273,7 @@ class _SchoolRankMapState extends State<SchoolRankMap> {
                 position: latLng
             )
         );
-        if (schoolList[i].schoolName == _school!.schoolName) {
+        if (_school != null && schoolList[i].schoolName == _school!.schoolName) {
           _selectedRank = i+1;
           _selectedSchool = schoolList[i];
           _selectedIndex = i;
