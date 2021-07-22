@@ -72,8 +72,8 @@ class _AppBarTitleState extends State<AppBarTitle> {
           GestureDetector(
             onTap: () {
               Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => SelectScreen(user: _user!)), (route) => false);
-              Navigator.of(context).push(ScreenAnimation.routeTo(SearchingDictionaryScreen(user: _user!)));
+                  MaterialPageRoute(builder: (context) => SelectScreen(user: _user)), (route) => false);
+              Navigator.of(context).push(ScreenAnimation.routeTo(SearchingDictionaryScreen(user: _user)));
             },
             child: Container(
               decoration: BoxDecoration(
@@ -109,8 +109,8 @@ class _AppBarTitleState extends State<AppBarTitle> {
           GestureDetector(
             onTap: () {
               Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => SelectScreen(user: _user!)), (route) => false);
-              Navigator.of(context).push(ScreenAnimation.routeTo(FriendsMainScreen(user: _user!)));
+                  MaterialPageRoute(builder: (context) => SelectScreen(user: _user)), (route) => false);
+              Navigator.of(context).push(ScreenAnimation.routeTo(FriendsMainScreen(user: _user)));
             },
             child: Container(
               decoration: BoxDecoration(
