@@ -65,8 +65,8 @@ class _AppBarTitleState extends State<AppBarTitle> {
     );
 
     if (_image == "creature" || _image == "friends") {
-      final creatureColor = _image == "creature" ? CustomColors.creatureGreen : Colors.grey;
-      final friendsColor = _image == "friends" ? CustomColors.orange : Colors.grey;
+      final creatureColor = _image == "creature" ? CustomColors.orange : Colors.grey;
+      final friendsColor = _image == "friends" ? CustomColors.creatureGreen : Colors.grey;
       image = Row(
         children: [
           GestureDetector(
