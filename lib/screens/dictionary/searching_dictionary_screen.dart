@@ -516,25 +516,22 @@ class _FindCreatureState extends State<SearchingDictionaryScreen>
                     ? Padding(
                         padding: EdgeInsets.only(
                             top: base / 10, left: base / 6, right: base / 6),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(30),
-                          child: CachedNetworkImage(
-                            imageUrl: pedia.imageURLs[0],
-                            placeholder: (context, url) => Container(
-                              child: Center(
-                                child: Text(
-                                  "로딩중",
-                                  style: TextStyle(
-                                      color: CustomColors.orange,
-                                      fontSize: base / 2),
-                                ),
+                        child: CachedNetworkImage(
+                          imageUrl: pedia.imageURLs[0],
+                          placeholder: (context, url) => Container(
+                            child: Center(
+                              child: Text(
+                                "로딩중",
+                                style: TextStyle(
+                                    color: CustomColors.orange,
+                                    fontSize: base / 2),
                               ),
                             ),
-                            errorWidget: (context, url, error) =>
-                                Icon(Icons.error),
-                            height: base * 2,
-                            fit: BoxFit.fitWidth,
                           ),
+                          errorWidget: (context, url, error) =>
+                              Icon(Icons.error),
+                          height: base * 2 - 16,
+                          fit: BoxFit.fitWidth,
                         ))
                     : Container()
               ],
