@@ -80,7 +80,6 @@ dependencies:
   painter: ^2.0.0
   flutter_colorpicker: ^0.4.0
   path_provider: ^2.0.2
-  image_size_getter: ^1.0.0
 
 dev_dependencies:
   flutter_test:
