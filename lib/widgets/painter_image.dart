@@ -5,8 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:image_size_getter/file_input.dart';
-import 'package:image_size_getter/image_size_getter.dart' as size;
 import 'package:painter/painter.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -29,26 +27,33 @@ class _PainterWidgetState extends State<PainterWidget> {
   final PainterController _controller = _newController();
   GlobalKey<State<StatefulWidget>> globalKey = GlobalKey();
   Image? _image;
-  late double _imageWidth;
-  late double _imageHeight;
+  double _imageWidth = 0;
+  double _imageHeight = 0;
   Color? _color;
 
   final _titleController = TextEditingController();
   var _titleText = "  제목 입력  ";
 
   bool _isTapped = false;
+  bool _isLoading = true;
   bool _isUploading = false;
 
   @override
   void initState() {
     backgroundImageFile = widget.backgroundImageFile;
-    print("받은 경로: ${backgroundImageFile.path}");
-    _imageWidth = size.ImageSizeGetter.getSize(FileInput(backgroundImageFile)).width + 0.0;
-    _imageHeight = size.ImageSizeGetter.getSize(FileInput(backgroundImageFile)).height + 0.0;
-    print("이미지 너비: $_imageWidth, 이미지 높이: $_imageHeight");
     super.initState();
-    _color = Colors.white;
-    _controller.drawColor = _color!;
+    Future.delayed(Duration(milliseconds: 500 ), () async {
+      print("받은 경로: ${backgroundImageFile.path}");
+      var decodedImage = await decodeImageFromList(backgroundImageFile.readAsBytesSync());
+      _imageWidth = decodedImage.width + 0.0;
+      _imageHeight = decodedImage.height + 0.0;
+      print("이미지 너비: $_imageWidth, 이미지 높이: $_imageHeight");
+      _color = Colors.white;
+      _controller.drawColor = _color!;
+      setState(() {
+        _isLoading = false;
+      });
+    });
   }
 
   static PainterController _newController() {
@@ -60,7 +65,10 @@ class _PainterWidgetState extends State<PainterWidget> {
 
   @override
   Widget build(BuildContext context) {
+    var w = MediaQuery.of(context).size.width;
     var h = MediaQuery.of(context).size.height;
+
+    var _baseSize = w > h ? h / 10 : w / 10;
 
     if (_imageHeight > h || _imageWidth > h) {
       _imageWidth = _imageWidth / (_imageHeight / h);
@@ -68,9 +76,13 @@ class _PainterWidgetState extends State<PainterWidget> {
       print("줄인 너비: $_imageWidth, 높이: $_imageHeight");
     }
 
-    return _isUploading ?
-    LoadingWidget.buildLoadingView("그림 만드는 중", 30) :
-    Scaffold(
+    if (_isUploading) {
+      return LoadingWidget.buildLoadingView("그림 만드는 중", 30);
+    } else if (_isLoading) {
+      return LoadingWidget.buildLoadingView("로딩중", _baseSize);
+    }
+
+    return Scaffold(
       backgroundColor: Colors.black,
       body: Stack(
         children: [

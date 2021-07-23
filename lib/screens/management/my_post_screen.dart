@@ -72,7 +72,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
     _baseSize = w > h ? h / 10 : w / 15;
 
     if (!_isUploaded) {
-      return LoadingWidget.buildLoadingView("업로드중", _baseSize);
+      return LoadingWidget.buildLoadingView("업로드 중", _baseSize);
     }
 
     return _isLoading ?
@@ -518,9 +518,9 @@ class _MyPostScreenState extends State<MyPostScreen> {
                       style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(boxRounded)), primary: Colors.white, onSurface: Colors.white30),
                       onPressed: () async {
                         final result = await _pickImage(ImageSource.camera, context: context);
+                        Navigator.of(context).pop();
                         if (result) {
                           setState(() {
-                            Navigator.of(context).pop();
                             _isUploaded = false;
                           });
                           _uploadImage(rootContext);
@@ -561,6 +561,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
                         if (result) {
                           setState(() {
                             Navigator.of(context).pop();
+                            _isUploaded = false;
                           });
                           _uploadImage(rootContext);
                         } else {
