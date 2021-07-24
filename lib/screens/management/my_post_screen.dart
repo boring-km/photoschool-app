@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -485,8 +484,6 @@ class _MyPostScreenState extends State<MyPostScreen> {
     if (text.length <= 8) {
       final result = await CustomAPIService.changePostTitle(text, item.postId);
       if (result == true) {
-        FirebaseMessaging.instance.subscribeToTopic("${item.postId}");
-
         Navigator.of(context).pop();
         Navigator.of(rootContext).pushReplacement(
           MaterialPageRoute(
@@ -703,9 +700,6 @@ class _MyPostScreenState extends State<MyPostScreen> {
       final result = await CustomAPIService.updateImage(_post.postId, _thumbImgURL, _realImgURL);
       print(result);
 
-      // 3. 푸시 알림 등록
-      FirebaseMessaging.instance.subscribeToTopic("${_post.postId}");
-
       setState(() {
         _isUploaded = true;
         Navigator.of(rootContext).pushReplacement(
@@ -793,7 +787,6 @@ class _MyPostScreenState extends State<MyPostScreen> {
     var resultBackGroundColor = Colors.yellow;
     var resultTextColor = Colors.black;
     if (isApproved == 1 && isRejected == 0) {
-      FirebaseMessaging.instance.unsubscribeFromTopic("$postId");
       resultText = "승인됨";
       resultTextColor = Colors.white;
       resultBackGroundColor = Colors.green;
