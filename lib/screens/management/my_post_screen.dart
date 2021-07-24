@@ -680,8 +680,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
       var thumbImageRef = FirebaseStorage.instance.ref().child('thumbnail/${_post.postId}.png');
 
       final uploadTask = orgImageRef.putFile(_orgImageFile!);
-      final snapshot = await uploadTask.whenComplete(() => print("그림 없는 원본 이미지 업로드 완료"));
-      await snapshot.ref.getDownloadURL();
+      await uploadTask.whenComplete(() => print("그림 없는 원본 이미지 업로드 완료"));
 
       final uploadTask1 = realImageRef.putFile(_imageFileToUpload!);
       final snapshot1 = await uploadTask1.whenComplete(() => print("원본 이미지 업로드 완료"));
@@ -695,7 +694,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
       final result = await CustomAPIService.updateImage(_post.postId, _thumbImgURL, _realImgURL);
       print(result);
 
-      // 4. 푸시 알림 등록
+      // 3. 푸시 알림 등록
       FirebaseMessaging.instance.subscribeToTopic("${_post.postId}");
 
       setState(() {
