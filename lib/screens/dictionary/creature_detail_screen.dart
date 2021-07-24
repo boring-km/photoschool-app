@@ -75,7 +75,7 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
     if (!_isDetailLoaded) {
       return LoadingWidget.buildLoadingView("로딩중", _baseSize);
     } else if (!_isUploaded) {
-      return LoadingWidget.buildLoadingView("업로드중", _baseSize);
+      return LoadingWidget.buildLoadingView("업로드 중", _baseSize);
     }
 
     return Scaffold(
@@ -616,22 +616,22 @@ class _CreatureDetailScreenState extends State<CreatureDetailScreen> {
         _isUploaded = true;
       });
     }
-    Navigator.of(rootContext).pushReplacement(
-      MaterialPageRoute(
-        builder: (context) => CreatureDetailScreen(
-          _creature,
-          user: _user,
-        ),
-      ),
-    );
   }
 
   _buildOthersCardList(String apiId, BuildContext context, User? user) async {
+    final firstTime = DateTime.now(); // 2초 딜레이 재기
+
     final posts = await CustomAPIService.getOthersPostBy("C$apiId", _othersIndex);
     _received = posts.length;
-    var resultList = UserImageCard.buildImageCard(posts, context, user);
+    final resultList = UserImageCard.buildImageCard(posts, context, user);
+    _othersImageCardList.addAll(resultList);
+
+    final passedTime = firstTime.difference(DateTime.now());
+    if (passedTime < Duration(seconds: 2)) {
+      await Future.delayed(Duration(seconds: 2) - passedTime);
+    }
+
     setState(() {
-      _othersImageCardList.addAll(resultList);
       _isDetailLoaded = true;
       if (_received == 0) {
         _isLoading = false;

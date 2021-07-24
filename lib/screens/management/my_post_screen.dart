@@ -310,29 +310,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
                             ),
                             PopupMenuButton(
                               onSelected: (result) async {
-                                if (item.month != null) {
-                                  SingleMessageDialog.alert(context, "우수 게시물은 수정/삭제가 불가합니다");
-                                } else {
-                                  if (result == 1) {
-                                    _buildTitleChangeDialog(context, item, user);
-                                  } else if (result == 2) {
-                                    _post = item;
-                                    final result = await _pickImage(ImageSource.gallery, isRepainting: true, context: context);
-                                    if (result) {
-                                      setState(() {
-                                        _isUploaded = false;
-                                      });
-                                      _uploadImage(context);
-                                    } else {
-                                      SingleMessageDialog.alert(context, "취소됨");
-                                    }
-                                  } else if (result == 3) {
-                                    _post = item;
-                                    _showSelectSource(context);
-                                  } else if (result == 4) {
-                                    _buildDeletePostDialog(context, item, user);
-                                  }
-                                }
+                                await setUpdateMenu(item, context, result!, user);
                               },
                               color: CustomColors.friendsYellow,
                               child: Container(
@@ -438,6 +416,32 @@ class _MyPostScreenState extends State<MyPostScreen> {
       resultList.add(widget);
     }
     return resultList;
+  }
+
+  Future<void> setUpdateMenu(PostResponse item, BuildContext context, Object result, User user) async {
+    if (item.month != null) {
+      SingleMessageDialog.alert(context, "우수 게시물은 수정/삭제가 불가합니다");
+    } else {
+      if (result == 1) {
+        _buildTitleChangeDialog(context, item, user);
+      } else if (result == 2) {
+        _post = item;
+        final result = await _pickImage(ImageSource.gallery, isRepainting: true, context: context);
+        if (result) {
+          setState(() {
+            _isUploaded = false;
+          });
+          _uploadImage(context);
+        } else {
+          SingleMessageDialog.alert(context, "취소됨");
+        }
+      } else if (result == 3) {
+        _post = item;
+        _showSelectSource(context);
+      } else if (result == 4) {
+        _buildDeletePostDialog(context, item, user);
+      }
+    }
   }
 
   void _buildTitleChangeDialog(BuildContext rootContext, PostResponse item, User user) {
@@ -646,7 +650,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
     if (_orgImageFile != null) {
       print("마이페이지 경로: ${_orgImageFile!.path}");
       final result = await Navigator.of(context!).push(
-        MaterialPageRoute(builder: (context) => PainterWidget(backgroundImageFile: _orgImageFile!,)),
+        MaterialPageRoute(builder: (context) => PainterWidget(backgroundImageFile: _orgImageFile!, isUpdating: true)),
       );
       if (result == null) {
         return false;
