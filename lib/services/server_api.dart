@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:photoschool/dto/post/award_response.dart';
 
 import '../dto/post/post_response.dart';
 import '../dto/post/searched_post_response.dart';
@@ -57,12 +58,25 @@ class CustomAPIService {
     final json = _getResult(result);
 
     final schoolName = json['schoolName'];
+    final awards = json['awards'];
+    final awardMap = <int, Award>{};
+    if (awards != null) {
+      for (var item in awards) {
+        awardMap[item['postId']] = Award(item['postId'], item['awardName'], item['month']);
+      }
+    }
+
     final posts = json['posts'];
-    var postList = <PostResponse>[];
+    final postList = <PostResponse>[];
     for (var item in posts) {
-      var response = PostResponse(item['postId'], item['title'], item['likes'], item['views'], item['tbImgURL'], item['regTime'], item['upTime']);
+      var postId = item['postId'];
+      var response = PostResponse(postId, item['title'], item['likes'], item['views'], item['tbImgURL'], item['regTime'], item['upTime']);
       response.isApproved = item['isApproved'];
       response.isRejected = item['isRejected'];
+      if (awardMap.containsKey(postId)) {
+        response.awardName = awardMap[postId]!.awardName;
+        response.month = awardMap[postId]!.month;
+      }
       postList.add(response);
     }
     return { "schoolName": schoolName, "posts": postList };

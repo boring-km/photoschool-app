@@ -39,7 +39,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
   late User _user;
 
   int _postIndex = 0;
-  final List _postList = [];
+  final _postList = [];
   String _schoolName = "";
   bool _isLoading = true;
   bool _isPostsLoading = false;
@@ -202,9 +202,10 @@ class _MyPostScreenState extends State<MyPostScreen> {
   _buildPosts(BuildContext context) async {
     final result = await CustomAPIService.getMyPosts(_postIndex);
     _schoolName = result['schoolName'] as String;
-    var posts = result['posts'] as List<PostResponse>;
+    final posts = result['posts'] as List<PostResponse>;
     _postReceived = posts.length;
     final resultList = _buildMyImageCard(posts, context, _user);
+
     setState(() {
       _postList.addAll(resultList);
       _isLoading = false;
@@ -309,24 +310,28 @@ class _MyPostScreenState extends State<MyPostScreen> {
                             ),
                             PopupMenuButton(
                               onSelected: (result) async {
-                                if (result == 1) {
-                                  _buildTitleChangeDialog(context, item, user);
-                                } else if (result == 2) {
-                                  _post = item;
-                                  final result = await _pickImage(ImageSource.gallery, isRepainting: true, context: context);
-                                  if (result) {
-                                    setState(() {
-                                      _isUploaded = false;
-                                    });
-                                    _uploadImage(context);
-                                  } else {
-                                    SingleMessageDialog.alert(context, "취소됨");
+                                if (item.month != null) {
+                                  SingleMessageDialog.alert(context, "우수 게시물은 수정/삭제가 불가합니다");
+                                } else {
+                                  if (result == 1) {
+                                    _buildTitleChangeDialog(context, item, user);
+                                  } else if (result == 2) {
+                                    _post = item;
+                                    final result = await _pickImage(ImageSource.gallery, isRepainting: true, context: context);
+                                    if (result) {
+                                      setState(() {
+                                        _isUploaded = false;
+                                      });
+                                      _uploadImage(context);
+                                    } else {
+                                      SingleMessageDialog.alert(context, "취소됨");
+                                    }
+                                  } else if (result == 3) {
+                                    _post = item;
+                                    _showSelectSource(context);
+                                  } else if (result == 4) {
+                                    _buildDeletePostDialog(context, item, user);
                                   }
-                                } else if (result == 3) {
-                                  _post = item;
-                                  _showSelectSource(context);
-                                } else if (result == 4) {
-                                  _buildDeletePostDialog(context, item, user);
                                 }
                               },
                               color: CustomColors.friendsYellow,
