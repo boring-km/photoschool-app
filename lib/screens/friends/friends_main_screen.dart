@@ -35,6 +35,8 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
 
   final _awardImageCardList = <Widget>[];
   final _searchedList = <Widget>[];
+  final _schoolList = <SchoolRank>[];
+  final _schoolWidgetList = <Widget>[];
   final _searchTextController = TextEditingController();
 
   final _searchTypeList = ['제목', '닉네임', '학교'];
@@ -62,10 +64,61 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
   void _initialize() async {
     _user = widget._user;
     Future.delayed(const Duration(milliseconds: 2000), () async {
+      await _setSchoolRankList();
       await _buildPosts(context);
       await _buildAwardView(context);
     });
 
+  }
+
+  Future<void> _setSchoolRankList() async {
+    _schoolList.addAll(await CustomAPIService.getSchoolRank(0));
+    for (var i = 0; i < _schoolList.length; i++) {
+      _schoolWidgetList.add(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(width: _baseSize/2, child: Text("${i+1}등 ", style: TextStyle(fontSize: _baseSize/3),)),
+              Container(width: _baseSize*3, child: Text(_schoolList[i].schoolName, style: TextStyle(fontSize: _baseSize/3),)),
+              Container(
+                width: _baseSize * 1.5,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Icon(
+                      CupertinoIcons.eye,
+                      color: Colors.black,
+                    ),
+                    Text('${_schoolList[i].sumOfViews}', style: TextStyle(fontSize: _baseSize/3),),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: _baseSize/10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Icon(
+                      CupertinoIcons.doc,
+                      color: Colors.black,
+                    ),
+                    Text('${_schoolList[i].sumOfPosts}', style: TextStyle(fontSize: _baseSize/3),),
+                  ],
+                ),
+              )
+            ],
+          )
+      );
+    }
+    _schoolWidgetList.add(Padding(
+      padding: EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Text("조회수와 사진 갯수가 많으면 등수가 올라가요!", style: TextStyle(color: Colors.black45, fontSize: 12),),
+        ],
+      ),
+    ));
   }
 
   @override
@@ -78,8 +131,7 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
     var buttonHeight = w > h ? h / 15 : w / 15;
     var buttonFontSize = w > h ? h / 35 : w / 35;
 
-    return !_isLoaded
-        ? Scaffold(
+    return !_isLoaded ? Scaffold(
             backgroundColor: CustomColors.creatureGreen,
             body: Center(
               child: Container(
@@ -547,54 +599,6 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
 
   _buildSchoolRankDialog(BuildContext rootContext) async {
     var _baseSize = 80.0;
-    final schoolList = await CustomAPIService.getSchoolRank(0);
-    final widgetList = <Widget>[];
-    for (var i = 0; i < schoolList.length; i++) {
-      widgetList.add(
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(width: _baseSize/2, child: Text("${i+1}등 ", style: TextStyle(fontSize: _baseSize/3),)),
-              Container(width: _baseSize*3, child: Text(schoolList[i].schoolName, style: TextStyle(fontSize: _baseSize/3),)),
-              Container(
-                width: _baseSize * 1.5,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Icon(
-                      CupertinoIcons.eye,
-                      color: Colors.black,
-                    ),
-                    Text('${schoolList[i].sumOfViews}', style: TextStyle(fontSize: _baseSize/3),),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: _baseSize/10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Icon(
-                      CupertinoIcons.doc,
-                      color: Colors.black,
-                    ),
-                    Text('${schoolList[i].sumOfPosts}', style: TextStyle(fontSize: _baseSize/3),),
-                  ],
-                ),
-              )
-            ],
-          )
-      );
-    }
-    widgetList.add(Padding(
-      padding: EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Text("조회수와 사진 갯수가 많으면 등수가 올라가요!", style: TextStyle(color: Colors.black45, fontSize: 12),),
-        ],
-      ),
-    ));
     Navigator.push(rootContext,
         HeroDialogRoute(
             builder: (context) =>
@@ -624,7 +628,7 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
                           height: 230,
                           child: SingleChildScrollView(
                             child: Column(
-                              children: widgetList,
+                              children: _schoolWidgetList,
                             ),
                           ),
                         ),
@@ -649,7 +653,7 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
                               height: _baseSize / 2,
                               child: ElevatedButton(
                                   onPressed: () {
-                                    _showSchoolRankMap(rootContext, context, _baseSize, schoolList);
+                                    _showSchoolRankMap(rootContext, context, _baseSize, _schoolList);
                                   },
                                   style: ElevatedButton.styleFrom(
                                       primary: CustomColors.red
@@ -691,7 +695,7 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
                                   Navigator.of(context).pop();
                                 },
                                 style: ElevatedButton.styleFrom(
-                                  primary: Colors.red
+                                    primary: Colors.red
                                 ),
                                 child: Text("닫기")),
                           ),
