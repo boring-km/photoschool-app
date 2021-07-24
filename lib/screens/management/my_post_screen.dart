@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +39,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
   late User _user;
 
   int _postIndex = 0;
-  final List _postList = [];
+  final _postList = [];
   String _schoolName = "";
   bool _isLoading = true;
   bool _isPostsLoading = false;
@@ -201,9 +202,10 @@ class _MyPostScreenState extends State<MyPostScreen> {
   _buildPosts(BuildContext context) async {
     final result = await CustomAPIService.getMyPosts(_postIndex);
     _schoolName = result['schoolName'] as String;
-    var posts = result['posts'] as List<PostResponse>;
+    final posts = result['posts'] as List<PostResponse>;
     _postReceived = posts.length;
     final resultList = _buildMyImageCard(posts, context, _user);
+
     setState(() {
       _postList.addAll(resultList);
       _isLoading = false;
@@ -308,25 +310,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
                             ),
                             PopupMenuButton(
                               onSelected: (result) async {
-                                if (result == 1) {
-                                  _buildTitleChangeDialog(context, item, user);
-                                } else if (result == 2) {
-                                  _post = item;
-                                  final result = await _pickImage(ImageSource.gallery, isRepainting: true, context: context);
-                                  if (result) {
-                                    setState(() {
-                                      _isUploaded = false;
-                                    });
-                                    _uploadImage(context);
-                                  } else {
-                                    SingleMessageDialog.alert(context, "취소됨");
-                                  }
-                                } else if (result == 3) {
-                                  _post = item;
-                                  _showSelectSource(context);
-                                } else if (result == 4) {
-                                  _buildDeletePostDialog(context, item, user);
-                                }
+                                await setUpdateMenu(item, context, result!, user);
                               },
                               color: CustomColors.friendsYellow,
                               child: Container(
@@ -434,6 +418,32 @@ class _MyPostScreenState extends State<MyPostScreen> {
     return resultList;
   }
 
+  Future<void> setUpdateMenu(PostResponse item, BuildContext context, Object result, User user) async {
+    if (item.month != null) {
+      SingleMessageDialog.alert(context, "우수 게시물은 수정/삭제가 불가합니다");
+    } else {
+      if (result == 1) {
+        _buildTitleChangeDialog(context, item, user);
+      } else if (result == 2) {
+        _post = item;
+        final result = await _pickImage(ImageSource.gallery, isRepainting: true, context: context);
+        if (result) {
+          setState(() {
+            _isUploaded = false;
+          });
+          _uploadImage(context);
+        } else {
+          SingleMessageDialog.alert(context, "취소됨");
+        }
+      } else if (result == 3) {
+        _post = item;
+        _showSelectSource(context);
+      } else if (result == 4) {
+        _buildDeletePostDialog(context, item, user);
+      }
+    }
+  }
+
   void _buildTitleChangeDialog(BuildContext rootContext, PostResponse item, User user) {
     Navigator.of(rootContext).push(HeroDialogRoute(builder: (context) => Center(
       child: AlertDialog(
@@ -475,6 +485,8 @@ class _MyPostScreenState extends State<MyPostScreen> {
     if (text.length <= 8) {
       final result = await CustomAPIService.changePostTitle(text, item.postId);
       if (result == true) {
+        FirebaseMessaging.instance.subscribeToTopic("${item.postId}");
+
         Navigator.of(context).pop();
         Navigator.of(rootContext).pushReplacement(
           MaterialPageRoute(
@@ -638,7 +650,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
     if (_orgImageFile != null) {
       print("마이페이지 경로: ${_orgImageFile!.path}");
       final result = await Navigator.of(context!).push(
-        MaterialPageRoute(builder: (context) => PainterWidget(backgroundImageFile: _orgImageFile!,)),
+        MaterialPageRoute(builder: (context) => PainterWidget(backgroundImageFile: _orgImageFile!, isUpdating: true)),
       );
       if (result == null) {
         return false;
@@ -677,8 +689,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
       var thumbImageRef = FirebaseStorage.instance.ref().child('thumbnail/${_post.postId}.png');
 
       final uploadTask = orgImageRef.putFile(_orgImageFile!);
-      final snapshot = await uploadTask.whenComplete(() => print("그림 없는 원본 이미지 업로드 완료"));
-      await snapshot.ref.getDownloadURL();
+      await uploadTask.whenComplete(() => print("그림 없는 원본 이미지 업로드 완료"));
 
       final uploadTask1 = realImageRef.putFile(_imageFileToUpload!);
       final snapshot1 = await uploadTask1.whenComplete(() => print("원본 이미지 업로드 완료"));
@@ -691,6 +702,9 @@ class _MyPostScreenState extends State<MyPostScreen> {
       // 2. 다시 이미지 등록
       final result = await CustomAPIService.updateImage(_post.postId, _thumbImgURL, _realImgURL);
       print(result);
+
+      // 3. 푸시 알림 등록
+      FirebaseMessaging.instance.subscribeToTopic("${_post.postId}");
 
       setState(() {
         _isUploaded = true;
@@ -779,6 +793,7 @@ class _MyPostScreenState extends State<MyPostScreen> {
     var resultBackGroundColor = Colors.yellow;
     var resultTextColor = Colors.black;
     if (isApproved == 1 && isRejected == 0) {
+      FirebaseMessaging.instance.unsubscribeFromTopic("$postId");
       resultText = "승인됨";
       resultTextColor = Colors.white;
       resultBackGroundColor = Colors.green;

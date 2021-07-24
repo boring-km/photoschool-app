@@ -14,8 +14,9 @@ import 'loading.dart';
 class PainterWidget extends StatefulWidget {
 
   final File backgroundImageFile;
+  final bool? isUpdating;
 
-  const PainterWidget({Key? key, required this.backgroundImageFile}) : super(key: key);
+  const PainterWidget({Key? key, required this.backgroundImageFile, this.isUpdating}) : super(key: key);
 
   @override
   _PainterWidgetState createState() => _PainterWidgetState();
@@ -37,22 +38,28 @@ class _PainterWidgetState extends State<PainterWidget> {
   bool _isTapped = false;
   bool _isLoading = true;
   bool _isUploading = false;
+  bool _isUpdating = false;
 
   @override
   void initState() {
     backgroundImageFile = widget.backgroundImageFile;
+    _isUpdating = widget.isUpdating != null ? widget.isUpdating! : _isUpdating;
     super.initState();
     Future.delayed(Duration(milliseconds: 500 ), () async {
-      print("받은 경로: ${backgroundImageFile.path}");
-      var decodedImage = await decodeImageFromList(backgroundImageFile.readAsBytesSync());
-      _imageWidth = decodedImage.width + 0.0;
-      _imageHeight = decodedImage.height + 0.0;
-      print("이미지 너비: $_imageWidth, 이미지 높이: $_imageHeight");
-      _color = Colors.white;
-      _controller.drawColor = _color!;
-      setState(() {
-        _isLoading = false;
-      });
+      await getImageSize();
+    });
+  }
+
+  Future<void> getImageSize() async {
+    print("받은 경로: ${backgroundImageFile.path}");
+    var decodedImage = await decodeImageFromList(backgroundImageFile.readAsBytesSync());
+    _imageWidth = decodedImage.width + 0.0;
+    _imageHeight = decodedImage.height + 0.0;
+    print("이미지 너비: $_imageWidth, 이미지 높이: $_imageHeight");
+    _color = Colors.white;
+    _controller.drawColor = _color!;
+    setState(() {
+      _isLoading = false;
     });
   }
 
@@ -65,16 +72,7 @@ class _PainterWidgetState extends State<PainterWidget> {
 
   @override
   Widget build(BuildContext context) {
-    var w = MediaQuery.of(context).size.width;
-    var h = MediaQuery.of(context).size.height;
-
-    var _baseSize = w > h ? h / 10 : w / 10;
-
-    if (_imageHeight > h || _imageWidth > h) {
-      _imageWidth = _imageWidth / (_imageHeight / h);
-      _imageHeight = h;
-      print("줄인 너비: $_imageWidth, 높이: $_imageHeight");
-    }
+    var _baseSize = fitImageSize(context);
 
     if (_isUploading) {
       return LoadingWidget.buildLoadingView("그림 만드는 중", 30);
@@ -190,12 +188,12 @@ class _PainterWidgetState extends State<PainterWidget> {
             right: 10,
             child: Column(
               children: [
-                Padding(
+                _isUpdating ? Container() : Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text("제목 설정", style: TextStyle(fontSize: 24, color: Colors.white),),
                 ),
                 _isTapped ?
-                Container(
+                _isUpdating ? Container() : Container(
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.all(Radius.circular(8.0))
@@ -220,7 +218,7 @@ class _PainterWidgetState extends State<PainterWidget> {
                     },
                   )
                 ) :
-                GestureDetector(
+                _isUpdating ? Container() : GestureDetector(
                   onTap: () {
                     setState(() {
                       _isTapped = true;
@@ -280,7 +278,7 @@ class _PainterWidgetState extends State<PainterWidget> {
               children: [
                 Row(
                   children: [
-                    Text("원본 업로드", style: TextStyle(color: Colors.white, fontSize: 20),),
+                    Text("사진만 업로드", style: TextStyle(color: Colors.white, fontSize: 20),),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: FloatingActionButton(
@@ -299,7 +297,7 @@ class _PainterWidgetState extends State<PainterWidget> {
                 ),
                 Row(
                   children: [
-                    Text("업로드", style: TextStyle(color: Colors.white, fontSize: 20),),
+                    Text("함께 업로드", style: TextStyle(color: Colors.white, fontSize: 20),),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: FloatingActionButton(
@@ -324,13 +322,29 @@ class _PainterWidgetState extends State<PainterWidget> {
     );
   }
 
+  double fitImageSize(BuildContext context) {
+    var w = MediaQuery.of(context).size.width;
+    var h = MediaQuery.of(context).size.height;
+
+    var _baseSize = w > h ? h / 10 : w / 10;
+
+    if (_imageHeight > h || _imageWidth > h) {
+      _imageWidth = _imageWidth / (_imageHeight / h);
+      _imageHeight = h;
+      print("줄인 너비: $_imageWidth, 높이: $_imageHeight");
+    }
+    return _baseSize;
+  }
+
   void _capture(BuildContext context, {bool? isOrigin}) async {
+    final firstTime = DateTime.now();
+    var captureResult = {};
     if (isOrigin != null) {
-      Navigator.of(context).pop({
+      captureResult = {
         "image": backgroundImageFile,
         "title": _titleController.text,
         "quality": 50,
-      });
+      };
     } else {
       print("START CAPTURE");
       var renderObject = globalKey.currentContext!.findRenderObject();
@@ -344,14 +358,18 @@ class _PainterWidgetState extends State<PainterWidget> {
 
         final imageFile = await imgFile.writeAsBytes(pngBytes);
         print("FINISH CAPTURE ${imgFile.path}");
-        Navigator.of(context).pop({
+        captureResult = {
           "image": imageFile,
           "title": _titleController.text,
           "quality": 30,
-        });
+        };
       }
     }
-
+    final passedTime = firstTime.difference(DateTime.now());
+    if (passedTime < Duration(seconds: 2)) {
+      await Future.delayed(Duration(seconds: 2) - passedTime);
+    }
+    Navigator.of(context).pop(captureResult);
   }
 
   _pickColor(BuildContext context, Color color) async {

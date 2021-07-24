@@ -56,6 +56,7 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
   }
 
   _searchDetailPost(int postId) async {
+    final firstTime = DateTime.now();
     _post = await CustomAPIService.searchDetailPost(postId);
     if (_post.apiId[0] == 'C') {
       _original = await PublicAPIService.getChildBookDetail(_post.apiId.substring(1), "");
@@ -80,6 +81,10 @@ class _FriendsDetailScreenState extends State<FriendsDetailScreen> {
     }
     _likes = _post.likes;
     _regTime = "${_post.regTime.substring(5,10).replaceFirst('-', '월 ')}일";
+    final passedTime = firstTime.difference(DateTime.now());
+    if (passedTime < Duration(seconds: 2)) {
+      await Future.delayed(Duration(seconds: 2) - passedTime);
+    }
     setState(() {
       _isLoading = false;
     });

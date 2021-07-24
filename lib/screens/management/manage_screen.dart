@@ -40,14 +40,23 @@ class _ManagementScreenState extends State<ManagementScreen> {
   void initState() {
     _user = widget.user;
     Future.delayed(Duration.zero, () async {
-      final posts = await CustomAPIService.getNotApprovedPosts(_postIndex);
-      _dictNameList.addAll(await _setDictNameList(posts));
-      _postList.addAll(posts);
-      setState(() {
-        _isLoaded = true;
-      });
+      await getPosts();
     });
     super.initState();
+  }
+
+  Future<void> getPosts() async {
+    final firstTime = DateTime.now();
+    final posts = await CustomAPIService.getNotApprovedPosts(_postIndex);
+    _dictNameList.addAll(await _setDictNameList(posts));
+    _postList.addAll(posts);
+    final passedTime = firstTime.difference(DateTime.now());
+    if (passedTime < Duration(seconds: 2)) {
+      await Future.delayed(Duration(seconds: 2) - passedTime);
+    }
+    setState(() {
+      _isLoaded = true;
+    });
   }
 
   Future<List> _setDictNameList(List<PostResponse> posts) async {
@@ -201,7 +210,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                     ),
                     SizedBox(height: _baseSize/8,),
                     Text("작성됨: $regTime", style: TextStyle(color: Colors.black38, fontSize: _baseSize/4),),
-                    Text("수정됨: $upTime", style: TextStyle(color: Colors.black38, fontSize: _baseSize/4),),
+                    Text("요청된 시간: $upTime", style: TextStyle(color: Colors.black38, fontSize: _baseSize/4),),
                     SizedBox(height: _baseSize/3,),
                     Row(
                       children: [

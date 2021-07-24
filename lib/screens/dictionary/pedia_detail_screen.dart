@@ -74,10 +74,16 @@ class _PediaDetailState extends State<PediaDetailScreen> {
   }
 
   _loadPediaDetail() async {
+    final firstTime = DateTime.now(); // 2초 딜레이 재기
     _pediaDetail = await WoongJinAPIService.searchDetailWJPedia(_pedia.apiId);
     _subImageList = await WoongJinAPIService.searchPhotoLibrary(_pedia.name, _pediaDetail.categoryNo);
-    _isDetailLoaded = true;
-    setState(() {});
+    final passedTime = firstTime.difference(DateTime.now());
+    if (passedTime < Duration(seconds: 2)) {
+      await Future.delayed(Duration(seconds: 2) - passedTime);
+    }
+    setState(() {
+      _isDetailLoaded = true;
+    });
   }
 
   @override
@@ -91,7 +97,7 @@ class _PediaDetailState extends State<PediaDetailScreen> {
     if (!_isDetailLoaded) {
       return LoadingWidget.buildLoadingView("로딩중", _baseSize);
     } else if (!_isUploaded) {
-      return LoadingWidget.buildLoadingView("업로드중", _baseSize);
+      return LoadingWidget.buildLoadingView("업로드 중", _baseSize);
     }
 
     return Scaffold(
@@ -204,155 +210,150 @@ class _PediaDetailState extends State<PediaDetailScreen> {
                   ),
                   Expanded(
                       child: ListView(
-                    children: [
-                      Flex(
-                        direction: Axis.horizontal,
                         children: [
-                          Expanded(
-                              child: Container(
-                            height: 400,
-                            child: Center(
-                              child: Scrollbar(
-                                isAlwaysShown: true,
-                                controller: _scrollController,
-                                child: ListView(
-                                  shrinkWrap: true,
-                                  scrollDirection: Axis.horizontal,
-                                  children: _buildImages(_baseSize, boxRounded),
-                                ),
+                          Flex(
+                            direction: Axis.horizontal,
+                            children: [
+                              Expanded(
+                                  child: Container(
+                                    height: 400,
+                                    child: Center(
+                                      child: ListView(
+                                        shrinkWrap: true,
+                                        scrollDirection: Axis.horizontal,
+                                        children: _buildImages(_baseSize, boxRounded),
+                                      ),
+                                    ),
+                                  ))],
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: _baseSize / 6, left: _baseSize / 2),
+                            child: Align(
+                              alignment: Alignment.bottomLeft,
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    _pedia.name,
+                                    style: TextStyle(fontSize: _baseSize * (2 / 3), fontWeight: FontWeight.w700, color: Colors.black),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(bottom: _baseSize / 10),
+                                    child: Text(
+                                      "(${_pedia.subName})",
+                                      style: TextStyle(fontSize: _baseSize * (1 / 3), color: Colors.black),
+                                    ),
+                                  )
+                                ],
                               ),
                             ),
-                          ))
-                        ],
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: _baseSize / 6, left: _baseSize / 2),
-                        child: Align(
-                          alignment: Alignment.bottomLeft,
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(
-                                _pedia.name,
-                                style: TextStyle(fontSize: _baseSize * (2 / 3), fontWeight: FontWeight.w700, color: Colors.black),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(bottom: _baseSize / 10),
-                                child: Text(
-                                  "(${_pedia.subName})",
-                                  style: TextStyle(fontSize: _baseSize * (1 / 3), color: Colors.black),
-                                ),
-                              )
-                            ],
                           ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: _baseSize / 10, left: _baseSize / 2, right: _baseSize / 2),
-                        child: Html(
-                          data: _pediaDetail.detail,
-                          style: {
-                            "html": Style(color: Colors.black, fontSize: FontSize(_baseSize/3)),
-                            "a": Style(color: Colors.black),
-                          },
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: _baseSize / 10, left: _baseSize / 2, right: _baseSize / 2),
-                        child: Text(
-                          "출처 | 웅진학습백과\n본 콘텐츠는 학교 공부나 숙제, 웅진씽크빅의 다른 콘텐츠에 이용할 수 있습니다.\n단, 영리 목적이 아닌 개인적인 용도로만 이용할 수 있습니다.\n본 콘텐츠의 글 저작권과 편집저작물 저작권은 웅진씽크빅에 있으며, 시청각 자료의 저작권은 웅진씽크빅이나 저작자나 제공처에 있습니다.",
-                          style: TextStyle(color: Colors.grey, fontSize: _baseSize/5),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 12.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: Color(0xF3FFEE98),
-                              borderRadius: BorderRadius.all(Radius.circular(28))
+                          Padding(
+                            padding: EdgeInsets.only(top: _baseSize / 10, left: _baseSize / 2, right: _baseSize / 2),
+                            child: Html(
+                              data: _pediaDetail.detail,
+                              style: {
+                                "html": Style(color: Colors.black, fontSize: FontSize(_baseSize/3)),
+                                "a": Style(color: Colors.black),
+                              },
+                            ),
                           ),
-                          child: Column(
-                            children: [
-                              _othersImageCardList.length == 1
-                                  ? Padding(
-                                padding: EdgeInsets.symmetric(vertical: _baseSize / 4),
-                                child: Text(
-                                  "아직 관련 사진을 찍은 친구가 없어요!",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(color: Colors.black, fontSize: _baseSize * (1 / 3)),
-                                ),
-                              )
-                                  : Padding(
-                                padding: EdgeInsets.symmetric(vertical: _baseSize / 3),
-                                child: Text(
-                                  "친구들이 찍은 사진",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(color: Colors.black, fontSize: _baseSize * (2 / 3)),
-                                ),
+                          Padding(
+                            padding: EdgeInsets.only(top: _baseSize / 10, left: _baseSize / 2, right: _baseSize / 2),
+                            child: Text(
+                              "출처 | 웅진학습백과\n본 콘텐츠는 학교 공부나 숙제, 웅진씽크빅의 다른 콘텐츠에 이용할 수 있습니다.\n단, 영리 목적이 아닌 개인적인 용도로만 이용할 수 있습니다.\n본 콘텐츠의 글 저작권과 편집저작물 저작권은 웅진씽크빅에 있으며, 시청각 자료의 저작권은 웅진씽크빅이나 저작자나 제공처에 있습니다.",
+                              style: TextStyle(color: Colors.grey, fontSize: _baseSize/5),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 12.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: Color(0xF3FFEE98),
+                                  borderRadius: BorderRadius.all(Radius.circular(28))
                               ),
-                              _othersImageCardList.length == 1
-                                  ? Container()
-                                  : Padding(
-                                padding: EdgeInsets.symmetric(horizontal: _baseSize / 4),
-                                child: Flex(
-                                  direction: Axis.horizontal,
-                                  children: [
-                                    Expanded(
-                                        child: Container(
-                                            height: 400,
-                                            child: NotificationListener<ScrollEndNotification>(
-                                              onNotification: (scrollEnd) {
-                                                final metrics = scrollEnd.metrics;
-                                                if (metrics.atEdge) {
-                                                  if (metrics.pixels != 0) {
-                                                    if (_received == -1 || _received == 5) {
+                              child: Column(
+                                children: [
+                                  _othersImageCardList.length == 1
+                                      ? Padding(
+                                    padding: EdgeInsets.symmetric(vertical: _baseSize / 4),
+                                    child: Text(
+                                      "아직 관련 사진을 찍은 친구가 없어요!",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(color: Colors.black, fontSize: _baseSize * (1 / 3)),
+                                    ),
+                                  )
+                                      : Padding(
+                                    padding: EdgeInsets.symmetric(vertical: _baseSize / 3),
+                                    child: Text(
+                                      "친구들이 찍은 사진",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(color: Colors.black, fontSize: _baseSize * (2 / 3)),
+                                    ),
+                                  ),
+                                  _othersImageCardList.length == 1
+                                      ? Container()
+                                      : Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: _baseSize / 4),
+                                    child: Flex(
+                                      direction: Axis.horizontal,
+                                      children: [
+                                        Expanded(
+                                            child: Container(
+                                                height: 400,
+                                                child: NotificationListener<ScrollEndNotification>(
+                                                  onNotification: (scrollEnd) {
+                                                    final metrics = scrollEnd.metrics;
+                                                    if (metrics.atEdge) {
+                                                      if (metrics.pixels != 0) {
+                                                        if (_received == -1 || _received == 5) {
 
-                                                      setState(() {
-                                                        _isLoading = true;
-                                                      });
+                                                          setState(() {
+                                                            _isLoading = true;
+                                                          });
 
-                                                      _othersIndex++;
-                                                      _buildOthersCardList(context);
+                                                          _othersIndex++;
+                                                          _buildOthersCardList(context);
+                                                        }
+                                                      }
                                                     }
-                                                  }
-                                                }
-                                                return true;
-                                              },
-                                              child: ListView.builder(
-                                                shrinkWrap: true,
-                                                scrollDirection: Axis.horizontal,
-                                                itemCount: _othersImageCardList.length + 1,
-                                                itemBuilder: (context, index) {
-                                                  if (index == _othersImageCardList.length) {
-                                                    return _isLoading ? Container(
-                                                      child: Center(
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.center,
-                                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                                          children: [
-                                                            CircularProgressIndicator(color: Colors.red,),
-                                                            Padding(
-                                                              padding: EdgeInsets.all(_baseSize/10),
-                                                              child: Text("로딩중", style: TextStyle(color: Colors.red, fontSize: _baseSize/2),),
-                                                            )
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ) : Container();
-                                                  }
-                                                  return _othersImageCardList[index];
-                                                },
-                                              ),
-                                            )))
-                                  ],
-                                ),
-                              )
-                            ],
+                                                    return true;
+                                                  },
+                                                  child: ListView.builder(
+                                                    shrinkWrap: true,
+                                                    scrollDirection: Axis.horizontal,
+                                                    itemCount: _othersImageCardList.length + 1,
+                                                    itemBuilder: (context, index) {
+                                                      if (index == _othersImageCardList.length) {
+                                                        return _isLoading ? Container(
+                                                          child: Center(
+                                                            child: Column(
+                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                                              children: [
+                                                                CircularProgressIndicator(color: Colors.red,),
+                                                                Padding(
+                                                                  padding: EdgeInsets.all(_baseSize/10),
+                                                                  child: Text("로딩중", style: TextStyle(color: Colors.red, fontSize: _baseSize/2),),
+                                                                )
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ) : Container();
+                                                      }
+                                                      return _othersImageCardList[index];
+                                                    },
+                                                  ),
+                                                )))
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    ],
-                  )),
+                        ],
+                      )),
                 ],
               ),
             ),
@@ -456,9 +457,9 @@ class _PediaDetailState extends State<PediaDetailScreen> {
   _buildOthersCardList(BuildContext context) async {
     final posts = await CustomAPIService.getOthersPostBy("P${_pedia.apiId}", _othersIndex);
     _received = posts.length;
-    var resultList = UserImageCard.buildImageCard(posts, context, _user);
+    final resultList = UserImageCard.buildImageCard(posts, context, _user);
+    _othersImageCardList.addAll(resultList);
     setState(() {
-      _othersImageCardList.addAll(resultList);
       if (_received == 0) {
         _isLoading = false;
       }
@@ -722,14 +723,6 @@ class _PediaDetailState extends State<PediaDetailScreen> {
         _isUploaded = true;
       });
     }
-    Navigator.of(rootContext).pushReplacement(
-      MaterialPageRoute(
-        builder: (context) => PediaDetailScreen(
-          _pedia,
-          user: _user,
-        ),
-      ),
-    );
   }
 
   _sendEmail(DictDetailResponse pediaDetail, User user) async {
