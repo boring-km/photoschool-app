@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:photoschool/dto/post/award_response.dart';
+import '../dto/post/award_response.dart';
 
 import '../dto/post/post_response.dart';
 import '../dto/post/searched_post_response.dart';
@@ -232,6 +232,7 @@ class CustomAPIService {
       post.isRejected = item['isRejected'];
       post.imgURL = item['imgURL'];
       post.apiId = item['apiId'];
+      post.nickname = item['nickname'];
       resultList.add(post);
     }
     return resultList;

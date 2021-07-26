@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../dto/dict/dict_detail_response.dart';
@@ -44,9 +45,18 @@ class WoongJinAPIService {
   }
 
   static Future<DictDetailResponse> searchDetailWJPedia(String pid) async {
-    final domain = dotenv.env["woongjin_domain"]!;
-    final apiPath = dotenv.env["woongjin_search_detail_wjpedia"];
-    final response = await HttpWJDict.get("$domain$apiPath$pid");
+
+    var response = {};
+
+    if (kIsWeb) {
+      final domain = dotenv.env["server_domain"]!;
+      response = await Http.get("$domain/wjPedia/detail/$pid");
+    } else {
+      final domain = dotenv.env["woongjin_domain"]!;
+      final apiPath = dotenv.env["woongjin_search_detail_wjpedia"];
+      response = await HttpWJDict.get("$domain$apiPath$pid");
+    }
+
     final jsonResult = jsonDecode(response['data'])['RESP_RESULT'] as List;
 
     if (jsonResult.isNotEmpty) {

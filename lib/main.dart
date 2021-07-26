@@ -3,20 +3,23 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'config/android.dart';
+import 'res/colors.dart';
 
 import 'screens/management/my_post_screen.dart';
 import 'screens/user/signin_screen.dart';
-// import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: '.env');
-  await Firebase.initializeApp();
-
+  await dotenv.load(fileName: 'dotenv');
+  if (!kIsWeb) {
+    await AndroidConfig.setAndroidConfig();
+  }
   runApp(MyApp());
 }
 
@@ -41,10 +44,10 @@ class MyApp extends StatelessWidget {
       onGenerateRoute: routes,
       navigatorKey: navigatorKey,
       theme: ThemeData(
-        fontFamily: 'DdoDdo'
+        fontFamily: 'DdoDdo',
+        backgroundColor: CustomColors.deepblue
       ),
       home: SignInScreen(),
     );
   }
 }
-
