@@ -232,6 +232,7 @@ class CustomAPIService {
       post.isRejected = item['isRejected'];
       post.imgURL = item['imgURL'];
       post.apiId = item['apiId'];
+      post.nickname = item['nickname'];
       resultList.add(post);
     }
     return resultList;

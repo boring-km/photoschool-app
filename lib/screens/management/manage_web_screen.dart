@@ -11,7 +11,6 @@ import '../../services/woongjin_api.dart';
 import '../../widgets/image_dialog.dart';
 import '../../widgets/loading.dart';
 import '../../widgets/snackbar.dart';
-import '../../widgets/user_image_card.dart';
 
 class AdminScreen extends StatefulWidget {
 
@@ -79,7 +78,24 @@ class _AdminScreenState extends State<AdminScreen> {
     _baseSize = w > h ? h / 10 : w / 15;
 
     return !_isLoaded ? LoadingWidget.buildLoadingView("로딩중", _baseSize) : Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Color(0xFF1F1F1F),
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        title: Center(
+          child: Text("포토스쿨 게시물 관리자",
+            style: TextStyle(
+              fontSize: _baseSize/3,
+              shadows: [
+                Shadow(
+                    blurRadius: 4.0,
+                    color: Colors.black45,
+                    offset: Offset(2.0, 2.0)
+                )
+              ],
+            ),),
+        ),
+      ),
       body: SafeArea(
         child: Center(
           child: Padding(
@@ -90,6 +106,23 @@ class _AdminScreenState extends State<AdminScreen> {
                 child: Flex(
                   direction: Axis.vertical,
                   children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          ElevatedButton(
+                              onPressed: _refresh,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: [
+                                  Icon(Icons.refresh, color: Colors.white,),
+                                  Text("새로고침"),
+                                ],
+                              ))
+                        ],
+                      ),
+                    ),
                     Expanded(
                         child: NotificationListener<ScrollEndNotification>(
                             onNotification: (scrollEnd) {
@@ -107,51 +140,27 @@ class _AdminScreenState extends State<AdminScreen> {
                               }
                               return true;
                             },
-                            child: RefreshIndicator(
-                              child: ListView.builder(
-                                itemCount: _postList.length + 1,
-                                itemBuilder: (context, index) {
-                                  if (index == _postList.length) {
-                                    return _isPostLoading ? Container(
-                                      child: Center(
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                          children: [
-                                            CircularProgressIndicator(color: Colors.red,),
-                                            Padding(
-                                              padding: EdgeInsets.all(_baseSize/10),
-                                              child: Text("로딩중", style: TextStyle(color: Colors.red, fontSize: _baseSize/2),),
-                                            )
-                                          ],
-                                        ),
+                            child: ListView.builder(
+                              itemCount: _postList.length + 1,
+                              itemBuilder: (context, index) {
+                                if (index == _postList.length) {
+                                  return _isPostLoading ? Container(
+                                    child: Center(
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                        children: [
+                                          CircularProgressIndicator(color: Colors.red,),
+                                          Padding(
+                                            padding: EdgeInsets.all(_baseSize/10),
+                                            child: Text("로딩중", style: TextStyle(color: Colors.red, fontSize: _baseSize/2),),
+                                          )
+                                        ],
                                       ),
-                                    ) : Container();
-                                  }
-                                  return Dismissible(
-                                      key: Key("${_postList[index].postId}"),
-                                      background: UserImageCard.slideRightBackground(_baseSize),
-                                      secondaryBackground: UserImageCard.slideLeftBackground(_baseSize),
-                                      confirmDismiss: (direction) async {
-                                        if (direction == DismissDirection.endToStart) {
-                                          await _rejectPost(_postList[index].postId);
-                                        } else {
-                                          await _approvePost(_postList[index].postId);
-                                        }
-                                        setState(() {
-                                          _postList.removeAt(index);
-                                        });
-                                        return true;
-                                      },
-                                      child: InkWell(
-                                        onTap: () {
-                                          ImageDialog.show(rootContext, _postList[index].imgURL!);
-                                        },
-                                        child: _buildListViewItem(w, h, context, index),
-                                      )
-                                  );
-                                },
-                              ),
-                              onRefresh: _refresh,
+                                    ),
+                                  ) : Container();
+                                }
+                                return _buildListViewItem(w, h, rootContext, context, index);
+                              },
                             )
                         )
                     )
@@ -164,45 +173,47 @@ class _AdminScreenState extends State<AdminScreen> {
     );
   }
 
-  Widget _buildListViewItem(double w, double h, BuildContext context, int index) {
+  Widget _buildListViewItem(double w, double h, BuildContext rootContext, BuildContext context, int index) {
     final post = _postList[index];
     final regTime = DateFormat("yyyy-MM-dd HH:mm").format(DateTime.parse(post.regTime).add(Duration(hours: 9)));
     final upTime = DateFormat("yyyy-MM-dd HH:mm").format(DateTime.parse(post.upTime).add(Duration(hours: 9)));
 
-    return ListTile(title: Container(
-      height: 250,
+    return Container(
+      height: 180,
       color: CustomColors.white,
       child: Center(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              CachedNetworkImage(
-                imageUrl: post.tbImgURL,
-                width: w > h ? 300 : 200,
-                fit: BoxFit.fitWidth,
-                placeholder: (context, url) => Container(child: Center(child: Text("로딩중", style: TextStyle(color: CustomColors.creatureGreen, fontSize: _baseSize/2),),),),
-                errorWidget: (context, url, error) => Icon(Icons.error),
+              GestureDetector(
+                onTap: () {
+                  ImageDialog.show(rootContext, _postList[index].imgURL!);
+                },
+                child: CachedNetworkImage(
+                  imageUrl: post.tbImgURL,
+                  width: _baseSize*2,
+                  fit: BoxFit.fitWidth,
+                  placeholder: (context, url) => Container(child: Center(child: Text("로딩중", style: TextStyle(color: CustomColors.creatureGreen, fontSize: _baseSize/2),),),),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
+                ),
               ),
               Container(
-                width: _baseSize * 4.5,
+                width: _baseSize * 3,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("${post.title}", style: TextStyle(fontSize: _baseSize/2),),
+                    Text("${post.title}", style: TextStyle(fontSize: _baseSize/3),),
                     SizedBox(height: _baseSize/8,),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Icon(CupertinoIcons.book_solid, color: CustomColors.creatureGreen, size: _baseSize/3,),
+                        Icon(CupertinoIcons.book_solid, color: CustomColors.creatureGreen, size: _baseSize/4,),
                         SizedBox(width: _baseSize/8,),
-                        Text("관련 사전: ${_dictNameList[index]}", style: TextStyle(fontSize: _baseSize/3),),
+                        Text("관련 사전: ${_dictNameList[index]}", style: TextStyle(fontSize: _baseSize/4),),
                       ],
                     ),
-                    SizedBox(height: _baseSize/8,),
-                    Text("작성됨: $regTime", style: TextStyle(color: Colors.black38, fontSize: _baseSize/4),),
-                    Text("요청된 시간: $upTime", style: TextStyle(color: Colors.black38, fontSize: _baseSize/4),),
-                    SizedBox(height: _baseSize/3,),
+                    SizedBox(height: _baseSize/6,),
                     Row(
                       children: [
                         Icon(Icons.thumb_up, color: Colors.red,),
@@ -217,6 +228,15 @@ class _AdminScreenState extends State<AdminScreen> {
                   ],
                 ),
               ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("닉네임: ${post.nickname}", style: TextStyle(color: Colors.black, fontSize: _baseSize/5),),
+                  Text("처음 작성됨: $regTime", style: TextStyle(color: Colors.black38, fontSize: _baseSize/6),),
+                  Text("요청된 시간: $upTime", style: TextStyle(color: Colors.black38, fontSize: _baseSize/6),),
+                ],
+              ),
               Container(
                 height: _baseSize * (2/3),
                 child: ElevatedButton(
@@ -230,18 +250,18 @@ class _AdminScreenState extends State<AdminScreen> {
                       primary: Colors.green
                   ),
                   child: Container(
-                    width: _baseSize * 1.5,
+                    width: _baseSize,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Icon(
                             Icons.verified_user_outlined,
                             color: Colors.white,
-                            size: _baseSize/2
+                            size: _baseSize/3
                         ),
                         Text(
                           "승인",
-                          style: TextStyle(fontSize: _baseSize/3),
+                          style: TextStyle(fontSize: _baseSize/4),
                         )
                       ],
                     ),
@@ -261,18 +281,18 @@ class _AdminScreenState extends State<AdminScreen> {
                       primary: Colors.red
                   ),
                   child: Container(
-                    width: _baseSize * 1.5,
+                    width: _baseSize,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Icon(
                             Icons.cancel_outlined,
                             color: Colors.white,
-                            size: _baseSize/2
+                            size: _baseSize/3
                         ),
                         Text(
                           "거부",
-                          style: TextStyle(fontSize: _baseSize/3),
+                          style: TextStyle(fontSize: _baseSize/4),
                         )
                       ],
                     ),
@@ -282,7 +302,7 @@ class _AdminScreenState extends State<AdminScreen> {
             ],
           )
       ),
-    ));
+    );
   }
 
   _buildPosts(BuildContext context) async {
