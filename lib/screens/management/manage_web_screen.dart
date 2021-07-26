@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -14,6 +15,10 @@ import '../../widgets/user_image_card.dart';
 
 class AdminScreen extends StatefulWidget {
 
+  final User? user;
+
+  const AdminScreen({Key? key, this.user}) : super(key: key);
+
   @override
   _AdminScreenState createState() => _AdminScreenState();
 
@@ -21,6 +26,7 @@ class AdminScreen extends StatefulWidget {
 
 class _AdminScreenState extends State<AdminScreen> {
 
+  User? user;
   int _postIndex = 0;
   final List<PostResponse> _postList = [];
   final List<dynamic> _dictNameList = [];
@@ -31,6 +37,7 @@ class _AdminScreenState extends State<AdminScreen> {
 
   @override
   void initState() {
+    user = widget.user;
     Future.delayed(Duration.zero, () async {
       await getPosts();
     });

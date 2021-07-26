@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -163,7 +164,7 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
                         ),
                       ),
                   ),
-                    ElevatedButton(
+                    kIsWeb ? Container() : ElevatedButton(
                         onPressed: () async {
                           final prefs = await SharedPreferences.getInstance();
                           prefs.setString('nickname', "테스트 계정");

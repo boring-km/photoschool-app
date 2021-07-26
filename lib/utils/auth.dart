@@ -6,6 +6,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../screens/main_screen.dart';
+import '../screens/management/manage_web_screen.dart';
 import '../screens/user/signup_screen.dart';
 import '../services/server_api.dart';
 
@@ -79,7 +80,7 @@ class Authentication {
         }
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (context) => SelectScreen(
+            builder: (context) => kIsWeb ? AdminScreen(user: user) : SelectScreen(
                 user: user
             ),
           ),
