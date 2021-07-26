@@ -52,3 +52,5 @@ app.*.map.json
 
 test/services/public_api_test.dart
 lib/utils/http_wjdict.dart
+
+web/index.html
