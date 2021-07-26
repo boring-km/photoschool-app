@@ -210,6 +210,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                       ],
                     ),
                     SizedBox(height: _baseSize/8,),
+                    Text("닉네임: ${post.nickname}", style: TextStyle(color: Colors.black, fontSize: _baseSize/4),),
                     Text("작성됨: $regTime", style: TextStyle(color: Colors.black38, fontSize: _baseSize/4),),
                     Text("요청된 시간: $upTime", style: TextStyle(color: Colors.black38, fontSize: _baseSize/4),),
                     SizedBox(height: _baseSize/3,),
