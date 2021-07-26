@@ -16,7 +16,7 @@ import 'screens/user/signin_screen.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: '.env');
+  await dotenv.load(fileName: 'dotenv');
   if (!kIsWeb) {
     await AndroidConfig.setAndroidConfig();
   }
