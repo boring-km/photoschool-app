@@ -9,6 +9,7 @@ import '../screens/main_screen.dart';
 import '../screens/management/manage_web_screen.dart';
 import '../screens/user/signup_screen.dart';
 import '../services/server_api.dart';
+import '../widgets/single_message_dialog.dart';
 
 class Authentication {
   static Future<FirebaseApp?> initializeFirebase({
@@ -77,6 +78,11 @@ class Authentication {
           prefs.setBool('isAdmin', true);
         } else {
           prefs.setBool('isAdmin', false);
+          if (kIsWeb) {
+            SingleMessageDialog.alert(context, "관리자만 로그인 가능합니다.");
+            await signOut(context: context);
+            return false;
+          }
         }
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
@@ -86,11 +92,17 @@ class Authentication {
           ),
         );
       } else {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (context) => SignUpScreen(user: user),
-          ),
-        );
+        if (kIsWeb) {
+          SingleMessageDialog.alert(context, "관리자만 로그인 가능합니다.");
+          await signOut(context: context);
+          return false;
+        } else {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => SignUpScreen(user: user),
+            ),
+          );
+        }
       }
       return true;
     } else {
@@ -101,9 +113,7 @@ class Authentication {
   static Future<void> signOut({required BuildContext context}) async {
     final googleSignIn = GoogleSignIn();
     try {
-      if (!kIsWeb) {
-        await googleSignIn.signOut();
-      }
+      await googleSignIn.signOut();
       final prefs = await SharedPreferences.getInstance();
       prefs.clear();
       await FirebaseAuth.instance.signOut();
