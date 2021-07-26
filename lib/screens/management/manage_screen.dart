@@ -147,6 +147,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                                       await _approvePost(_postList[index].postId);
                                     }
                                     setState(() {
+                                      _dictNameList.removeAt(index);
                                       _postList.removeAt(index);
                                     });
                                     return true;
@@ -232,6 +233,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                   onPressed: () async {
                     await _approvePost(post.postId);
                     setState(() {
+                      _dictNameList.removeAt(index);
                       _postList.removeAt(index);
                     });
                   },
@@ -263,6 +265,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
                   onPressed: () async {
                     await _rejectPost(post.postId);
                     setState(() {
+                      _dictNameList.removeAt(index);
                       _postList.removeAt(index);
                     });
                   },
