@@ -348,6 +348,7 @@ class _ManagementScreenState extends State<ManagementScreen> {
 
   Future<void> _refresh() async {
     _postIndex = 0;
+    _dictNameList.clear();
     _postList.clear();
     _buildPosts(context);
   }

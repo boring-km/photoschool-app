@@ -243,6 +243,7 @@ class _AdminScreenState extends State<AdminScreen> {
                   onPressed: () async {
                     await _approvePost(post.postId);
                     setState(() {
+                      _dictNameList.removeAt(index);
                       _postList.removeAt(index);
                     });
                   },
@@ -274,6 +275,7 @@ class _AdminScreenState extends State<AdminScreen> {
                   onPressed: () async {
                     await _rejectPost(post.postId);
                     setState(() {
+                      _dictNameList.removeAt(index);
                       _postList.removeAt(index);
                     });
                   },
@@ -356,6 +358,7 @@ class _AdminScreenState extends State<AdminScreen> {
   Future<void> _refresh() async {
     _postIndex = 0;
     _postList.clear();
+    _dictNameList.clear();
     _buildPosts(context);
   }
 
