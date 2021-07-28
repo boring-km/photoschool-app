@@ -78,7 +78,7 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Container(width: _baseSize/2, child: Text("${i+1}등 ", style: TextStyle(fontSize: _baseSize/3),)),
+              Container(width: _baseSize/2 + 20, child: Text("${i+1}등 ", style: TextStyle(fontSize: _baseSize/3),)),
               Container(width: _baseSize*3, child: Text(_schoolList[i].schoolName, style: TextStyle(fontSize: _baseSize/3),)),
               Container(
                 width: _baseSize * 1.5,
@@ -89,6 +89,7 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
                       CupertinoIcons.eye,
                       color: Colors.black,
                     ),
+                    SizedBox(width: 4,),
                     Text('${_schoolList[i].sumOfViews}', style: TextStyle(fontSize: _baseSize/3),),
                   ],
                 ),
@@ -102,6 +103,7 @@ class _FriendsMainState extends State<FriendsMainScreen> with TickerProviderStat
                       CupertinoIcons.doc,
                       color: Colors.black,
                     ),
+                    SizedBox(width: 4,),
                     Text('${_schoolList[i].sumOfPosts}', style: TextStyle(fontSize: _baseSize/3),),
                   ],
                 ),
