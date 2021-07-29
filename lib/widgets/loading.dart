@@ -19,6 +19,7 @@ class LoadingWidget {
             message == "업로드 중" ?
             Text("업로드한 사진은 선생님이 확인한 뒤에 친구들 사진보기에서 볼 수 있어요",
               maxLines: 3,
+              textAlign: TextAlign.center,
               style: TextStyle(color: Colors.white, fontSize: baseSize/2),)
                 : Container()
           ],
