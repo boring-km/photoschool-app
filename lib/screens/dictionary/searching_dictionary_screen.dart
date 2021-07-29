@@ -397,25 +397,18 @@ class _FindCreatureState extends State<SearchingDictionaryScreen>
 
   _searchCreature(String text, int page) async {
     var list = await PublicAPIService.getChildBookSearch(text, page);
+    setState(() {
+      _isFirstLoading = false;
+      _isLoading = false;
+    });
     _creatureReceived = list.length;
-    var resultList = <CreatureDetailResponse>[];
     for (var item in list) {
-      final result =
-          await PublicAPIService.getChildBookDetail(item.apiId, text);
+      final result = await PublicAPIService.getChildBookDetail(item.apiId, text);
       if (result != false) {
-        resultList.add(result);
+        _creatureDataList.add(result);
       }
-    }
-    if (resultList.isNotEmpty) {
       setState(() {
-        _creatureDataList.addAll(resultList);
-        _isFirstLoading = false;
-        _isSearching = false;
-      });
-    } else {
-      setState(() {
-        _isFirstLoading = false;
-        _isLoading = false;
+
       });
     }
   }
