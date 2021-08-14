@@ -50,10 +50,6 @@ dependencies:
   # dart linter
   effective_dart: ^1.3.2
 
-  # windows
-  firedart: ^0.9.0+1
-  hive: ^2.0.4
-
   # google maps
   google_maps_flutter: ^2.0.6
 
